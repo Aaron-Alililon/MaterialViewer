@@ -1,0 +1,152 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\Core">
+      <UniqueIdentifier>{05094e01-eb1e-4367-a458-178671c15098}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Window">
+      <UniqueIdentifier>{2531bfc5-3a4f-4491-a4f9-b76f31addb5f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Rendering">
+      <UniqueIdentifier>{27d91422-58fa-4922-9ce0-e572cb433d9d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Logging">
+      <UniqueIdentifier>{8ce00a29-6d60-4ebf-820d-74ec11e1b699}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Input">
+      <UniqueIdentifier>{b317063f-83e5-4447-8d15-2d6897284fce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Core">
+      <UniqueIdentifier>{0da9ba95-324f-4edc-be7a-e3d1a6b8523c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Window">
+      <UniqueIdentifier>{96aba027-3210-44b2-98ab-c11c78fe99f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Input">
+      <UniqueIdentifier>{87521e1c-210d-4e58-b251-c527fcfa00d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Rendering">
+      <UniqueIdentifier>{e3a63bb3-5793-4c60-854f-806caf11a271}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Logging">
+      <UniqueIdentifier>{4634db9d-0b61-4dc7-ae61-aaab0544ce81}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\D3D11">
+      <UniqueIdentifier>{92221ac8-ab59-43d7-a6ab-5ab1d8111d01}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\D3D11">
+      <UniqueIdentifier>{ecba93fc-ebce-4fd8-9ade-bd4f17a07413}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Engine.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="FrameState.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Rcore.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Window.h">
+      <Filter>Header Files\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="Window.inl">
+      <Filter>Header Files\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowDesc.h">
+      <Filter>Header Files\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowsInterface.h">
+      <Filter>Header Files\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowView.h">
+      <Filter>Header Files\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="Layer.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer3D.h">
+      <Filter>Header Files\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Logger.h">
+      <Filter>Header Files\Logging</Filter>
+    </ClInclude>
+    <ClInclude Include="InputManager.h">
+      <Filter>Header Files\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="D3D11Context.h">
+      <Filter>Header Files\D3D11</Filter>
+    </ClInclude>
+    <ClInclude Include="D3DContextDesc.h">
+      <Filter>Header Files\D3D11</Filter>
+    </ClInclude>
+    <ClInclude Include="D3D11Device.h">
+      <Filter>Header Files\D3D11</Filter>
+    </ClInclude>
+    <ClInclude Include="DeviceDesc.h">
+      <Filter>Header Files\D3D11</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Engine.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="pch.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Window.cpp">
+      <Filter>Source Files\Window</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowDesc.cpp">
+      <Filter>Source Files\Window</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowsInterface.cpp">
+      <Filter>Source Files\Window</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowView.cpp">
+      <Filter>Source Files\Window</Filter>
+    </ClCompile>
+    <ClCompile Include="InputManager.cpp">
+      <Filter>Source Files\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer3D.cpp">
+      <Filter>Source Files\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Logger.cpp">
+      <Filter>Source Files\Logging</Filter>
+    </ClCompile>
+    <ClCompile Include="D3D11Context.cpp">
+      <Filter>Source Files\D3D11</Filter>
+    </ClCompile>
+    <ClCompile Include="D3DContextDesc.cpp">
+      <Filter>Source Files\D3D11</Filter>
+    </ClCompile>
+    <ClCompile Include="D3D11Device.cpp">
+      <Filter>Source Files\D3D11</Filter>
+    </ClCompile>
+    <ClCompile Include="DeviceDesc.cpp">
+      <Filter>Source Files\D3D11</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="WindowView.inl">
+      <Filter>Header Files\Window</Filter>
+    </None>
+  </ItemGroup>
+</Project>
