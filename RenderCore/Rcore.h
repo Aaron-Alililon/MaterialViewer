@@ -1,3 +1,5 @@
+#include "pch.h"
+
 #ifndef RCORE_H
 #define RCORE_H
 
