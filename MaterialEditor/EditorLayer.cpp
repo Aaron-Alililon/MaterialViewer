@@ -1,5 +1,9 @@
 #include "EditorLayer.h"
 
+void EditorLayer::setup() {
+
+}
+
 void EditorLayer::update(rcore::FrameState const& frame) {
   
 }

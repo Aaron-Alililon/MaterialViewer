@@ -1,0 +1,1 @@
+Sat Jun  6 00:40:27 2026 | Error   | class rcore::D3D11Device &__cdecl rcore::D3D11Device::get(void) (14) | Tried accessing D3D11Device before initialization

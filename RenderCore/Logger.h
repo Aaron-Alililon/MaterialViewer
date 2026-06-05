@@ -7,6 +7,8 @@
 #include <chrono>
 #include <ctime>
 
+#define RCORE_LOG(level, msg) Logger::log(level, msg, __FUNCSIG__, __LINE__)
+
 namespace rcore {
 
   enum LogLevel {
@@ -24,7 +26,7 @@ namespace rcore {
     static std::string levelToString(LogLevel level);
 
   public:
-    static void log(LogLevel level, std::string text);
+    static void log(LogLevel level, std::string text, const char* func = nullptr, int line = 0);
   };
 
 }

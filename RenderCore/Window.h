@@ -5,6 +5,7 @@
 #include "Layer.h"
 #include "Engine.h"
 #include "WindowsInterface.h"
+#include "D3D11Context.h"
 
 namespace rcore {
 
@@ -20,12 +21,17 @@ namespace rcore {
     void endFrame();
     bool isWindowByHandle(HWND hwnd) const;
     LRESULT CALLBACK handleMessage(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam);
+    void setContext(std::unique_ptr<D3D11Context> context);
+
+    HWND getHandle() const;
+    std::pair<int, int> getSize() const;
 
     template<std::derived_from<Layer> T>
     void addLayer();
 
   private:
     WindowsInterface m_winInterface;
+    std::unique_ptr<D3D11Context> m_context;
     std::vector<std::unique_ptr<Layer>> m_layers;
     FrameState m_frameState;
     int m_width, m_height;

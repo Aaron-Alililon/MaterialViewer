@@ -11,6 +11,7 @@ namespace rcore {
 
   public:
     bool isValid() const;
+    Window* raw() const;
 
     template<std::derived_from<Layer> T>
     void addLayer() const;
@@ -19,6 +20,7 @@ namespace rcore {
     Window* m_window;
 
     friend WindowView makeWindow(WindowDesc const& descriptor);
+    friend void makeD3D11Context(WindowView const& window, D3DContextDesc const& descriptor);
   };
 
 }

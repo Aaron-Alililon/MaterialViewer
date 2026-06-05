@@ -11,7 +11,7 @@ namespace rcore {
 
   D3D11Device& D3D11Device::get() {
     if (instance == nullptr) {
-      Logger::log(ERR, "Tried accessing D3D11Device before initialization");
+      RCORE_LOG(ERR, "Tried accessing D3D11Device before initialization");
       assert(false && "Check log for more info");
     }
 
@@ -56,7 +56,7 @@ namespace rcore {
     );
 
     if (FAILED(result)) {
-      Logger::log(ERR, "D3D11CreateDevice failed with HRESULT: " + std::to_string(result));
+      RCORE_LOG(ERR, "D3D11CreateDevice failed with HRESULT: " + std::to_string(result));
       assert(false && "Check log for more info");
     }
   }

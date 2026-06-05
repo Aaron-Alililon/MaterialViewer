@@ -7,6 +7,7 @@ namespace rcore {
 
   class Layer {
   public:
+    virtual void setup() {}
     virtual void update(FrameState const& frame) {}
     virtual void render(FrameState const& frame) {}
   };
