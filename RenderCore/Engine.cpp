@@ -29,7 +29,6 @@ namespace rcore {
       bool anyWindowClosing = false;
       for (auto const& window : m_windows) {
         if (!window->readMessages()) {
-          std::erase(m_windowAliveStates, window.get());
           anyWindowClosing = true;
         } else {
           window->update();
@@ -40,10 +39,7 @@ namespace rcore {
 
       if (anyWindowClosing) {
         std::erase_if(m_windows, [&](auto const& window) {
-          if (!windowIsAlive(window.get())) {
-            return true;
-          }
-          return false;
+          return window->pendingClose();
         });
       }
     }
@@ -51,21 +47,17 @@ namespace rcore {
     shutdown();
   }
 
-  void Engine::registerWindow(std::unique_ptr<Window> window, bool flush) {
+  void Engine::registerWindow(std::shared_ptr<Window> window, bool flush) {
     m_windowCreationQueue.push(std::move(window));
     if (flush) _registerWindows();
   }
 
-  Window* Engine::getWindowByHandle(HWND hwnd) const {
+  std::weak_ptr<Window> Engine::getWindowByHandle(HWND hwnd) const {
     for (auto const& window : m_windows) {
-      if (window->isWindowByHandle(hwnd)) return window.get();
+      if (window->isWindowByHandle(hwnd)) return window;
     }
 
-    return nullptr;
-  }
-
-  bool Engine::windowIsAlive(Window* rawWindow) const {
-    return std::find(m_windowAliveStates.begin(), m_windowAliveStates.end(), rawWindow) != m_windowAliveStates.end();
+    return {};
   }
 
   bool Engine::isRunning() const {
@@ -76,15 +68,12 @@ namespace rcore {
     while (m_windowCreationQueue.size() > 0) {
       auto window = std::move(m_windowCreationQueue.front());
       m_windowCreationQueue.pop();
-
-      m_windowAliveStates.push_back(window.get());
       m_windows.push_back(std::move(window));
     }
   }
 
   void Engine::shutdown() {
     m_windows.clear();
-    m_windowAliveStates.clear();
     delete instance;
     instance = nullptr;
   }

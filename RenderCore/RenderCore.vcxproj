@@ -34,7 +34,6 @@
     <ClInclude Include="Window.h" />
     <ClInclude Include="WindowDesc.h" />
     <ClInclude Include="WindowsInterface.h" />
-    <ClInclude Include="WindowView.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="D3D11Context.cpp" />
@@ -54,7 +53,6 @@
     <ClCompile Include="Window.cpp" />
     <ClCompile Include="WindowDesc.cpp" />
     <ClCompile Include="WindowsInterface.cpp" />
-    <ClCompile Include="WindowView.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Window.inl">
@@ -62,9 +60,6 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="WindowView.inl" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

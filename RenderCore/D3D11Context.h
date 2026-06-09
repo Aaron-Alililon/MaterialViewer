@@ -6,11 +6,11 @@
 
 namespace rcore {
 
-  class WindowView; // Forward declared
+  class Window; // Forward declared
 
   class D3D11Context {
   public:
-    D3D11Context(WindowView const& window, D3DContextDesc const& descriptor);
+    D3D11Context(std::shared_ptr<Window> const& window, D3DContextDesc const& descriptor);
 
   private:
     Microsoft::WRL::ComPtr<IDXGISwapChain> m_swapChain;

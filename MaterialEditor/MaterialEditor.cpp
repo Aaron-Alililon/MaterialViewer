@@ -9,13 +9,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
   windDesc.name(L"Material Editor");
   windDesc.width(800);
   windDesc.height(800);
-  rcore::WindowView mainWindow = rcore::makeWindow(windDesc);
+  auto mainWindow = rcore::makeWindow(windDesc);
+  auto subWindow = rcore::makeWindow(windDesc);
 
   rcore::D3DContextDesc ctxDesc;
   ctxDesc.targetFps(144);
   rcore::makeD3D11Context(mainWindow, ctxDesc);
 
-  mainWindow.addLayer<EditorLayer>();
+  mainWindow.lock()->addLayer<EditorLayer>();
 
   rcore::init();
 }

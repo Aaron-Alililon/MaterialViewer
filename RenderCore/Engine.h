@@ -20,9 +20,8 @@ namespace rcore {
   public:
     void run();
 
-    void registerWindow(std::unique_ptr<Window> window, bool flush = false);
-    Window* getWindowByHandle(HWND hwnd) const;
-    bool windowIsAlive(Window* rawWindow) const;
+    void registerWindow(std::shared_ptr<Window> window, bool flush = false);
+    std::weak_ptr<Window> getWindowByHandle(HWND hwnd) const;
     bool isRunning() const;
 
   private:
@@ -31,9 +30,8 @@ namespace rcore {
 
   private:
     bool m_running = false;
-    std::queue<std::unique_ptr<Window>> m_windowCreationQueue;
-    std::vector<std::unique_ptr<Window>> m_windows;
-    std::vector<Window*> m_windowAliveStates;
+    std::queue<std::shared_ptr<Window>> m_windowCreationQueue;
+    std::vector<std::shared_ptr<Window>> m_windows;
   };
 
 }

@@ -7,7 +7,6 @@
 #include "D3D11Context.h"
 #include "Engine.h"
 #include "Window.h"
-#include "WindowView.h"
 
 namespace rcore {
 
@@ -19,16 +18,23 @@ namespace rcore {
     Engine::get().run();
   }
 
-  inline WindowView makeWindow(WindowDesc const& descriptor) {
-    auto uPtrWindow = std::make_unique<Window>(descriptor);
-    Window* rawPtrWindow = uPtrWindow.get();
-    Engine::get().registerWindow(std::move(uPtrWindow), !Engine::get().isRunning());
+  inline std::weak_ptr<Window> makeWindow(WindowDesc const& descriptor) {
+    auto sPtrWindow = std::make_shared<Window>(descriptor);
+    std::weak_ptr<Window> wPtrWindow = sPtrWindow;
 
-    return { rawPtrWindow };
+    Engine::get().registerWindow(std::move(sPtrWindow), !Engine::get().isRunning());
+
+    return wPtrWindow;
   }
 
-  inline void makeD3D11Context(WindowView const& window, D3DContextDesc const& descriptor) {
-    window.raw()->setContext(std::make_unique<D3D11Context>(window, descriptor));
+  inline void makeD3D11Context(std::weak_ptr<Window> window, D3DContextDesc const& descriptor) {
+    auto lockedWindow = window.lock();
+    if (!lockedWindow) {
+      RCORE_LOG(ERR, "Tried creating D3D11Context with expired window");
+      return;
+    }
+
+    lockedWindow->setContext(std::make_unique<D3D11Context>(lockedWindow, descriptor));
   }
 
 }

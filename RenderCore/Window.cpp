@@ -19,6 +19,10 @@ namespace rcore {
     m_winInterface.hintClose();
   }
 
+  bool Window::pendingClose() const {
+    return m_winInterface.m_windowClosing;
+  }
+
   void Window::update() const {
     for (auto const& layer : m_layers) {
       layer->update(m_frameState);

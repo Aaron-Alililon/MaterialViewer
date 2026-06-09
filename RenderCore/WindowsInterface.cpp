@@ -3,7 +3,8 @@
 #include "Window.h"
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam) {
-	rcore::Window* window = rcore::Engine::get().getWindowByHandle(hwnd);
+	auto weakWindow = rcore::Engine::get().getWindowByHandle(hwnd);
+	auto window = weakWindow.lock();
 
 	if (!window) {
 		return DefWindowProc(hwnd, umessage, wparam, lparam);

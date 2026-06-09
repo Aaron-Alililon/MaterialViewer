@@ -16,6 +16,7 @@ namespace rcore {
   public:
     bool readMessages() const;
     void hintClose() const;
+    bool pendingClose() const;
     void update() const;
     void render() const;
     void endFrame();
