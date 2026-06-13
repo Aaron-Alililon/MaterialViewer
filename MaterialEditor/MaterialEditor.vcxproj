@@ -151,6 +151,9 @@
   <ItemGroup>
     <Text Include="data\log.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Descriptors.inl" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

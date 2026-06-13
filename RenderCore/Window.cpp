@@ -23,6 +23,10 @@ namespace rcore {
     return m_winInterface.m_windowClosing;
   }
 
+  void Window::startFrame() {
+    m_context->activate();
+  }
+
   void Window::update() const {
     for (auto const& layer : m_layers) {
       layer->update(m_frameState);
@@ -57,6 +61,10 @@ namespace rcore {
 
   std::pair<int, int> Window::getSize() const {
     return std::make_pair(m_width, m_height);
+  }
+
+  IDXGISwapChain* Window::getSwapChain() const {
+    return m_context->m_swapChain.Get();
   }
 
 }

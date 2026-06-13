@@ -17,6 +17,7 @@ namespace rcore {
     bool readMessages() const;
     void hintClose() const;
     bool pendingClose() const;
+    void startFrame();
     void update() const;
     void render() const;
     void endFrame();
@@ -26,6 +27,7 @@ namespace rcore {
 
     HWND getHandle() const;
     std::pair<int, int> getSize() const;
+    IDXGISwapChain* getSwapChain() const;
 
     template<std::derived_from<Layer> T>
     void addLayer();
