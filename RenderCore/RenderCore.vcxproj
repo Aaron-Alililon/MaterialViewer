@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -31,6 +31,7 @@
     <ClInclude Include="pch.h" />
     <ClInclude Include="Rcore.h" />
     <ClInclude Include="Renderer3D.h" />
+    <ClInclude Include="Shader.h" />
     <ClInclude Include="Window.h" />
     <ClInclude Include="WindowDesc.h" />
     <ClInclude Include="WindowsInterface.h" />
@@ -50,6 +51,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Renderer3D.cpp" />
+    <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Window.cpp" />
     <ClCompile Include="WindowDesc.cpp" />
     <ClCompile Include="WindowsInterface.cpp" />

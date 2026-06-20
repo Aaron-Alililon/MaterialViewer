@@ -99,6 +99,9 @@
     <ClInclude Include="DeviceDesc.h">
       <Filter>Header Files\D3D11</Filter>
     </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>Header Files\Rendering</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp">
@@ -136,6 +139,9 @@
     </ClCompile>
     <ClCompile Include="DeviceDesc.cpp">
       <Filter>Source Files\D3D11</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>Source Files\Rendering</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
