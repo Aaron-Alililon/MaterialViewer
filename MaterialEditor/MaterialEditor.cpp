@@ -8,15 +8,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
 
   rcore::WindowDesc windDesc = getWindowDesc();
   auto mainWindow = rcore::makeWindow(windDesc);
-  auto subWindow = rcore::makeWindow(windDesc);
+  // auto subWindow = rcore::makeWindow(windDesc);
 
   rcore::D3DContextDesc ctxDesc = getContextDesc(windDesc.width(), windDesc.height());
   rcore::makeD3D11Context(mainWindow, ctxDesc);
 
-  rcore::makeD3D11Context(subWindow, ctxDesc);
-
   mainWindow.lock()->addLayer<EditorLayer>();
-  subWindow.lock()->addLayer<EditorLayer>();
 
   rcore::init();
 }

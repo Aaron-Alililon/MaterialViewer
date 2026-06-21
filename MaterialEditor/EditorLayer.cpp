@@ -21,6 +21,7 @@ EditorLayer::EditorLayer(std::weak_ptr<rcore::Window> window) : Layer(window) {
 
   m_shader = { L"VertexShader.hlsl", L"PixelShader.hlsl", inputDesc };
 
+  createMatrixBuffer();
   createVertexBuffer();
   createIndexBuffer();
 }
@@ -39,6 +40,8 @@ void EditorLayer::render(rcore::FrameState const& frame) {
   rcore::D3D11Device::get().rawContext()->ClearRenderTargetView(window->getRenderTargetView(), bgCol);
   rcore::D3D11Device::get().rawContext()->ClearDepthStencilView(window->getDepthStencilView(), D3D11_CLEAR_DEPTH, 1.0f, 0);
 
+  setMatrixBuffer();
+
   UINT stride = sizeof(VertexType);
   UINT offset = 0;
   UINT indexCount = 3;
@@ -48,6 +51,52 @@ void EditorLayer::render(rcore::FrameState const& frame) {
   rcore::D3D11Device::get().rawContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
   rcore::D3D11Device::get().rawContext()->DrawIndexed(indexCount, 0, 0);
+}
+
+void EditorLayer::setMatrixBuffer() {
+  HRESULT result;
+
+  DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixIdentity();
+  DirectX::XMMATRIX viewMatrix = DirectX::XMMatrixLookAtLH(DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f), DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f), DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f));
+  DirectX::XMMATRIX projectionMatrix = DirectX::XMMatrixPerspectiveFovLH(3.141592654f / 4.0f, 1, 0.3f, 1000.0f);
+
+  worldMatrix = XMMatrixTranspose(worldMatrix);
+  viewMatrix = XMMatrixTranspose(viewMatrix);
+  projectionMatrix = XMMatrixTranspose(projectionMatrix);
+
+  D3D11_MAPPED_SUBRESOURCE mappedResource;
+  result = rcore::D3D11Device::get().rawContext()->Map(m_matrixBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+  if (FAILED(result)) {
+    return;
+  }
+
+  MatrixBufferType* dataPtr = (MatrixBufferType*)mappedResource.pData;
+
+  dataPtr->world = worldMatrix;
+  dataPtr->view = viewMatrix;
+  dataPtr->projection = projectionMatrix;
+
+  rcore::D3D11Device::get().rawContext()->Unmap(m_matrixBuffer.Get(), 0);
+
+  UINT bufferNumber = 0;
+  rcore::D3D11Device::get().rawContext()->VSSetConstantBuffers(bufferNumber, 1, m_matrixBuffer.GetAddressOf());
+}
+
+void EditorLayer::createMatrixBuffer() {
+  HRESULT result;
+
+  D3D11_BUFFER_DESC matrixBufferDesc{};
+  matrixBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+  matrixBufferDesc.ByteWidth = sizeof(MatrixBufferType);
+  matrixBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+  matrixBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+  matrixBufferDesc.MiscFlags = 0;
+  matrixBufferDesc.StructureByteStride = 0;
+
+  result = rcore::D3D11Device::get().raw()->CreateBuffer(&matrixBufferDesc, NULL, &m_matrixBuffer);
+  if (FAILED(result)) {
+    return;
+  }
 }
 
 void EditorLayer::createVertexBuffer() {
@@ -63,9 +112,9 @@ void EditorLayer::createVertexBuffer() {
 
   D3D11_SUBRESOURCE_DATA vertexData{};
   VertexType vertices[] = {
-    {{ 0.0f,  0.5f, 0.0f, 1.0f}, {1.0f, 0.0f, 0.0f, 1.0f}},
-    {{ 0.5f, -0.5f, 0.0f, 1.0f}, {0.0f, 1.0f, 0.0f, 1.0f}},
-    {{-0.5f, -0.5f, 0.0f, 1.0f}, {0.0f, 0.0f, 1.0f, 1.0f}}
+    {{ 0.0f,  0.5f, 5.0f, 1.0f}, {1.0f, 0.0f, 0.0f, 1.0f}},
+    {{ 0.5f, -0.5f, 5.0f, 1.0f}, {0.0f, 1.0f, 0.0f, 1.0f}},
+    {{-0.5f, -0.5f, 5.0f, 1.0f}, {0.0f, 0.0f, 1.0f, 1.0f}}
   };
   vertexData.pSysMem = vertices;
   vertexData.SysMemPitch = 0;
