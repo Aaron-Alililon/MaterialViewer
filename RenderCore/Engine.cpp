@@ -31,6 +31,7 @@ namespace rcore {
         if (!window->readMessages()) {
           anyWindowClosing = true;
         } else {
+          window->startFrame();
           window->update();
           window->render();
           window->endFrame();

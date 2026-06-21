@@ -38,7 +38,7 @@ namespace rcore {
 		// || Vertex Shader ||
 		// ===================
 
-		result = D3DCompileFromFile(m_vertexFile.c_str(), nullptr, nullptr, "VertexShader", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, vertexShaderBuffer.GetAddressOf(), errorMessage.GetAddressOf());
+		result = D3DCompileFromFile(m_vertexFile.c_str(), nullptr, nullptr, "VSMain", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, vertexShaderBuffer.GetAddressOf(), errorMessage.GetAddressOf());
 		if (FAILED(result)) {
 			if (errorMessage) {
 				logError(errorMessage.Get());
@@ -54,7 +54,7 @@ namespace rcore {
 		// || Pixel Shader ||
 		// ==================
 
-		result = D3DCompileFromFile(m_pixelFile.c_str(), nullptr, nullptr, "PixelShader", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, pixelShaderBuffer.GetAddressOf(), errorMessage.GetAddressOf());
+		result = D3DCompileFromFile(m_pixelFile.c_str(), nullptr, nullptr, "PSMain", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, pixelShaderBuffer.GetAddressOf(), errorMessage.GetAddressOf());
 		if (FAILED(result)) {
 			if (errorMessage) {
 				logError(errorMessage.Get());
@@ -82,7 +82,7 @@ namespace rcore {
 			return false;
 		}
 
-		result = D3D11Device::get().raw()->CreateInputLayout(inputDescription.data(), inputDescription.size(), vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), m_inputLayout.GetAddressOf());
+		result = D3D11Device::get().raw()->CreateInputLayout(inputDescription.data(), static_cast<UINT>(inputDescription.size()), vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), m_inputLayout.GetAddressOf());
 		if (FAILED(result)) {
 			RCORE_LOG(ERR, "Failed to create input layout from input description");
 			return false;

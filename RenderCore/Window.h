@@ -9,7 +9,7 @@
 
 namespace rcore {
 
-  class Window {
+  class Window : public std::enable_shared_from_this<Window> {
   public:
     Window(WindowDesc const& descriptor);
 
@@ -28,6 +28,8 @@ namespace rcore {
     HWND getHandle() const;
     std::pair<int, int> getSize() const;
     IDXGISwapChain* getSwapChain() const;
+    ID3D11RenderTargetView* getRenderTargetView() const;
+    ID3D11DepthStencilView* getDepthStencilView() const;
 
     template<std::derived_from<Layer> T>
     void addLayer();

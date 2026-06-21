@@ -14,6 +14,7 @@ namespace rcore {
 
   public:
     void activate();
+    void presentSwapChain() const;
 
   private:
     bool createSwapChain(std::pair<int, int> windowSize, HWND windowHandle, int targetFps);

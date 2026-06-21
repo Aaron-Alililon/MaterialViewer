@@ -1,4 +1,0 @@
-Sat Jun 13 14:26:33 2026 | Error   | bool __cdecl rcore::D3D11Context::createDepthBuffer(const struct D3D11_TEXTURE2D_DESC &,const struct D3D11_DEPTH_STENCIL_DESC &,const struct D3D11_DEPTH_STENCIL_VIEW_DESC &) (109) | Failed to create depth stencil buffer
-Sat Jun 13 14:26:33 2026 | Error   | __cdecl rcore::D3D11Context::D3D11Context(const class std::shared_ptr<class rcore::Window> &,const class rcore::D3DContextDesc &) (17) | Failed to create D3D11Context
-Sat Jun 13 14:27:06 2026 | Error   | bool __cdecl rcore::D3D11Context::createDepthBuffer(const struct D3D11_TEXTURE2D_DESC &,const struct D3D11_DEPTH_STENCIL_DESC &,const struct D3D11_DEPTH_STENCIL_VIEW_DESC &) (109) | Failed to create depth stencil buffer
-Sat Jun 13 14:27:06 2026 | Error   | __cdecl rcore::D3D11Context::D3D11Context(const class std::shared_ptr<class rcore::Window> &,const class rcore::D3DContextDesc &) (17) | Failed to create D3D11Context

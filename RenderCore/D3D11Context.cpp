@@ -30,6 +30,12 @@ namespace rcore {
 		deviceContext->RSSetViewports(1, &m_viewport);
 	}
 
+	void D3D11Context::presentSwapChain() const {
+		if (!m_valid) return;
+
+		m_swapChain->Present(1, 0);
+	}
+
 	bool D3D11Context::createSwapChain(std::pair<int, int> windowSize, HWND windowHandle, int targetFps) {
 		HRESULT result;
 		DXGI_SWAP_CHAIN_DESC swapChainDesc;

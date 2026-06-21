@@ -3,12 +3,30 @@
 
 #include "Layer.h"
 #include "Rcore.h"
+#include "Shader.h"
 
 class EditorLayer : public rcore::Layer {
+
+  struct __declspec(align(16)) VertexType {
+    DirectX::XMFLOAT4 position;
+    DirectX::XMFLOAT4 color;
+  };
+
 public:
-  virtual void setup() override;
+  EditorLayer(std::weak_ptr<rcore::Window> window);
+
+public:
   virtual void update(rcore::FrameState const& frame) override;
   virtual void render(rcore::FrameState const& frame) override;
+
+private:
+  void createVertexBuffer();
+  void createIndexBuffer();
+
+private:
+  rcore::Shader m_shader;
+  Microsoft::WRL::ComPtr<ID3D11Buffer> m_vertexBuffer;
+  Microsoft::WRL::ComPtr<ID3D11Buffer> m_indexBuffer;
 };
 
 #endif
