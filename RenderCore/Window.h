@@ -31,8 +31,8 @@ namespace rcore {
     ID3D11RenderTargetView* getRenderTargetView() const;
     ID3D11DepthStencilView* getDepthStencilView() const;
 
-    template<std::derived_from<Layer> T>
-    void addLayer();
+    template<std::derived_from<Layer> T, class... Args>
+    void addLayer(Args... args);
 
   private:
     WindowsInterface m_winInterface;

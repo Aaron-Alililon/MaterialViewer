@@ -13,7 +13,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
   rcore::D3DContextDesc ctxDesc = getContextDesc(windDesc.width(), windDesc.height());
   rcore::makeD3D11Context(mainWindow, ctxDesc);
 
-  mainWindow.lock()->addLayer<EditorLayer>();
+  mainWindow.lock()->addLayer<EditorLayer>(ctxDesc);
 
   rcore::init();
 }

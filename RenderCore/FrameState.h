@@ -4,6 +4,8 @@
 namespace rcore {
 
   struct FrameState {
+    int width = 1;
+    int height = 1;
     int frameCount = 0;
     double dTime = 0;
   };

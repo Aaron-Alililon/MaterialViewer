@@ -1,6 +1,6 @@
 #include "EditorLayer.h"
 
-EditorLayer::EditorLayer(std::weak_ptr<rcore::Window> window) : Layer(window) {
+EditorLayer::EditorLayer(std::weak_ptr<rcore::Window> window, rcore::D3DContextDesc contextDesc) : Layer(window), m_ctxDesc{ contextDesc } {
   std::vector<D3D11_INPUT_ELEMENT_DESC> inputDesc(2);
 
   inputDesc[0].SemanticName = "POSITION";
@@ -60,10 +60,10 @@ void EditorLayer::render(rcore::FrameState const& frame) {
   m_matrixBuffer.setMatrices({
     transform.getWorldMatrix(),
     DirectX::XMMatrixLookAtLH(
-      DirectX::XMVectorSet(0.0f, 0.0f, -10.0f, 1.0f),
-      DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f),
-      DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f)),
-    DirectX::XMMatrixPerspectiveFovLH(3.141592654f / 4.0f, 1, 0.3f, 1000.0f)
+      DirectX::XMVectorSet(0.0f, 0.0f, -10.0f, 1.0f), //
+      DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f),   //  Camera
+      DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f)),  //
+    DirectX::XMMatrixPerspectiveFovLH(m_ctxDesc.fov(), (float)frame.width / frame.height, m_ctxDesc.nearPlane(), m_ctxDesc.farPlane())
   });
 
   UINT indexCount = m_SIVBuffer.bind();

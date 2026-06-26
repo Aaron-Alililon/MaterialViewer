@@ -26,6 +26,8 @@ namespace rcore {
   void Window::startFrame() {
     if (!m_context) return;
 
+    m_frameState.width = m_width;
+    m_frameState.height = m_height;
     m_context->activate();
   }
 

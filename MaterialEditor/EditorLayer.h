@@ -17,13 +17,14 @@ class EditorLayer : public rcore::Layer {
   };
 
 public:
-  EditorLayer(std::weak_ptr<rcore::Window> window);
+  EditorLayer(std::weak_ptr<rcore::Window> window, rcore::D3DContextDesc contextDesc);
 
 public:
   virtual void update(rcore::FrameState const& frame) override;
   virtual void render(rcore::FrameState const& frame) override;
 
 private:
+  rcore::D3DContextDesc m_ctxDesc;
   rcore::Shader m_shader;
   rcore::StaticIndexedVertexBuffer<VertexType> m_SIVBuffer;
   rcore::MatrixBuffer m_matrixBuffer;
