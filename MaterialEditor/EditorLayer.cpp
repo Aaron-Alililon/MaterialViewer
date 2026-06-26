@@ -49,7 +49,7 @@ void EditorLayer::render(rcore::FrameState const& frame) {
   auto window = m_window.lock();
   if (!window) return;
 
-  float bgCol[] = { 0.0f, 0.0f, 0.0f, 1.0f };
+  float bgCol[] = { 0.1f, 0.15f, 0.2f, 1.0f };
   rcore::D3D11Device::get().rawContext()->ClearRenderTargetView(window->getRenderTargetView(), bgCol);
   rcore::D3D11Device::get().rawContext()->ClearDepthStencilView(window->getDepthStencilView(), D3D11_CLEAR_DEPTH, 1.0f, 0);
 
@@ -64,7 +64,7 @@ void EditorLayer::setMatrixBuffer() {
   HRESULT result;
 
   DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixIdentity();
-  DirectX::XMMATRIX viewMatrix = DirectX::XMMatrixLookAtLH(DirectX::XMVectorSet(0.0f, 0.0f, -15.0f, 0.0f), DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f), DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f));
+  DirectX::XMMATRIX viewMatrix = DirectX::XMMatrixLookAtLH(DirectX::XMVectorSet(0.0f, 0.0f, -5.0f, 0.0f), DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f), DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f));
   DirectX::XMMATRIX projectionMatrix = DirectX::XMMatrixPerspectiveFovLH(3.141592654f / 4.0f, 1, 0.3f, 1000.0f);
 
   worldMatrix = XMMatrixTranspose(worldMatrix);
