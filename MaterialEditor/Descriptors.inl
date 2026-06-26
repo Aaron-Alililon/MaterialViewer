@@ -63,7 +63,7 @@ static rcore::D3DContextDesc getContextDesc(int screenWidth, int screenHeight) {
   ctxDesc.depthStencilDesc(depthStencilDesc);
   ctxDesc.depthStencilViewDesc(depthStencilViewDesc);
   ctxDesc.rasterDesc(rasterDesc);
-  ctxDesc.targetFps(144);
+  ctxDesc.targetFps(60);
 
   return ctxDesc;
 }

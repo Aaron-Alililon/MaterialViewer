@@ -61,7 +61,7 @@ void EditorLayer::render(rcore::FrameState const& frame) {
     transform.getWorldMatrix(),
     DirectX::XMMatrixLookAtLH(
       DirectX::XMVectorSet(0.0f, 0.0f, -10.0f, 1.0f), //
-      DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f),   //  Camera
+      DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f),   //  TODO Camera
       DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f)),  //
     DirectX::XMMatrixPerspectiveFovLH(m_ctxDesc.fov(), (float)frame.width / frame.height, m_ctxDesc.nearPlane(), m_ctxDesc.farPlane())
   });
@@ -69,4 +69,8 @@ void EditorLayer::render(rcore::FrameState const& frame) {
   UINT indexCount = m_SIVBuffer.bind();
   rcore::D3D11Device::get().rawContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
   rcore::D3D11Device::get().rawContext()->DrawIndexed(indexCount, 0, 0);
+
+  std::ostringstream strs;
+  strs << frame.dTime;
+  RCORE_LOG(rcore::INFO, strs.str());
 }

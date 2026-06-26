@@ -8,8 +8,13 @@ namespace rcore {
     m_context{ nullptr },
     m_frameState{},
     m_width{ descriptor.width() },
-    m_height{ descriptor.height() }
-  {}
+    m_height{ descriptor.height() },
+    m_lastFrameTime{ 0 },
+    m_frequency{ 0 }
+  {
+    QueryPerformanceFrequency(&m_frequency);
+    QueryPerformanceCounter(&m_lastFrameTime);
+  }
 
   bool Window::readMessages() const {
     return m_winInterface.readMessages();
@@ -49,6 +54,11 @@ namespace rcore {
 
   void Window::endFrame() {
     if (!m_context) return;
+
+    LARGE_INTEGER now;
+    QueryPerformanceCounter(&now);
+    m_frameState.dTime = (double)(now.QuadPart - m_lastFrameTime.QuadPart) / m_frequency.QuadPart;
+    m_lastFrameTime = now;
 
     m_frameState.frameCount++;
     m_context->presentSwapChain();

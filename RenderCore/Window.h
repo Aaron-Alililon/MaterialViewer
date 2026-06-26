@@ -32,7 +32,7 @@ namespace rcore {
     ID3D11DepthStencilView* getDepthStencilView() const;
 
     template<std::derived_from<Layer> T, class... Args>
-    void addLayer(Args... args);
+    void addLayer(Args&&... args);
 
   private:
     WindowsInterface m_winInterface;
@@ -40,6 +40,8 @@ namespace rcore {
     std::vector<std::unique_ptr<Layer>> m_layers;
     FrameState m_frameState;
     int m_width, m_height;
+    LARGE_INTEGER m_lastFrameTime;
+    LARGE_INTEGER m_frequency;
   };
 
 }

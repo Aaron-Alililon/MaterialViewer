@@ -3,7 +3,29 @@
 
 namespace rcore {
 
-	Mesh MeshLoader::load(std::string file) {
+	std::vector<std::string> split(std::string const& text, char sep) {
+		std::vector<std::string> out;
+		std::stringstream textPart;
+
+		for (char c : text) {
+			if (c == sep) {
+				if (textPart.str().empty()) continue;
+
+				out.push_back(textPart.str());
+				textPart = std::stringstream{};
+			} else {
+				textPart << c;
+			}
+		}
+
+		if (!textPart.str().empty() || out.empty()) {
+			out.push_back(textPart.str());
+		}
+
+		return out;
+	}
+
+	Mesh MeshLoader::load(std::string const& file) {
 		bool vertexCountSet = false, indexCountSet = false;
 
 		std::vector<DirectX::XMFLOAT4> verts;
@@ -146,35 +168,13 @@ namespace rcore {
 		return mesh;
 	}
 
-	MeshLoader::ModelDataType MeshLoader::strToMDT(std::string input) {
-		if (input == "v") return ModelDataType::vertex;
-		if (input == "vt") return ModelDataType::texture;
-		if (input == "vn") return ModelDataType::normal;
-		if (input == "f") return ModelDataType::face;
+	MeshLoader::ModelDataType MeshLoader::strToMDT(std::string const& type) {
+		if (type == "v") return ModelDataType::vertex;
+		if (type == "vt") return ModelDataType::texture;
+		if (type == "vn") return ModelDataType::normal;
+		if (type == "f") return ModelDataType::face;
 
 		return ModelDataType::notSupported;
-	}
-
-	std::vector<std::string> split(std::string const& text, char sep) {
-		std::vector<std::string> out;
-		std::stringstream textPart;
-
-		for (char c : text) {
-			if (c == sep) {
-				if (textPart.str().empty()) continue;
-
-				out.push_back(textPart.str());
-				textPart = std::stringstream{};
-			} else {
-				textPart << c;
-			}
-		}
-
-		if (!textPart.str().empty() || out.empty()) {
-			out.push_back(textPart.str());
-		}
-
-		return out;
 	}
 
 }

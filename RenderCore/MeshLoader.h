@@ -15,14 +15,15 @@ namespace rcore {
 			notSupported
 		};
 
+	public:
+		MeshLoader() = delete;
+
   public:
-    static Mesh load(std::string file);
+    static Mesh load(std::string const& file);
 
 	private:
-		static ModelDataType strToMDT(std::string);
+		static ModelDataType strToMDT(std::string const& type);
   };
-
-  std::vector<std::string> split(std::string const& text, char sep);
 
 }
 

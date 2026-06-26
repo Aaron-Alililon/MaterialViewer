@@ -46,7 +46,7 @@ namespace rcore {
 		swapChainDesc.BufferDesc.Width = windowSize.first;
 		swapChainDesc.BufferDesc.Height = windowSize.second;
 		swapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-		swapChainDesc.BufferDesc.RefreshRate.Numerator = targetFps;
+		swapChainDesc.BufferDesc.RefreshRate.Numerator = targetFps; // TODO this only affects reporting, need to implement own frame limiting
 		swapChainDesc.BufferDesc.RefreshRate.Denominator = 1;
 		swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 		swapChainDesc.OutputWindow = windowHandle;

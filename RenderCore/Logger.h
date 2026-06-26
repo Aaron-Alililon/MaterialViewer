@@ -1,13 +1,7 @@
 #ifndef LOGGER_H
 #define LOGGER_H
 
-#include <string>
-#include <iostream>
-#include <fstream>
-#include <chrono>
-#include <ctime>
-
-#define RCORE_LOG(level, msg) Logger::log(level, msg, __FUNCSIG__, __LINE__)
+#define RCORE_LOG(level, msg) rcore::Logger::log(level, msg, __FUNCSIG__, __LINE__)
 
 namespace rcore {
 
