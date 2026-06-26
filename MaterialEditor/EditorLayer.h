@@ -5,6 +5,7 @@
 #include "Rcore.h"
 #include "Shader.h"
 #include "StaticIndexedVertexBuffer.h"
+#include "MatrixBuffer.h"
 #include "MeshLoader.h"
 
 class EditorLayer : public rcore::Layer {
@@ -12,12 +13,6 @@ class EditorLayer : public rcore::Layer {
   struct __declspec(align(16)) VertexType {
     DirectX::XMFLOAT4 position;
     DirectX::XMFLOAT3 normal;
-  };
-
-  struct __declspec(align(16)) MatrixBufferType {
-    DirectX::XMMATRIX world;
-    DirectX::XMMATRIX view;
-    DirectX::XMMATRIX projection;
   };
 
 public:
@@ -28,13 +23,9 @@ public:
   virtual void render(rcore::FrameState const& frame) override;
 
 private:
-  void setMatrixBuffer();
-  void createMatrixBuffer();
-
-private:
   rcore::Shader m_shader;
-  Microsoft::WRL::ComPtr<ID3D11Buffer> m_matrixBuffer;
   rcore::StaticIndexedVertexBuffer<VertexType> m_SIVBuffer;
+  rcore::MatrixBuffer m_matrixBuffer;
 };
 
 #endif

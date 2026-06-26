@@ -16,7 +16,7 @@ static rcore::D3DContextDesc getContextDesc(int screenWidth, int screenHeight) {
   depthBufferDesc.MipLevels = 1;
   depthBufferDesc.ArraySize = 1;
   depthBufferDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-  depthBufferDesc.SampleDesc.Count = 1;
+  depthBufferDesc.SampleDesc.Count = 4; // 1 if no MSAA
   depthBufferDesc.SampleDesc.Quality = 0;
   depthBufferDesc.Usage = D3D11_USAGE_DEFAULT;
   depthBufferDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
@@ -43,7 +43,7 @@ static rcore::D3DContextDesc getContextDesc(int screenWidth, int screenHeight) {
   D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc{};
   ZeroMemory(&depthStencilViewDesc, sizeof(depthStencilViewDesc));
   depthStencilViewDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-  depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+  depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DMS; // D3D11_DSV_DIMENSION_TEXTURE2D if no MSAA
   depthStencilViewDesc.Texture2D.MipSlice = 0;
 
   D3D11_RASTERIZER_DESC rasterDesc{};
@@ -54,7 +54,7 @@ static rcore::D3DContextDesc getContextDesc(int screenWidth, int screenHeight) {
   rasterDesc.DepthClipEnable = true;
   rasterDesc.FillMode = D3D11_FILL_SOLID;
   rasterDesc.FrontCounterClockwise = false;
-  rasterDesc.MultisampleEnable = false;
+  rasterDesc.MultisampleEnable = true; // false if no MSAA
   rasterDesc.ScissorEnable = false;
   rasterDesc.SlopeScaledDepthBias = 0.0f;
 

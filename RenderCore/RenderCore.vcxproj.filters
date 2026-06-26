@@ -55,6 +55,12 @@
     <Filter Include="Source Files\Model">
       <UniqueIdentifier>{66ca9517-9dbb-4cef-a61a-9acf6ec83eb1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\D3D11\Buffers">
+      <UniqueIdentifier>{bd367f25-7c9b-4ea2-8809-078148591461}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\D3D11\Buffers">
+      <UniqueIdentifier>{ce7d793a-e1ed-4a03-9991-085aeb12289f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine.h">
@@ -108,14 +114,17 @@
     <ClInclude Include="Shader.h">
       <Filter>Header Files\Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="StaticIndexedVertexBuffer.h">
-      <Filter>Header Files\Rendering</Filter>
-    </ClInclude>
     <ClInclude Include="MeshLoader.h">
       <Filter>Header Files\Model</Filter>
     </ClInclude>
     <ClInclude Include="Mesh.h">
       <Filter>Header Files\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticIndexedVertexBuffer.h">
+      <Filter>Header Files\D3D11\Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="MatrixBuffer.h">
+      <Filter>Header Files\D3D11\Buffers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -164,10 +173,13 @@
     <ClCompile Include="MeshLoader.cpp">
       <Filter>Source Files\Model</Filter>
     </ClCompile>
+    <ClCompile Include="MatrixBuffer.cpp">
+      <Filter>Source Files\D3D11\Buffers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="StaticIndexedVertexBuffer.inl">
-      <Filter>Header Files\Rendering</Filter>
+      <Filter>Header Files\D3D11\Buffers</Filter>
     </None>
   </ItemGroup>
 </Project>
