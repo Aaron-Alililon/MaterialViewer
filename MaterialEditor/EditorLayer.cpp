@@ -69,8 +69,4 @@ void EditorLayer::render(rcore::FrameState const& frame) {
   UINT indexCount = m_SIVBuffer.bind();
   rcore::D3D11Device::get().rawContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
   rcore::D3D11Device::get().rawContext()->DrawIndexed(indexCount, 0, 0);
-
-  std::ostringstream strs;
-  strs << frame.dTime;
-  RCORE_LOG(rcore::INFO, strs.str());
 }
