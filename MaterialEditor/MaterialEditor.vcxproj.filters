@@ -16,6 +16,9 @@
     <Filter Include="Source Files\Shaders">
       <UniqueIdentifier>{45960ea3-9ea5-4a04-a7fe-f1283467a8cd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\models">
+      <UniqueIdentifier>{4b423637-2c6d-4145-8b81-3bd806a567f7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MaterialEditor.cpp">
@@ -44,6 +47,9 @@
     </None>
     <None Include="VertexShader.hlsl">
       <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="models\sphere.obj">
+      <Filter>Resource Files\models</Filter>
     </None>
   </ItemGroup>
 </Project>

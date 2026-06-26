@@ -98,6 +98,9 @@ StyleCopReport.xml
 *.svclog
 *.scc
 
+# Allow models to be loaded
+!MaterialEditor/models/*.obj
+
 # Chutzpah Test files
 _Chutzpah*
 

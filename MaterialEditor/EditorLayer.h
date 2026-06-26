@@ -4,12 +4,14 @@
 #include "Layer.h"
 #include "Rcore.h"
 #include "Shader.h"
+#include "StaticIndexedVertexBuffer.h"
+#include "MeshLoader.h"
 
 class EditorLayer : public rcore::Layer {
 
   struct __declspec(align(16)) VertexType {
     DirectX::XMFLOAT4 position;
-    DirectX::XMFLOAT4 color;
+    DirectX::XMFLOAT3 normal;
   };
 
   struct __declspec(align(16)) MatrixBufferType {
@@ -28,14 +30,11 @@ public:
 private:
   void setMatrixBuffer();
   void createMatrixBuffer();
-  void createVertexBuffer();
-  void createIndexBuffer();
 
 private:
   rcore::Shader m_shader;
   Microsoft::WRL::ComPtr<ID3D11Buffer> m_matrixBuffer;
-  Microsoft::WRL::ComPtr<ID3D11Buffer> m_vertexBuffer;
-  Microsoft::WRL::ComPtr<ID3D11Buffer> m_indexBuffer;
+  rcore::StaticIndexedVertexBuffer<VertexType> m_SIVBuffer;
 };
 
 #endif

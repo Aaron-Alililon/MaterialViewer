@@ -49,6 +49,12 @@
     <Filter Include="Source Files\D3D11">
       <UniqueIdentifier>{ecba93fc-ebce-4fd8-9ade-bd4f17a07413}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Model">
+      <UniqueIdentifier>{509dbe25-9f46-4800-9bdd-7868bac67ac6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Model">
+      <UniqueIdentifier>{66ca9517-9dbb-4cef-a61a-9acf6ec83eb1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine.h">
@@ -102,6 +108,15 @@
     <ClInclude Include="Shader.h">
       <Filter>Header Files\Rendering</Filter>
     </ClInclude>
+    <ClInclude Include="StaticIndexedVertexBuffer.h">
+      <Filter>Header Files\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshLoader.h">
+      <Filter>Header Files\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>Header Files\Model</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp">
@@ -146,5 +161,13 @@
     <ClCompile Include="Layer.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
+    <ClCompile Include="MeshLoader.cpp">
+      <Filter>Source Files\Model</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="StaticIndexedVertexBuffer.inl">
+      <Filter>Header Files\Rendering</Filter>
+    </None>
   </ItemGroup>
 </Project>

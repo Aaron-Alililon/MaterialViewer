@@ -43,7 +43,7 @@ namespace rcore {
 			if (errorMessage) {
 				logError(errorMessage.Get());
 			} else {
-				std::string narrowVertexFile(m_vertexFile.begin(), m_vertexFile.end());
+				std::string narrowVertexFile = std::filesystem::path(m_vertexFile).string();
 				RCORE_LOG(ERR, "Could not find vertex shader file: " + narrowVertexFile);
 			}
 
@@ -59,7 +59,7 @@ namespace rcore {
 			if (errorMessage) {
 				logError(errorMessage.Get());
 			} else {
-				std::string narrowPixelFile(m_pixelFile.begin(), m_pixelFile.end());
+				std::string narrowPixelFile = std::filesystem::path(m_pixelFile).string();
 				RCORE_LOG(ERR, "Could not find pixel shader file: " + narrowPixelFile);
 			}
 

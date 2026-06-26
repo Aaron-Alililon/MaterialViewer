@@ -3,9 +3,12 @@
 
 #include <concepts>
 #include <vector>
+#include <array>
 #include <memory>
 #include <algorithm>
 #include <queue>
+#include <filesystem>
+#include <fstream>
 
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>

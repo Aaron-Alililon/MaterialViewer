@@ -6,12 +6,12 @@ cbuffer MatrixBuffer {
 
 struct VertexInputType {
     float4 position : POSITION;
-    float4 color : COLOR;
+    float3 normal : NORMAL;
 };
 
 struct PixelInputType {
     float4 position : SV_POSITION;
-    float4 color : COLOR;
+    float3 normal : NORMAL;
 };
 
 PixelInputType VSMain(VertexInputType input) {
@@ -22,8 +22,8 @@ PixelInputType VSMain(VertexInputType input) {
     output.position = mul(input.position, worldMatrix);
     output.position = mul(output.position, viewMatrix);
     output.position = mul(output.position, projectionMatrix);
-
-    output.color = input.color;
+    
+    output.normal = input.normal;
     
     return output;
 }

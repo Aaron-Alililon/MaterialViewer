@@ -11,9 +11,9 @@ EditorLayer::EditorLayer(std::weak_ptr<rcore::Window> window) : Layer(window) {
   inputDesc[0].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
   inputDesc[0].InstanceDataStepRate = 0;
 
-  inputDesc[1].SemanticName = "COLOR";
+  inputDesc[1].SemanticName = "NORMAL";
   inputDesc[1].SemanticIndex = 0;
-  inputDesc[1].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+  inputDesc[1].Format = DXGI_FORMAT_R32G32B32_FLOAT;
   inputDesc[1].InputSlot = 0;
   inputDesc[1].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
   inputDesc[1].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
@@ -22,8 +22,21 @@ EditorLayer::EditorLayer(std::weak_ptr<rcore::Window> window) : Layer(window) {
   m_shader = { L"VertexShader.hlsl", L"PixelShader.hlsl", inputDesc };
 
   createMatrixBuffer();
-  createVertexBuffer();
-  createIndexBuffer();
+
+  rcore::Mesh sphere = rcore::MeshLoader::load("models/sphere.obj");
+  std::vector<VertexType> verts;
+  std::vector<UINT> indices;
+
+  for (size_t i = 0; i < sphere.vertices.size(); i++) {
+    verts.push_back({
+      sphere.vertices.at(i),
+      sphere.normals.at(i)
+    });
+
+    indices.push_back(static_cast<UINT>(i));
+  }
+
+  m_SIVBuffer.createBuffers(verts, indices);
 }
 
 void EditorLayer::update(rcore::FrameState const& frame) {
@@ -36,20 +49,14 @@ void EditorLayer::render(rcore::FrameState const& frame) {
   auto window = m_window.lock();
   if (!window) return;
 
-  float bgCol[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+  float bgCol[] = { 0.0f, 0.0f, 0.0f, 1.0f };
   rcore::D3D11Device::get().rawContext()->ClearRenderTargetView(window->getRenderTargetView(), bgCol);
   rcore::D3D11Device::get().rawContext()->ClearDepthStencilView(window->getDepthStencilView(), D3D11_CLEAR_DEPTH, 1.0f, 0);
 
   setMatrixBuffer();
 
-  UINT stride = sizeof(VertexType);
-  UINT offset = 0;
-  UINT indexCount = 3;
-
-  rcore::D3D11Device::get().rawContext()->IASetVertexBuffers(0, 1, m_vertexBuffer.GetAddressOf(), &stride, &offset);
-  rcore::D3D11Device::get().rawContext()->IASetIndexBuffer(m_indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+  UINT indexCount = m_SIVBuffer.bind();
   rcore::D3D11Device::get().rawContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
   rcore::D3D11Device::get().rawContext()->DrawIndexed(indexCount, 0, 0);
 }
 
@@ -57,7 +64,7 @@ void EditorLayer::setMatrixBuffer() {
   HRESULT result;
 
   DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixIdentity();
-  DirectX::XMMATRIX viewMatrix = DirectX::XMMatrixLookAtLH(DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f), DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f), DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f));
+  DirectX::XMMATRIX viewMatrix = DirectX::XMMatrixLookAtLH(DirectX::XMVectorSet(0.0f, 0.0f, -15.0f, 0.0f), DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f), DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f));
   DirectX::XMMATRIX projectionMatrix = DirectX::XMMatrixPerspectiveFovLH(3.141592654f / 4.0f, 1, 0.3f, 1000.0f);
 
   worldMatrix = XMMatrixTranspose(worldMatrix);
@@ -94,56 +101,6 @@ void EditorLayer::createMatrixBuffer() {
   matrixBufferDesc.StructureByteStride = 0;
 
   result = rcore::D3D11Device::get().raw()->CreateBuffer(&matrixBufferDesc, NULL, &m_matrixBuffer);
-  if (FAILED(result)) {
-    return;
-  }
-}
-
-void EditorLayer::createVertexBuffer() {
-  HRESULT result;
-
-  D3D11_BUFFER_DESC vertexBufferDesc{};
-  vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-  vertexBufferDesc.ByteWidth = sizeof(VertexType) * 3;
-  vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-  vertexBufferDesc.CPUAccessFlags = 0;
-  vertexBufferDesc.MiscFlags = 0;
-  vertexBufferDesc.StructureByteStride = 0;
-
-  D3D11_SUBRESOURCE_DATA vertexData{};
-  VertexType vertices[] = {
-    {{ 0.0f,  0.5f, 5.0f, 1.0f}, {1.0f, 0.0f, 0.0f, 1.0f}},
-    {{ 0.5f, -0.5f, 5.0f, 1.0f}, {0.0f, 1.0f, 0.0f, 1.0f}},
-    {{-0.5f, -0.5f, 5.0f, 1.0f}, {0.0f, 0.0f, 1.0f, 1.0f}}
-  };
-  vertexData.pSysMem = vertices;
-  vertexData.SysMemPitch = 0;
-  vertexData.SysMemSlicePitch = 0;
-
-  result = rcore::D3D11Device::get().raw()->CreateBuffer(&vertexBufferDesc, &vertexData, &m_vertexBuffer);
-  if (FAILED(result)) {
-    return;
-  }
-}
-
-void EditorLayer::createIndexBuffer() {
-  HRESULT result;
-
-  D3D11_BUFFER_DESC indexBufferDesc{};
-  indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-  indexBufferDesc.ByteWidth = sizeof(unsigned long) * 3;
-  indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-  indexBufferDesc.CPUAccessFlags = 0;
-  indexBufferDesc.MiscFlags = 0;
-  indexBufferDesc.StructureByteStride = 0;
-
-  D3D11_SUBRESOURCE_DATA indexData{};
-  unsigned int indices[] = { 0, 1, 2 };
-  indexData.pSysMem = indices;
-  indexData.SysMemPitch = 0;
-  indexData.SysMemSlicePitch = 0;
-
-  result = rcore::D3D11Device::get().raw()->CreateBuffer(&indexBufferDesc, &indexData, m_indexBuffer.GetAddressOf());
   if (FAILED(result)) {
     return;
   }
