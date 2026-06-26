@@ -7,6 +7,7 @@
 #include "StaticIndexedVertexBuffer.h"
 #include "MatrixBuffer.h"
 #include "MeshLoader.h"
+#include "Transform.h"
 
 class EditorLayer : public rcore::Layer {
 

@@ -11,6 +11,7 @@ namespace rcore {
       DirectX::XMMATRIX world;
       DirectX::XMMATRIX view;
       DirectX::XMMATRIX projection;
+      DirectX::XMMATRIX worldInverseTranspose;
     };
 
   public:

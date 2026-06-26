@@ -12,10 +12,6 @@ namespace rcore {
   bool MatrixBuffer::setMatrices(MatrixBufferType const& matrices, UINT startSlot) const {
     HRESULT result;
 
-    DirectX::XMMATRIX worldMatrix = XMMatrixTranspose(matrices.world);
-    DirectX::XMMATRIX viewMatrix = XMMatrixTranspose(matrices.view);
-    DirectX::XMMATRIX projectionMatrix = XMMatrixTranspose(matrices.projection);
-
     D3D11_MAPPED_SUBRESOURCE mappedResource;
     result = D3D11Device::get().rawContext()->Map(m_matrixBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
     if (FAILED(result)) {
@@ -25,9 +21,10 @@ namespace rcore {
 
     MatrixBufferType* dataPtr = (MatrixBufferType*)mappedResource.pData;
 
-    dataPtr->world = worldMatrix;
-    dataPtr->view = viewMatrix;
-    dataPtr->projection = projectionMatrix;
+    dataPtr->world = XMMatrixTranspose(matrices.world);
+    dataPtr->view = XMMatrixTranspose(matrices.view);
+    dataPtr->projection = XMMatrixTranspose(matrices.projection);
+    dataPtr->worldInverseTranspose = XMMatrixInverse(nullptr, matrices.world);
 
     D3D11Device::get().rawContext()->Unmap(m_matrixBuffer.Get(), 0);
 

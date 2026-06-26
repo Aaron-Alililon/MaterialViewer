@@ -126,6 +126,9 @@
     <ClInclude Include="MatrixBuffer.h">
       <Filter>Header Files\D3D11\Buffers</Filter>
     </ClInclude>
+    <ClInclude Include="Transform.h">
+      <Filter>Header Files\Model</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp">
@@ -175,6 +178,9 @@
     </ClCompile>
     <ClCompile Include="MatrixBuffer.cpp">
       <Filter>Source Files\D3D11\Buffers</Filter>
+    </ClCompile>
+    <ClCompile Include="Transform.cpp">
+      <Filter>Source Files\Model</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

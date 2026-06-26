@@ -51,10 +51,16 @@ void EditorLayer::render(rcore::FrameState const& frame) {
   rcore::D3D11Device::get().rawContext()->ClearRenderTargetView(window->getRenderTargetView(), bgCol);
   rcore::D3D11Device::get().rawContext()->ClearDepthStencilView(window->getDepthStencilView(), D3D11_CLEAR_DEPTH, 1.0f, 0);
 
+  rcore::Transform transform{
+    { 0, 0, 0 },
+    { 0, frame.frameCount * 0.01f, 0 },
+    { 2, 2, 1 }
+  };
+
   m_matrixBuffer.setMatrices({
-    DirectX::XMMatrixIdentity(),
+    transform.getWorldMatrix(),
     DirectX::XMMatrixLookAtLH(
-      DirectX::XMVectorSet(sin(frame.frameCount / 100.0f) * 10.0f, 0.0f, cos(frame.frameCount / 100.0f) * 10.0f, 1.0f),
+      DirectX::XMVectorSet(0.0f, 0.0f, -10.0f, 1.0f),
       DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f),
       DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f)),
     DirectX::XMMatrixPerspectiveFovLH(3.141592654f / 4.0f, 1, 0.3f, 1000.0f)

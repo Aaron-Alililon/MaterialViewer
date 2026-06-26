@@ -2,6 +2,7 @@ cbuffer MatrixBuffer {
     matrix worldMatrix;
     matrix viewMatrix;
     matrix projectionMatrix;
+    matrix worldInverseTranspose;
 };
 
 struct VertexInputType {
@@ -23,7 +24,7 @@ PixelInputType VSMain(VertexInputType input) {
     output.position = mul(output.position, viewMatrix);
     output.position = mul(output.position, projectionMatrix);
     
-    output.normal = input.normal;
+    output.normal = mul(input.normal, (float3x3) worldInverseTranspose);
     
     return output;
 }

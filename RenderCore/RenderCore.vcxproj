@@ -36,6 +36,7 @@
     <ClInclude Include="Renderer3D.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="StaticIndexedVertexBuffer.h" />
+    <ClInclude Include="Transform.h" />
     <ClInclude Include="Window.h" />
     <ClInclude Include="WindowDesc.h" />
     <ClInclude Include="WindowsInterface.h" />
@@ -59,6 +60,7 @@
     </ClCompile>
     <ClCompile Include="Renderer3D.cpp" />
     <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="Transform.cpp" />
     <ClCompile Include="Window.cpp" />
     <ClCompile Include="WindowDesc.cpp" />
     <ClCompile Include="WindowsInterface.cpp" />
