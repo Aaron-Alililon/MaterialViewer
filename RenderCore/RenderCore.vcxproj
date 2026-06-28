@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="D3D11Context.h" />
     <ClInclude Include="D3D11Device.h" />
     <ClInclude Include="D3DContextDesc.h" />
@@ -42,6 +43,7 @@
     <ClInclude Include="WindowsInterface.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="D3D11Context.cpp" />
     <ClCompile Include="D3D11Device.cpp" />
     <ClCompile Include="D3DContextDesc.cpp" />

@@ -8,6 +8,7 @@
 #include "MatrixBuffer.h"
 #include "MeshLoader.h"
 #include "Transform.h"
+#include "Camera.h"
 
 class EditorLayer : public rcore::Layer {
 
@@ -26,6 +27,7 @@ public:
 private:
   rcore::D3DContextDesc m_ctxDesc;
   rcore::Shader m_shader;
+  rcore::Camera m_cam;
   rcore::StaticIndexedVertexBuffer<VertexType> m_SIVBuffer;
   rcore::MatrixBuffer m_matrixBuffer;
 };

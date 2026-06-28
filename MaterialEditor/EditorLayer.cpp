@@ -21,6 +21,8 @@ EditorLayer::EditorLayer(std::weak_ptr<rcore::Window> window, rcore::D3DContextD
 
   m_shader = { L"VertexShader.hlsl", L"PixelShader.hlsl", inputDesc };
 
+  m_cam = { 0, 0, -10 };
+
   rcore::Mesh sphere = rcore::MeshLoader::load("models/sphere.obj");
   std::vector<VertexType> verts;
   std::vector<UINT> indices;
@@ -38,7 +40,8 @@ EditorLayer::EditorLayer(std::weak_ptr<rcore::Window> window, rcore::D3DContextD
 }
 
 void EditorLayer::update(rcore::FrameState const& frame) {
-  
+  m_matrixBuffer.setProjectionMatrix(m_cam.getPerspectiveMatrix((float)frame.width / frame.height));
+  m_matrixBuffer.setViewMatrix(m_cam.getViewMatrix());
 }
 
 void EditorLayer::render(rcore::FrameState const& frame) {
@@ -51,22 +54,18 @@ void EditorLayer::render(rcore::FrameState const& frame) {
   rcore::D3D11Device::get().rawContext()->ClearRenderTargetView(window->getRenderTargetView(), bgCol);
   rcore::D3D11Device::get().rawContext()->ClearDepthStencilView(window->getDepthStencilView(), D3D11_CLEAR_DEPTH, 1.0f, 0);
 
+  // --- Move to model class ---
   rcore::Transform transform{
     { 0, 0, 0 },
     { 0, frame.frameCount * 0.01f, 0 },
     { 2, 2, 1 }
   };
 
-  m_matrixBuffer.setMatrices({
-    transform.getWorldMatrix(),
-    DirectX::XMMatrixLookAtLH(
-      DirectX::XMVectorSet(0.0f, 0.0f, -10.0f, 1.0f), //
-      DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f),   //  TODO Camera
-      DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f)),  //
-    DirectX::XMMatrixPerspectiveFovLH(m_ctxDesc.fov(), (float)frame.width / frame.height, m_ctxDesc.nearPlane(), m_ctxDesc.farPlane())
-  });
+  m_matrixBuffer.setWorldMatrix(transform.getWorldMatrix());
+  m_matrixBuffer.uploadMatrices();
 
   UINT indexCount = m_SIVBuffer.bind();
   rcore::D3D11Device::get().rawContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
   rcore::D3D11Device::get().rawContext()->DrawIndexed(indexCount, 0, 0);
+  // --- Move to model class ---
 }
