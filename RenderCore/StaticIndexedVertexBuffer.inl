@@ -3,7 +3,7 @@
 
 #include "StaticIndexedVertexBuffer.h"
 
-// Header gaurds and include necessary for intellisense to work properly
+// Header guards and include necessary for intellisense to work properly
 
 namespace rcore {
 

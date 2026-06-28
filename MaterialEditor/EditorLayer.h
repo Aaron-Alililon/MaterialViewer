@@ -3,11 +3,10 @@
 
 #include "Layer.h"
 #include "Rcore.h"
-#include "Shader.h"
+#include "Material.h"
 #include "StaticIndexedVertexBuffer.h"
 #include "MatrixBuffer.h"
 #include "MeshLoader.h"
-#include "Transform.h"
 #include "Camera.h"
 
 class EditorLayer : public rcore::Layer {
@@ -15,6 +14,12 @@ class EditorLayer : public rcore::Layer {
   struct __declspec(align(16)) VertexType {
     DirectX::XMFLOAT4 position;
     DirectX::XMFLOAT3 normal;
+  };
+
+  struct __declspec(align(16)) MaterialProperties {
+    DirectX::XMFLOAT4 albedo;
+    DirectX::XMFLOAT4 sunDirection;
+    float globalIllumination;
   };
 
 public:
@@ -26,7 +31,7 @@ public:
 
 private:
   rcore::D3DContextDesc m_ctxDesc;
-  rcore::Shader m_shader;
+  rcore::Material<MaterialProperties> m_material;
   rcore::Camera m_cam;
   rcore::StaticIndexedVertexBuffer<VertexType> m_SIVBuffer;
   rcore::MatrixBuffer m_matrixBuffer;

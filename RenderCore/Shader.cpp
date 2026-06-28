@@ -4,12 +4,12 @@
 namespace rcore {
 	Shader::Shader(std::wstring vertexFile, std::wstring pixelFile, std::vector<D3D11_INPUT_ELEMENT_DESC> const& inputDescription) : m_vertexFile{ vertexFile }, m_pixelFile{ pixelFile } {
 		if (compileAndCreate(inputDescription)) {
-			m_initialized = true;
+			m_valid = true;
 		}
 	}
 
 	void Shader::activate() const {
-		if (!m_initialized) {
+		if (!m_valid) {
 			RCORE_LOG(ERR, "Tried activation uninitialized or faulty shader");
 			return;
 		}
@@ -26,6 +26,10 @@ namespace rcore {
 
 	ID3D11PixelShader* Shader::getPixelShader() const {
 		return m_pixelShader.Get();
+	}
+
+	bool Shader::valid() const {
+		return m_valid;
 	}
 
 	bool Shader::compileAndCreate(std::vector<D3D11_INPUT_ELEMENT_DESC> const& inputDescription) {

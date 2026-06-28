@@ -3,7 +3,7 @@
 
 namespace rcore {
 
-  MatrixBuffer::MatrixBuffer() {
+  MatrixBuffer::MatrixBuffer(int bufferSlot) : m_bufferSlot{ bufferSlot } {
     if (createBuffer()) {
       m_valid = true;
     }
@@ -26,7 +26,7 @@ namespace rcore {
   }
 
 
-  bool MatrixBuffer::uploadMatrices(UINT startSlot) const {
+  bool MatrixBuffer::uploadMatrices() const {
     HRESULT result;
 
     D3D11_MAPPED_SUBRESOURCE mappedResource;
@@ -36,7 +36,7 @@ namespace rcore {
       return false;
     }
 
-    MatrixBufferType* dataPtr = (MatrixBufferType*)mappedResource.pData;
+    MatrixBufferType* dataPtr = reinterpret_cast<MatrixBufferType*>(mappedResource.pData);
 
     dataPtr->world = XMMatrixTranspose(m_matrices.world);
     dataPtr->view = XMMatrixTranspose(m_matrices.view);
@@ -45,7 +45,7 @@ namespace rcore {
 
     D3D11Device::get().rawContext()->Unmap(m_matrixBuffer.Get(), 0);
 
-    D3D11Device::get().rawContext()->VSSetConstantBuffers(startSlot, 1, m_matrixBuffer.GetAddressOf());
+    D3D11Device::get().rawContext()->VSSetConstantBuffers(m_bufferSlot, 1, m_matrixBuffer.GetAddressOf());
 
     return true;
   }

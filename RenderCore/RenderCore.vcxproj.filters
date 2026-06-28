@@ -132,6 +132,12 @@
     <ClInclude Include="Camera.h">
       <Filter>Header Files\Rendering</Filter>
     </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>Header Files\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderStage.h">
+      <Filter>Header Files\Rendering</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp">
@@ -192,6 +198,9 @@
   <ItemGroup>
     <None Include="StaticIndexedVertexBuffer.inl">
       <Filter>Header Files\D3D11\Buffers</Filter>
+    </None>
+    <None Include="Material.inl">
+      <Filter>Header Files\Rendering</Filter>
     </None>
   </ItemGroup>
 </Project>

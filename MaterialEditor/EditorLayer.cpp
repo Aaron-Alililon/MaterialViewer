@@ -19,7 +19,14 @@ EditorLayer::EditorLayer(std::weak_ptr<rcore::Window> window, rcore::D3DContextD
   inputDesc[1].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
   inputDesc[1].InstanceDataStepRate = 0;
 
-  m_shader = { L"VertexShader.hlsl", L"PixelShader.hlsl", inputDesc };
+  rcore::Shader shader = { L"VertexShader.hlsl", L"PixelShader.hlsl", inputDesc };
+  m_material = { shader, 1, rcore::Pixel };
+  m_material.setProperties({
+    { 0.4f, 0.5f, 1.0f, 1.0f },
+    { 1.0f, 1.0f, -1.0f, 0.0f },
+    0.1f
+  });
+  m_material.activateShader(); // TODO move into Model, only needed right before issuing draw call
 
   m_cam = { 0, 0, -10 };
 
@@ -37,6 +44,8 @@ EditorLayer::EditorLayer(std::weak_ptr<rcore::Window> window, rcore::D3DContextD
   }
 
   m_SIVBuffer.createBuffers(verts, indices);
+
+  m_matrixBuffer = { 0 };
 }
 
 void EditorLayer::update(rcore::FrameState const& frame) {
@@ -45,8 +54,6 @@ void EditorLayer::update(rcore::FrameState const& frame) {
 }
 
 void EditorLayer::render(rcore::FrameState const& frame) {
-  m_shader.activate();
-
   auto window = m_window.lock();
   if (!window) return;
 

@@ -15,21 +15,23 @@ namespace rcore {
     };
 
   public:
-    MatrixBuffer();
+    MatrixBuffer() = default;
+    MatrixBuffer(int bufferSlot);
 
   public:
     void setWorldMatrix(DirectX::XMMATRIX const& worldMatrix);
     void setViewMatrix(DirectX::XMMATRIX const& viewMatrix);
     void setProjectionMatrix(DirectX::XMMATRIX const& projectionMatrix);
     void setMatrices(MatrixBufferType const& matrices);
-    bool uploadMatrices(UINT startSlot = 0) const;
+    bool uploadMatrices() const;
 
   private:
     bool createBuffer();
     
   private:
     bool m_valid = false;
-    MatrixBufferType m_matrices;
+    MatrixBufferType m_matrices{};
+    int m_bufferSlot = 0;
     Microsoft::WRL::ComPtr<ID3D11Buffer> m_matrixBuffer;
   };
 

@@ -2,6 +2,10 @@
 #include "EditorLayer.h"
 #include "Descriptors.inl"
 
+// TODO
+// Model class
+// Renderer2D/3D/Shader
+
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline, int iCmdshow) {
   rcore::DeviceDesc devDesc;
   rcore::initDevice(devDesc);
