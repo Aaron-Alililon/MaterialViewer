@@ -1,24 +1,26 @@
 #ifndef MATERIAL_H
 #define MATERIAL_H
 
+#include "MaterialBase.h"
 #include "Shader.h"
 #include "ShaderStage.h"
 
 namespace rcore {
 
   template<typename TProperties>
-  class Material {
+  class Material : public MaterialBase {
   public:
     Material() = default;
     Material(Shader const& shader, int bufferSlot, uint8_t shaderStages = ShaderStage::Pixel);
 
   public:
-    void activateShader() const;
     bool setProperties(TProperties properties, bool updateShader = true);
+    bool uploadProperties() const override;
+    void activateShader() const override;
+    bool valid() const override;
 
   private:
     bool createBuffer();
-    bool uploadProperties() const;
 
   private:
     bool m_valid = false;

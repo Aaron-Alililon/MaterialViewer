@@ -35,6 +35,11 @@ namespace rcore {
   }
 
   template<typename TVertex>
+  bool StaticIndexedVertexBuffer<TVertex>::valid() const {
+    return m_valid;
+  }
+
+  template<typename TVertex>
   bool StaticIndexedVertexBuffer<TVertex>::createVertexBuffer(std::vector<TVertex> const& vertices) {
     HRESULT result;
 

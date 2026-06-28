@@ -1,7 +1,7 @@
 #include "EditorLayer.h"
 
 EditorLayer::EditorLayer(std::weak_ptr<rcore::Window> window, rcore::D3DContextDesc contextDesc) : Layer(window), m_ctxDesc{ contextDesc } {
-  std::vector<D3D11_INPUT_ELEMENT_DESC> inputDesc(2);
+  std::vector<D3D11_INPUT_ELEMENT_DESC> inputDesc(3);
 
   inputDesc[0].SemanticName = "POSITION";
   inputDesc[0].SemanticIndex = 0;
@@ -19,31 +19,34 @@ EditorLayer::EditorLayer(std::weak_ptr<rcore::Window> window, rcore::D3DContextD
   inputDesc[1].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
   inputDesc[1].InstanceDataStepRate = 0;
 
+  inputDesc[2].SemanticName = "TEXCOORD";
+  inputDesc[2].SemanticIndex = 0;
+  inputDesc[2].Format = DXGI_FORMAT_R32G32_FLOAT;
+  inputDesc[2].InputSlot = 0;
+  inputDesc[2].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+  inputDesc[2].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+  inputDesc[2].InstanceDataStepRate = 0;
+
+  m_cam = { 0, 0, -10 };
+
   rcore::Shader shader = { L"VertexShader.hlsl", L"PixelShader.hlsl", inputDesc };
-  m_material = { shader, 1, rcore::Pixel };
-  m_material.setProperties({
+  m_material = std::make_shared<rcore::Material<MaterialProperties>>(shader, 1, rcore::Pixel);
+  m_material->setProperties({
     { 0.4f, 0.5f, 1.0f, 1.0f },
     { 1.0f, 1.0f, -1.0f, 0.0f },
     0.1f
   });
-  m_material.activateShader(); // TODO move into Model, only needed right before issuing draw call
 
-  m_cam = { 0, 0, -10 };
+  rcore::Transform transform{
+    { 0, 0, 0 },
+    { 0, 0, 0 },
+    { 2, 2, 1 }
+  };
 
-  rcore::Mesh sphere = rcore::MeshLoader::load("models/sphere.obj");
-  std::vector<VertexType> verts;
-  std::vector<UINT> indices;
-
-  for (size_t i = 0; i < sphere.vertices.size(); i++) {
-    verts.push_back({
-      sphere.vertices.at(i),
-      sphere.normals.at(i)
-    });
-
-    indices.push_back(static_cast<UINT>(i));
-  }
-
-  m_SIVBuffer.createBuffers(verts, indices);
+  m_SIVBuffer = std::make_shared<rcore::StaticIndexedVertexBuffer<VertexType>>();
+  
+  m_model = { "models/sphere.obj", transform, m_material, m_SIVBuffer };
+  setSIVBufferData(m_model);
 
   m_matrixBuffer = { 0 };
 }
@@ -61,18 +64,26 @@ void EditorLayer::render(rcore::FrameState const& frame) {
   rcore::D3D11Device::get().rawContext()->ClearRenderTargetView(window->getRenderTargetView(), bgCol);
   rcore::D3D11Device::get().rawContext()->ClearDepthStencilView(window->getDepthStencilView(), D3D11_CLEAR_DEPTH, 1.0f, 0);
 
-  // --- Move to model class ---
-  rcore::Transform transform{
-    { 0, 0, 0 },
-    { 0, frame.frameCount * 0.01f, 0 },
-    { 2, 2, 1 }
-  };
+  m_model.setRotation(0, frame.frameCount * 0.01f, 0);
+  m_model.drawIndexed(m_matrixBuffer);
+}
 
-  m_matrixBuffer.setWorldMatrix(transform.getWorldMatrix());
-  m_matrixBuffer.uploadMatrices();
+// TODO find better way to set buffer data encapsulated in model or similar
+void EditorLayer::setSIVBufferData(rcore::Model const& model) {
+  std::vector<VertexType> verts;
+  std::vector<UINT> indices;
 
-  UINT indexCount = m_SIVBuffer.bind();
-  rcore::D3D11Device::get().rawContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-  rcore::D3D11Device::get().rawContext()->DrawIndexed(indexCount, 0, 0);
-  // --- Move to model class ---
+  rcore::Mesh mesh = model.getMesh();
+
+  for (size_t i = 0; i < mesh.vertices.size(); i++) {
+    verts.push_back({
+      mesh.vertices.at(i),
+      mesh.normals.at(i),
+      mesh.uvs.at(i)
+    });
+
+    indices.push_back(static_cast<UINT>(i));
+  }
+
+  m_SIVBuffer->createBuffers(verts, indices);
 }

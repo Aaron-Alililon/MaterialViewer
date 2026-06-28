@@ -8,6 +8,7 @@ cbuffer MatrixBuffer : register(b0) {
 struct VertexInputType {
     float4 position : POSITION;
     float3 normal : NORMAL;
+    float2 uv : TEXCOORD0;
 };
 
 struct PixelInputType {

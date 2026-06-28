@@ -17,16 +17,43 @@ namespace rcore {
   }
 
   template<typename TProperties>
-  void Material<TProperties>::activateShader() const {
-    m_shader.activate();
-  }
-
-  template<typename TProperties>
   bool Material<TProperties>::setProperties(TProperties properties, bool updateShader) {
     m_properties = properties;
 
     if (updateShader) return uploadProperties();
     return true;
+  }
+
+  template<typename TProperties>
+  bool Material<TProperties>::uploadProperties() const {
+    HRESULT result;
+
+    D3D11_MAPPED_SUBRESOURCE mappedResource;
+    result = D3D11Device::get().rawContext()->Map(m_propertiesBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+    if (FAILED(result)) {
+      RCORE_LOG(ERR, "Failed to map properties buffer");
+      return false;
+    }
+
+    TProperties* dataPtr = reinterpret_cast<TProperties*>(mappedResource.pData);
+    *dataPtr = m_properties;
+
+    D3D11Device::get().rawContext()->Unmap(m_propertiesBuffer.Get(), 0);
+
+    if (m_shaderStages & ShaderStage::Vertex) D3D11Device::get().rawContext()->VSSetConstantBuffers(m_bufferSlot, 1, m_propertiesBuffer.GetAddressOf());
+    if (m_shaderStages & ShaderStage::Pixel) D3D11Device::get().rawContext()->PSSetConstantBuffers(m_bufferSlot, 1, m_propertiesBuffer.GetAddressOf());
+
+    return true;
+  }
+
+  template<typename TProperties>
+  void Material<TProperties>::activateShader() const {
+    m_shader.activate();
+  }
+
+  template<typename TProperties>
+  bool Material<TProperties>::valid() const {
+    return m_valid;
   }
 
   template<typename TProperties>
@@ -51,28 +78,6 @@ namespace rcore {
       RCORE_LOG(ERR, "Failed to create properties buffer");
       return false;
     }
-
-    return true;
-  }
-
-  template<typename TProperties>
-  bool Material<TProperties>::uploadProperties() const {
-    HRESULT result;
-
-    D3D11_MAPPED_SUBRESOURCE mappedResource;
-    result = D3D11Device::get().rawContext()->Map(m_propertiesBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
-    if (FAILED(result)) {
-      RCORE_LOG(ERR, "Failed to map properties buffer");
-      return false;
-    }
-
-    TProperties* dataPtr = reinterpret_cast<TProperties*>(mappedResource.pData);
-    *dataPtr = m_properties;
-
-    D3D11Device::get().rawContext()->Unmap(m_propertiesBuffer.Get(), 0);
-
-    if (m_shaderStages & ShaderStage::Vertex) D3D11Device::get().rawContext()->VSSetConstantBuffers(m_bufferSlot, 1, m_propertiesBuffer.GetAddressOf());
-    if (m_shaderStages & ShaderStage::Pixel ) D3D11Device::get().rawContext()->PSSetConstantBuffers(m_bufferSlot, 1, m_propertiesBuffer.GetAddressOf());
 
     return true;
   }

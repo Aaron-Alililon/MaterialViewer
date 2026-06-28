@@ -2,17 +2,19 @@
 #define STATIC_INDEXED_VERTEX_BUFFER_H
 
 #include "D3D11Device.h"
+#include "VertexBufferBase.h"
 
 namespace rcore {
 
   template<typename TVertex>
-  class StaticIndexedVertexBuffer {
+  class StaticIndexedVertexBuffer : public VertexBufferBase {
   public:
     StaticIndexedVertexBuffer() = default;
 
   public:
     void createBuffers(std::vector<TVertex> const& vertices, std::vector<UINT> const& indices);
-    UINT bind() const;
+    UINT bind() const override;
+    bool valid() const override;
 
   private:
     bool createVertexBuffer(std::vector<TVertex> const& vertices);
