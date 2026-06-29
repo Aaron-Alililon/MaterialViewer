@@ -9,14 +9,9 @@
 #include "MeshLoader.h"
 #include "Camera.h"
 #include "Model.h"
+#include "Renderer3D.h"
 
 class EditorLayer : public rcore::Layer {
-
-  struct __declspec(align(16)) VertexType {
-    DirectX::XMFLOAT4 position;
-    DirectX::XMFLOAT3 normal;
-    DirectX::XMFLOAT2 uv;
-  };
 
   struct __declspec(align(16)) MaterialProperties {
     DirectX::XMFLOAT4 albedo;
@@ -32,15 +27,12 @@ public:
   void render(rcore::FrameState const& frame) override;
 
 private:
-  void setSIVBufferData(rcore::Model const& model);
-
-private:
   rcore::D3DContextDesc m_ctxDesc;
   std::shared_ptr<rcore::Material<MaterialProperties>> m_material;
-  std::shared_ptr<rcore::StaticIndexedVertexBuffer<VertexType>> m_SIVBuffer;
+  std::shared_ptr<rcore::StaticIndexedVertexBuffer<rcore::Renderer3D::StandardVertexType>> m_SIVBuffer;
   rcore::Camera m_cam;
-  rcore::Model m_model;
-  rcore::MatrixBuffer m_matrixBuffer;
+  std::unique_ptr<rcore::Model> m_model;
+  std::shared_ptr<rcore::MatrixBuffer> m_matrixBuffer;
 };
 
 #endif

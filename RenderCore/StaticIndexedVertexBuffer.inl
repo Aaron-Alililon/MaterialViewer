@@ -8,7 +8,7 @@
 namespace rcore {
 
   template<typename TVertex>
-  void StaticIndexedVertexBuffer<TVertex>::createBuffers(std::vector<TVertex> const& vertices, std::vector<UINT> const& indices) {
+  StaticIndexedVertexBuffer<TVertex>::StaticIndexedVertexBuffer(std::vector<TVertex> const& vertices, std::vector<UINT> const& indices) {
     m_indexAmount = static_cast<UINT>(indices.size());
 
     if (createVertexBuffer(vertices) &&

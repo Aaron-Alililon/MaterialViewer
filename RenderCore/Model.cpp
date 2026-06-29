@@ -3,25 +3,30 @@
 
 namespace rcore {
 
-  Model::Model(std::string meshFile, Transform const& transform, std::shared_ptr<MaterialBase> const& material, std::shared_ptr<VertexBufferBase> const& vertexBuffer) : Model{ MeshLoader::load(meshFile), transform, material, vertexBuffer } {}
-
-  Model::Model(Mesh const& mesh, Transform const& transform, std::shared_ptr<MaterialBase> const& material, std::shared_ptr<VertexBufferBase> const& vertexBuffer) : m_mesh{ mesh }, m_transform{ transform }, m_material{ material }, m_vertexBuffer{ vertexBuffer } {
-    if (m_material->valid()
+  Model::Model(Transform const& transform, std::shared_ptr<MaterialBase> const& material, std::shared_ptr<VertexBufferBase> const& vertexBuffer) : m_transform{ transform }, m_material{ material }, m_vertexBuffer{ vertexBuffer } {
+    if (m_material->valid() &&
+        m_vertexBuffer->valid()
     ) {
       m_valid = true;
     }
   }
 
-  void Model::drawIndexed(MatrixBuffer& matrixBuffer) {
+  void Model::drawIndexed(std::weak_ptr<MatrixBuffer> matrixBuffer) {
     if (!m_valid) {
       RCORE_LOG(WARN, "Tried drawing invalid model");
       return;
     }
 
+    auto lockedMatrixBuffer = matrixBuffer.lock();
+    if (!lockedMatrixBuffer) {
+      RCORE_LOG(WARN, "Gave invalid matrix buffer to model");
+      return;
+    }
+
     m_material->activateShader();
 
-    matrixBuffer.setWorldMatrix(m_transform.getWorldMatrix());
-    matrixBuffer.uploadMatrices();
+    lockedMatrixBuffer->setWorldMatrix(m_transform.getWorldMatrix());
+    lockedMatrixBuffer->uploadMatrices();
 
     UINT indexCount = m_vertexBuffer->bind();
 
@@ -63,10 +68,6 @@ namespace rcore {
 
   void Model::setScale(DirectX::XMFLOAT3 scale) {
     m_transform.scale = scale;
-  }
-
-  Mesh Model::getMesh() const {
-    return m_mesh;
   }
 
 }

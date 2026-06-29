@@ -10,9 +10,9 @@ namespace rcore {
   class StaticIndexedVertexBuffer : public VertexBufferBase {
   public:
     StaticIndexedVertexBuffer() = default;
+    StaticIndexedVertexBuffer(std::vector<TVertex> const& vertices, std::vector<UINT> const& indices);
 
   public:
-    void createBuffers(std::vector<TVertex> const& vertices, std::vector<UINT> const& indices);
     UINT bind() const override;
     bool valid() const override;
 

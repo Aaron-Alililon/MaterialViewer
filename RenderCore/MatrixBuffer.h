@@ -15,7 +15,6 @@ namespace rcore {
     };
 
   public:
-    MatrixBuffer() = default;
     MatrixBuffer(int bufferSlot);
 
   public:

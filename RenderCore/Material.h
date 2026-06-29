@@ -10,7 +10,6 @@ namespace rcore {
   template<typename TProperties>
   class Material : public MaterialBase {
   public:
-    Material() = default;
     Material(Shader const& shader, int bufferSlot, uint8_t shaderStages = ShaderStage::Pixel);
 
   public:

@@ -7,7 +7,6 @@ namespace rcore {
 
 	class Shader {
 	public:
-		Shader() = default;
 		Shader(std::wstring vertexFile, std::wstring pixelFile, std::vector<D3D11_INPUT_ELEMENT_DESC> const& inputDescription);
 
 	public:

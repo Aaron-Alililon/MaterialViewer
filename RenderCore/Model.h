@@ -12,12 +12,10 @@ namespace rcore {
 
   class Model {
   public:
-    Model() = default;
-    Model(Mesh const& mesh, Transform const& transform, std::shared_ptr<MaterialBase> const& material, std::shared_ptr<VertexBufferBase> const& vertexBuffer);
-    Model(std::string meshFile, Transform const& transform, std::shared_ptr<MaterialBase> const& material, std::shared_ptr<VertexBufferBase> const& vertexBuffer);
+    Model(Transform const& transform, std::shared_ptr<MaterialBase> const& material, std::shared_ptr<VertexBufferBase> const& vertexBuffer);
 
   public:
-    void drawIndexed(MatrixBuffer& matrixBuffer);
+    void drawIndexed(std::weak_ptr<MatrixBuffer> matrixBuffer);
 
     DirectX::XMFLOAT3 getPosition() const;
     void setPosition(float x, float y, float z);
@@ -31,12 +29,9 @@ namespace rcore {
     void setScale(float x, float y, float z);
     void setScale(DirectX::XMFLOAT3 scale);
 
-    Mesh getMesh() const;
-
   private:
     bool m_valid = false;
     Transform m_transform{};
-    Mesh m_mesh{};
     std::shared_ptr<MaterialBase> m_material;
     std::shared_ptr<VertexBufferBase> m_vertexBuffer;
   };
