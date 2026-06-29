@@ -27,9 +27,15 @@
     <ClCompile Include="EditorLayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ModelSphere.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EditorLayer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelSphere.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

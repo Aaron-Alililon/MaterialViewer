@@ -4,20 +4,8 @@ EditorLayer::EditorLayer(std::weak_ptr<rcore::Window> window, rcore::D3DContextD
   auto inputDesc = rcore::Preset3D::makeStandardInputDescription();
 
   m_cam = { 0, 0, -10 };
-
-  rcore::Shader shader = { L"VertexShader.hlsl", L"PixelShader.hlsl", inputDesc };
-  m_material = std::make_shared<rcore::Material<MaterialProperties>>(shader, 1, rcore::Pixel);
-  m_material->setProperties({
-    { 0.4f, 0.5f, 1.0f, 1.0f },
-    { 1.0f, 1.0f, -1.0f, 0.0f },
-    0.1f
-  });
-
-  m_SIVBuffer = rcore::Preset3D::makeStandardSIVBuffer("models/monkey.obj");
-  
-  m_model = std::make_unique<rcore::Model>(m_material, m_SIVBuffer);
-
   m_matrixBuffer = std::make_shared<rcore::MatrixBuffer>(0);
+  m_modelSphere = std::make_unique<ModelSphere>(inputDesc);
 }
 
 void EditorLayer::update(rcore::FrameState const& frame) {
@@ -33,6 +21,5 @@ void EditorLayer::render(rcore::FrameState const& frame) {
   rcore::D3D11Device::get().rawContext()->ClearRenderTargetView(window->getRenderTargetView(), bgCol);
   rcore::D3D11Device::get().rawContext()->ClearDepthStencilView(window->getDepthStencilView(), D3D11_CLEAR_DEPTH, 1.0f, 0);
 
-  m_model->setRotation(0, frame.frameCount * 0.01f, 0);
-  m_model->drawIndexed(*m_matrixBuffer);
+  m_modelSphere->render(frame, *m_matrixBuffer);
 }

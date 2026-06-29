@@ -139,6 +139,7 @@
   <ItemGroup>
     <ClCompile Include="EditorLayer.cpp" />
     <ClCompile Include="MaterialEditor.cpp" />
+    <ClCompile Include="ModelSphere.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\RenderCore\RenderCore.vcxproj">
@@ -147,6 +148,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EditorLayer.h" />
+    <ClInclude Include="ModelSphere.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="data\log.txt" />
