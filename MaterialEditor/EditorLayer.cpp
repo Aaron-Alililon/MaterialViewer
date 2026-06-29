@@ -13,15 +13,9 @@ EditorLayer::EditorLayer(std::weak_ptr<rcore::Window> window, rcore::D3DContextD
     0.1f
   });
 
-  rcore::Transform transform{
-    { 0, 0, 0 },
-    { 0, 0, 0 },
-    { 1, 1, 1 }
-  };
-
   m_SIVBuffer = rcore::Preset3D::makeStandardSIVBuffer("models/monkey.obj");
   
-  m_model = std::make_unique<rcore::Model>(transform, m_material, m_SIVBuffer);
+  m_model = std::make_unique<rcore::Model>(m_material, m_SIVBuffer);
 
   m_matrixBuffer = std::make_shared<rcore::MatrixBuffer>(0);
 }

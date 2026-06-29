@@ -3,7 +3,7 @@
 
 namespace rcore {
 
-  Model::Model(Transform const& transform, std::shared_ptr<MaterialBase> const& material, std::shared_ptr<VertexBufferBase> const& vertexBuffer) : m_transform{ transform }, m_material{ material }, m_vertexBuffer{ vertexBuffer } {
+  Model::Model(std::shared_ptr<MaterialBase> const& material, std::shared_ptr<VertexBufferBase> const& vertexBuffer) : m_material{ material }, m_vertexBuffer{ vertexBuffer } {
     if (m_material &&
         m_material->valid() &&
         m_vertexBuffer &&
@@ -28,6 +28,14 @@ namespace rcore {
 
     D3D11Device::get().rawContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     D3D11Device::get().rawContext()->DrawIndexed(indexCount, 0, 0);
+  }
+
+  Transform Model::getTransform() const {
+    return m_transform;
+  }
+
+  void Model::setTransform(Transform const& transform) {
+    m_transform = transform;
   }
 
   DirectX::XMFLOAT3 Model::getPosition() const {

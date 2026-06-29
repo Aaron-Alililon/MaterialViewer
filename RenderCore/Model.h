@@ -12,10 +12,13 @@ namespace rcore {
 
   class Model {
   public:
-    Model(Transform const& transform, std::shared_ptr<MaterialBase> const& material, std::shared_ptr<VertexBufferBase> const& vertexBuffer);
+    Model(std::shared_ptr<MaterialBase> const& material, std::shared_ptr<VertexBufferBase> const& vertexBuffer);
 
   public:
     void drawIndexed(MatrixBuffer& matrixBuffer);
+
+    Transform getTransform() const;
+    void setTransform(Transform const& transform);
 
     DirectX::XMFLOAT3 getPosition() const;
     void setPosition(float x, float y, float z);
