@@ -4,29 +4,25 @@
 namespace rcore {
 
   Model::Model(Transform const& transform, std::shared_ptr<MaterialBase> const& material, std::shared_ptr<VertexBufferBase> const& vertexBuffer) : m_transform{ transform }, m_material{ material }, m_vertexBuffer{ vertexBuffer } {
-    if (m_material->valid() &&
+    if (m_material &&
+        m_material->valid() &&
+        m_vertexBuffer &&
         m_vertexBuffer->valid()
     ) {
       m_valid = true;
     }
   }
 
-  void Model::drawIndexed(std::weak_ptr<MatrixBuffer> matrixBuffer) {
+  void Model::drawIndexed(MatrixBuffer& matrixBuffer) {
     if (!m_valid) {
       RCORE_LOG(WARN, "Tried drawing invalid model");
       return;
     }
 
-    auto lockedMatrixBuffer = matrixBuffer.lock();
-    if (!lockedMatrixBuffer) {
-      RCORE_LOG(WARN, "Gave invalid matrix buffer to model");
-      return;
-    }
-
     m_material->activateShader();
 
-    lockedMatrixBuffer->setWorldMatrix(m_transform.getWorldMatrix());
-    lockedMatrixBuffer->uploadMatrices();
+    matrixBuffer.setWorldMatrix(m_transform.getWorldMatrix());
+    matrixBuffer.uploadMatrices();
 
     UINT indexCount = m_vertexBuffer->bind();
 

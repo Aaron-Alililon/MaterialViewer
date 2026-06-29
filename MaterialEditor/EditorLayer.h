@@ -9,7 +9,7 @@
 #include "MeshLoader.h"
 #include "Camera.h"
 #include "Model.h"
-#include "Renderer3D.h"
+#include "Preset3D.h"
 
 class EditorLayer : public rcore::Layer {
 
@@ -29,7 +29,7 @@ public:
 private:
   rcore::D3DContextDesc m_ctxDesc;
   std::shared_ptr<rcore::Material<MaterialProperties>> m_material;
-  std::shared_ptr<rcore::StaticIndexedVertexBuffer<rcore::Renderer3D::StandardVertexType>> m_SIVBuffer;
+  std::shared_ptr<rcore::StaticIndexedVertexBuffer<rcore::Preset3D::StandardVertexType>> m_SIVBuffer;
   rcore::Camera m_cam;
   std::unique_ptr<rcore::Model> m_model;
   std::shared_ptr<rcore::MatrixBuffer> m_matrixBuffer;

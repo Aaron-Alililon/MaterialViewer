@@ -39,9 +39,6 @@
     </Text>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Descriptors.inl">
-      <Filter>Header Files</Filter>
-    </None>
     <None Include="PixelShader.hlsl">
       <Filter>Source Files\Shaders</Filter>
     </None>

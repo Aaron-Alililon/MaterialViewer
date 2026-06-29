@@ -152,9 +152,6 @@
     <Text Include="data\log.txt" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Descriptors.inl" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="PixelShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>

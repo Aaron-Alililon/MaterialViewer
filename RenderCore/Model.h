@@ -15,7 +15,7 @@ namespace rcore {
     Model(Transform const& transform, std::shared_ptr<MaterialBase> const& material, std::shared_ptr<VertexBufferBase> const& vertexBuffer);
 
   public:
-    void drawIndexed(std::weak_ptr<MatrixBuffer> matrixBuffer);
+    void drawIndexed(MatrixBuffer& matrixBuffer);
 
     DirectX::XMFLOAT3 getPosition() const;
     void setPosition(float x, float y, float z);

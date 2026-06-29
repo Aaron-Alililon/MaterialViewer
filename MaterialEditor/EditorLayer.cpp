@@ -1,7 +1,7 @@
 #include "EditorLayer.h"
 
 EditorLayer::EditorLayer(std::weak_ptr<rcore::Window> window, rcore::D3DContextDesc contextDesc) : Layer(window), m_ctxDesc{ contextDesc } {
-  auto inputDesc = rcore::Renderer3D::makeStandardInputDescription();
+  auto inputDesc = rcore::Preset3D::makeStandardInputDescription();
 
   m_cam = { 0, 0, -10 };
 
@@ -16,10 +16,10 @@ EditorLayer::EditorLayer(std::weak_ptr<rcore::Window> window, rcore::D3DContextD
   rcore::Transform transform{
     { 0, 0, 0 },
     { 0, 0, 0 },
-    { 2, 2, 1 }
+    { 1, 1, 1 }
   };
 
-  m_SIVBuffer = rcore::Renderer3D::makeStandardSIVBuffer("models/sphere.obj");
+  m_SIVBuffer = rcore::Preset3D::makeStandardSIVBuffer("models/monkey.obj");
   
   m_model = std::make_unique<rcore::Model>(transform, m_material, m_SIVBuffer);
 
@@ -40,5 +40,5 @@ void EditorLayer::render(rcore::FrameState const& frame) {
   rcore::D3D11Device::get().rawContext()->ClearDepthStencilView(window->getDepthStencilView(), D3D11_CLEAR_DEPTH, 1.0f, 0);
 
   m_model->setRotation(0, frame.frameCount * 0.01f, 0);
-  m_model->drawIndexed(m_matrixBuffer);
+  m_model->drawIndexed(*m_matrixBuffer);
 }

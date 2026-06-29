@@ -37,7 +37,7 @@
     <ClInclude Include="Model.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Rcore.h" />
-    <ClInclude Include="Renderer3D.h" />
+    <ClInclude Include="Preset3D.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="ShaderStage.h" />
     <ClInclude Include="StaticIndexedVertexBuffer.h" />
@@ -66,7 +66,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Renderer3D.cpp" />
+    <ClCompile Include="Preset3D.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="Window.cpp" />

@@ -90,7 +90,7 @@
     <ClInclude Include="Layer.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
-    <ClInclude Include="Renderer3D.h">
+    <ClInclude Include="Preset3D.h">
       <Filter>Header Files\Rendering</Filter>
     </ClInclude>
     <ClInclude Include="Logger.h">
@@ -167,7 +167,7 @@
     <ClCompile Include="InputManager.cpp">
       <Filter>Source Files\Input</Filter>
     </ClCompile>
-    <ClCompile Include="Renderer3D.cpp">
+    <ClCompile Include="Preset3D.cpp">
       <Filter>Source Files\Rendering</Filter>
     </ClCompile>
     <ClCompile Include="Logger.cpp">
