@@ -11,7 +11,7 @@ ModelSphere::ModelSphere(std::vector<D3D11_INPUT_ELEMENT_DESC> const& inputDesc)
 
   m_sampler = std::make_shared<rcore::Sampler>(rcore::Preset3D::makeStandardLinearSamplerDescription());
 
-  rcore::Shader shader = { L"VertexShader.hlsl", L"PixelShader.hlsl", inputDesc };
+  rcore::Shader shader = { L"PBRVertexShader.hlsl", L"PBRPixelShader.hlsl", inputDesc };
 
   m_material = std::make_shared<rcore::Material<MaterialProperties>>(shader, 1, rcore::Pixel | rcore::Vertex);
   m_material->setProperties({

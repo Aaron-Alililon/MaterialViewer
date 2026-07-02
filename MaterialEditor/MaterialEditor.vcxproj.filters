@@ -69,10 +69,10 @@
     </Text>
   </ItemGroup>
   <ItemGroup>
-    <None Include="PixelShader.hlsl">
+    <None Include="PBRPixelShader.hlsl">
       <Filter>Source Files\Shaders</Filter>
     </None>
-    <None Include="VertexShader.hlsl">
+    <None Include="PBRVertexShader.hlsl">
       <Filter>Source Files\Shaders</Filter>
     </None>
     <None Include="models\sphere.obj">

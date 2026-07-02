@@ -1,6 +1,6 @@
 #include "CameraController.h"
 
-CameraController::CameraController() : m_cam{ 0, 0, -10 } {
+CameraController::CameraController() {
   m_cam.farPlane = 10000.0f;
 }
 
@@ -23,7 +23,7 @@ void CameraController::onEvent(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lpara
   switch (umsg) {
     case WM_MOUSEWHEEL: {
       float scroll = static_cast<float>(GET_WHEEL_DELTA_WPARAM(wparam)) / WHEEL_DELTA;
-      m_radius = max(0.1f, m_radius - scroll * 0.5f);
+      m_radius = min(20.0f, max(1.5f, m_radius - scroll * 0.5f));
 
       break;
     }

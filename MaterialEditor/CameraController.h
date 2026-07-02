@@ -14,9 +14,9 @@ public:
 
 private:
   float m_radius = 10.0f;
-  float m_azimuth = 0.0f;
+  float m_azimuth = 2.0f;
   float m_elevation = 0.0f;
-  rcore::Camera m_cam;
+  rcore::Camera m_cam{};
   bool m_middleMouseHeld = false;
   DirectX::XMINT2 m_lastMousePos{};
 };
