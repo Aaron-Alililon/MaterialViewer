@@ -25,17 +25,11 @@
     <Filter Include="Header Files\Logging">
       <UniqueIdentifier>{8ce00a29-6d60-4ebf-820d-74ec11e1b699}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Input">
-      <UniqueIdentifier>{b317063f-83e5-4447-8d15-2d6897284fce}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Core">
       <UniqueIdentifier>{0da9ba95-324f-4edc-be7a-e3d1a6b8523c}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\Window">
       <UniqueIdentifier>{96aba027-3210-44b2-98ab-c11c78fe99f8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Input">
-      <UniqueIdentifier>{87521e1c-210d-4e58-b251-c527fcfa00d6}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\Rendering">
       <UniqueIdentifier>{e3a63bb3-5793-4c60-854f-806caf11a271}</UniqueIdentifier>
@@ -60,6 +54,15 @@
     </Filter>
     <Filter Include="Source Files\D3D11\Buffers">
       <UniqueIdentifier>{ce7d793a-e1ed-4a03-9991-085aeb12289f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Resource">
+      <UniqueIdentifier>{5166b4b6-ce97-423d-8071-a26d12755c22}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Resource">
+      <UniqueIdentifier>{b4bf7fee-78d9-478c-8960-9b76dddc262b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Lib">
+      <UniqueIdentifier>{66437f4c-cad4-405d-ad27-2f71932127b7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -90,14 +93,8 @@
     <ClInclude Include="Layer.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
-    <ClInclude Include="Preset3D.h">
-      <Filter>Header Files\Rendering</Filter>
-    </ClInclude>
     <ClInclude Include="Logger.h">
       <Filter>Header Files\Logging</Filter>
-    </ClInclude>
-    <ClInclude Include="InputManager.h">
-      <Filter>Header Files\Input</Filter>
     </ClInclude>
     <ClInclude Include="D3D11Context.h">
       <Filter>Header Files\D3D11</Filter>
@@ -114,7 +111,7 @@
     <ClInclude Include="Shader.h">
       <Filter>Header Files\Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="MeshLoader.h">
+    <ClInclude Include="ObjLoader.h">
       <Filter>Header Files\Model</Filter>
     </ClInclude>
     <ClInclude Include="Mesh.h">
@@ -147,6 +144,36 @@
     <ClInclude Include="VertexBufferBase.h">
       <Filter>Header Files\D3D11\Buffers</Filter>
     </ClInclude>
+    <ClInclude Include="TextureLoaderBase.h">
+      <Filter>Header Files\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Preset3D.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Targa32Loader.h">
+      <Filter>Header Files\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>Header Files\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Sampler.h">
+      <Filter>Header Files\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="stb_image.h">
+      <Filter>Header Files\Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="PNGLoader.h">
+      <Filter>Header Files\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="cgltf.h">
+      <Filter>Header Files\Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshLoaderBase.h">
+      <Filter>Header Files\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="GLTFLoader.h">
+      <Filter>Header Files\Model</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp">
@@ -163,12 +190,6 @@
     </ClCompile>
     <ClCompile Include="WindowsInterface.cpp">
       <Filter>Source Files\Window</Filter>
-    </ClCompile>
-    <ClCompile Include="InputManager.cpp">
-      <Filter>Source Files\Input</Filter>
-    </ClCompile>
-    <ClCompile Include="Preset3D.cpp">
-      <Filter>Source Files\Rendering</Filter>
     </ClCompile>
     <ClCompile Include="Logger.cpp">
       <Filter>Source Files\Logging</Filter>
@@ -191,7 +212,7 @@
     <ClCompile Include="Layer.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
-    <ClCompile Include="MeshLoader.cpp">
+    <ClCompile Include="ObjLoader.cpp">
       <Filter>Source Files\Model</Filter>
     </ClCompile>
     <ClCompile Include="MatrixBuffer.cpp">
@@ -206,6 +227,24 @@
     <ClCompile Include="Model.cpp">
       <Filter>Source Files\Model</Filter>
     </ClCompile>
+    <ClCompile Include="Preset3D.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Targa32Loader.cpp">
+      <Filter>Source Files\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>Source Files\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="Sampler.cpp">
+      <Filter>Source Files\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="PNGLoader.cpp">
+      <Filter>Source Files\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="GLTFLoader.cpp">
+      <Filter>Source Files\Model</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="StaticIndexedVertexBuffer.inl">
@@ -213,6 +252,12 @@
     </None>
     <None Include="Material.inl">
       <Filter>Header Files\Rendering</Filter>
+    </None>
+    <None Include="Texture.inl">
+      <Filter>Header Files\Resource</Filter>
+    </None>
+    <None Include="Preset3D.inl">
+      <Filter>Header Files\Core</Filter>
     </None>
   </ItemGroup>
 </Project>

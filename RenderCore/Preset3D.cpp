@@ -91,9 +91,8 @@ namespace rcore {
     return ctxDesc;
   }
 
-
   std::vector<D3D11_INPUT_ELEMENT_DESC> Preset3D::makeStandardInputDescription() {
-    std::vector<D3D11_INPUT_ELEMENT_DESC> inputDesc(3);
+    std::vector<D3D11_INPUT_ELEMENT_DESC> inputDesc(5);
 
     inputDesc[0].SemanticName = "POSITION";
     inputDesc[0].SemanticIndex = 0;
@@ -119,29 +118,121 @@ namespace rcore {
     inputDesc[2].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
     inputDesc[2].InstanceDataStepRate = 0;
 
+    inputDesc[3].SemanticName = "TANGENT";
+    inputDesc[3].SemanticIndex = 0;
+    inputDesc[3].Format = DXGI_FORMAT_R32G32B32_FLOAT;
+    inputDesc[3].InputSlot = 0;
+    inputDesc[3].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+    inputDesc[3].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+    inputDesc[3].InstanceDataStepRate = 0;
+
+    inputDesc[4].SemanticName = "BINORMAL";
+    inputDesc[4].SemanticIndex = 0;
+    inputDesc[4].Format = DXGI_FORMAT_R32G32B32_FLOAT;
+    inputDesc[4].InputSlot = 0;
+    inputDesc[4].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+    inputDesc[4].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+    inputDesc[4].InstanceDataStepRate = 0;
+
     return inputDesc;
   }
 
-  std::shared_ptr<StaticIndexedVertexBuffer<Preset3D::StandardVertexType>> Preset3D::makeStandardSIVBuffer(std::string const& meshFile) {
-    Mesh mesh = MeshLoader::load(meshFile);
-    return makeStandardSIVBuffer(mesh);
-  }
-
   std::shared_ptr<StaticIndexedVertexBuffer<Preset3D::StandardVertexType>> Preset3D::makeStandardSIVBuffer(Mesh const& mesh) {
-    std::vector<Preset3D::StandardVertexType> verts;
-    std::vector<UINT> indices;
+    std::vector<StandardVertexType> verts;
 
     for (size_t i = 0; i < mesh.vertices.size(); i++) {
-      verts.push_back({
-        mesh.vertices.at(i),
-        mesh.normals.at(i),
-        mesh.uvs.at(i)
-      });
+      StandardVertexType vert;
+      
+      vert.position = mesh.vertices.at(i);
+      vert.normal = mesh.normals.at(i);
+      vert.uv = mesh.uvs.at(i);
 
-      indices.push_back(static_cast<UINT>(i));
+      if (mesh.hasTangents) {
+        vert.tangent = mesh.tangents.at(i);
+        vert.binormal = mesh.binormals.at(i);
+      } else {
+        vert.tangent = { 1.0f, 0.0f, 0.0f };
+        vert.binormal = { 0.0f, 0.0f, 1.0f };
+      }
+
+      verts.push_back(vert);
     }
 
-    return std::make_shared<StaticIndexedVertexBuffer<Preset3D::StandardVertexType>>(verts, indices);
+    return std::make_shared<StaticIndexedVertexBuffer<StandardVertexType>>(verts, mesh.indices);
+  }
+
+  D3D11_TEXTURE2D_DESC Preset3D::makeStandardTextureDescription() {
+    D3D11_TEXTURE2D_DESC desc{};
+
+    desc.MipLevels = 0;
+    desc.ArraySize = 1;
+    desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+    desc.SampleDesc.Count = 1;
+    desc.SampleDesc.Quality = 0;
+    desc.Usage = D3D11_USAGE_DEFAULT;
+    desc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
+    desc.CPUAccessFlags = 0;
+    desc.MiscFlags = D3D11_RESOURCE_MISC_GENERATE_MIPS;
+
+    return desc;
+  }
+
+  D3D11_SHADER_RESOURCE_VIEW_DESC Preset3D::makeStandardTextureShaderResourceViewDescription() {
+    D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc{};
+
+    srvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+    srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+    srvDesc.Texture2D.MostDetailedMip = 0;
+    srvDesc.Texture2D.MipLevels = -1;
+
+    return srvDesc;
+  }
+
+  std::pair<D3D11_TEXTURE2D_DESC, D3D11_SHADER_RESOURCE_VIEW_DESC> Preset3D::makeStandardTextureDescriptionPair() {
+    return std::make_pair(
+      makeStandardTextureDescription(),
+      makeStandardTextureShaderResourceViewDescription()
+    );
+  }
+
+  D3D11_SAMPLER_DESC Preset3D::makeStandardPointSamplerDescription() {
+    D3D11_SAMPLER_DESC samplerDesc{};
+
+    samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
+    samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+    samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+    samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+    samplerDesc.MipLODBias = 0.0f;
+    samplerDesc.MaxAnisotropy = 1;
+    samplerDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
+    samplerDesc.BorderColor[0] = 0;
+    samplerDesc.BorderColor[1] = 0;
+    samplerDesc.BorderColor[2] = 0;
+    samplerDesc.BorderColor[3] = 0;
+    samplerDesc.MinLOD = 0;
+    samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
+
+    return samplerDesc;
+  }
+
+  D3D11_SAMPLER_DESC Preset3D::makeStandardLinearSamplerDescription() {
+    D3D11_SAMPLER_DESC samplerDesc{};
+
+    samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+    samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+    samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+    samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+    samplerDesc.MipLODBias = 0.0f;
+    samplerDesc.MaxAnisotropy = 1;
+    samplerDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
+    samplerDesc.BorderColor[0] = 0;
+    samplerDesc.BorderColor[1] = 0;
+    samplerDesc.BorderColor[2] = 0;
+    samplerDesc.BorderColor[3] = 0;
+    samplerDesc.MinLOD = 0;
+    samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
+
+    return samplerDesc;
   }
 
 }

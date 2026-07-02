@@ -2,7 +2,6 @@
 #define MODEL_H
 
 #include "Transform.h"
-#include "MeshLoader.h"
 #include "MaterialBase.h"
 #include "D3D11Device.h"
 #include "MatrixBuffer.h"

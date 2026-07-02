@@ -15,6 +15,8 @@ namespace rcore {
   public:
     bool setProperties(TProperties properties, bool updateShader = true);
     bool uploadProperties() const override;
+    void uploadTextures(std::span<ID3D11ShaderResourceView*> const& textureViews, UINT startSlot) const override;
+    void uploadSamplers(std::span<ID3D11SamplerState*> const& samplerViews, UINT startSlot) const override;
     void activateShader() const override;
     bool valid() const override;
 
@@ -23,11 +25,11 @@ namespace rcore {
 
   private:
     bool m_valid = false;
-    Shader m_shader{};
-    TProperties m_properties{};
-    int m_bufferSlot = 0;
+    Shader m_shader;
+    TProperties m_properties;
+    int m_bufferSlot;
     Microsoft::WRL::ComPtr<ID3D11Buffer> m_propertiesBuffer;
-    uint8_t m_shaderStages = 0;
+    uint8_t m_shaderStages;
   };
 
 }

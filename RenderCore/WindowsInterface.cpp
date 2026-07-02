@@ -73,14 +73,6 @@ namespace rcore {
 
 	LRESULT CALLBACK WindowsInterface::handleMessage(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam) {
 		switch (umsg) {
-		case WM_KEYDOWN:
-			InputManager::get().keyDown((unsigned int)wparam);
-			return 0;
-		
-		case WM_KEYUP:
-			InputManager::get().keyUp((unsigned int)wparam);
-			return 0;
-
 		case WM_DESTROY:
 			m_windowClosing = true;
 			return 0;

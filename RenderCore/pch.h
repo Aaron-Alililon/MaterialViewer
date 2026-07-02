@@ -4,6 +4,7 @@
 #include <concepts>
 #include <vector>
 #include <array>
+#include <span>
 #include <memory>
 #include <algorithm>
 #include <queue>
@@ -13,6 +14,7 @@
 
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
+#include <windowsx.h>
 
 #pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "dxgi.lib")

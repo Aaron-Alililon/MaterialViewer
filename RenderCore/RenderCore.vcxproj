@@ -20,27 +20,35 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="cgltf.h" />
     <ClInclude Include="D3D11Context.h" />
     <ClInclude Include="D3D11Device.h" />
     <ClInclude Include="D3DContextDesc.h" />
     <ClInclude Include="DeviceDesc.h" />
     <ClInclude Include="Engine.h" />
     <ClInclude Include="FrameState.h" />
-    <ClInclude Include="InputManager.h" />
+    <ClInclude Include="GLTFLoader.h" />
     <ClInclude Include="Layer.h" />
     <ClInclude Include="Logger.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="MaterialBase.h" />
     <ClInclude Include="MatrixBuffer.h" />
     <ClInclude Include="Mesh.h" />
-    <ClInclude Include="MeshLoader.h" />
+    <ClInclude Include="MeshLoaderBase.h" />
+    <ClInclude Include="ObjLoader.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="PNGLoader.h" />
     <ClInclude Include="Rcore.h" />
     <ClInclude Include="Preset3D.h" />
+    <ClInclude Include="Sampler.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="ShaderStage.h" />
     <ClInclude Include="StaticIndexedVertexBuffer.h" />
+    <ClInclude Include="stb_image.h" />
+    <ClInclude Include="Targa32Loader.h" />
+    <ClInclude Include="Texture.h" />
+    <ClInclude Include="TextureLoaderBase.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="VertexBufferBase.h" />
     <ClInclude Include="Window.h" />
@@ -54,11 +62,11 @@
     <ClCompile Include="D3DContextDesc.cpp" />
     <ClCompile Include="DeviceDesc.cpp" />
     <ClCompile Include="Engine.cpp" />
-    <ClCompile Include="InputManager.cpp" />
+    <ClCompile Include="GLTFLoader.cpp" />
     <ClCompile Include="Layer.cpp" />
     <ClCompile Include="Logger.cpp" />
     <ClCompile Include="MatrixBuffer.cpp" />
-    <ClCompile Include="MeshLoader.cpp" />
+    <ClCompile Include="ObjLoader.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -66,8 +74,12 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="PNGLoader.cpp" />
     <ClCompile Include="Preset3D.cpp" />
+    <ClCompile Include="Sampler.cpp" />
     <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="Targa32Loader.cpp" />
+    <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="Window.cpp" />
     <ClCompile Include="WindowDesc.cpp" />
@@ -82,7 +94,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Material.inl" />
+    <None Include="Preset3D.inl" />
     <None Include="StaticIndexedVertexBuffer.inl" />
+    <None Include="Texture.inl" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

@@ -20,12 +20,6 @@ namespace rcore {
     while (!m_windows.empty() || !m_windowCreationQueue.empty()) {
       _registerWindows();
 
-      if (InputManager::get().isKeyDown(VK_ESCAPE)) {
-        for (auto const& window : m_windows) {
-          window->hintClose();
-        }
-      }
-
       bool anyWindowClosing = false;
       for (auto const& window : m_windows) {
         if (!window->readMessages()) {

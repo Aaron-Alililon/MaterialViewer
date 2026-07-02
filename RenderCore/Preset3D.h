@@ -1,19 +1,21 @@
-#ifndef RENDERER_3D_H
-#define RENDERER_3D_H
+#ifndef PRESET_3D_H
+#define PRESET_3D_H
 
 #include "WindowDesc.h"
 #include "D3D11Context.h"
 #include "StaticIndexedVertexBuffer.h"
-#include "MeshLoader.h"
+#include "ObjLoader.h"
 
 namespace rcore {
 
   class Preset3D {
   public:
-    struct __declspec(align(16)) StandardVertexType {
+    struct StandardVertexType {
       DirectX::XMFLOAT4 position;
       DirectX::XMFLOAT3 normal;
       DirectX::XMFLOAT2 uv;
+      DirectX::XMFLOAT3 tangent;
+      DirectX::XMFLOAT3 binormal;
     };
 
   public:
@@ -30,10 +32,20 @@ namespace rcore {
 
     static std::vector<D3D11_INPUT_ELEMENT_DESC> makeStandardInputDescription();
     
+    template<std::derived_from<MeshLoaderBase> TLoader>
     static std::shared_ptr<StaticIndexedVertexBuffer<StandardVertexType>> makeStandardSIVBuffer(std::string const& meshFile);
     static std::shared_ptr<StaticIndexedVertexBuffer<StandardVertexType>> makeStandardSIVBuffer(Mesh const& mesh);
+
+    static D3D11_TEXTURE2D_DESC makeStandardTextureDescription();
+    static D3D11_SHADER_RESOURCE_VIEW_DESC makeStandardTextureShaderResourceViewDescription();
+    static std::pair<D3D11_TEXTURE2D_DESC, D3D11_SHADER_RESOURCE_VIEW_DESC> makeStandardTextureDescriptionPair();
+
+    static D3D11_SAMPLER_DESC makeStandardPointSamplerDescription();
+    static D3D11_SAMPLER_DESC makeStandardLinearSamplerDescription();
   };
 
 }
+
+#include "Preset3D.inl"
 
 #endif

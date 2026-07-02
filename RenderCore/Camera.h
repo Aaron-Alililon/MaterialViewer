@@ -1,6 +1,7 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
+#include "pch.h"
 #include "Transform.h"
 
 namespace rcore {
@@ -15,10 +16,17 @@ namespace rcore {
     DirectX::XMFLOAT3 getPosition() const;
     void setPosition(float x, float y, float z);
     void setPosition(DirectX::XMFLOAT3 position);
+    void addPosition(float x, float y, float z);
+    void addPosition(DirectX::XMFLOAT3 position);
 
     DirectX::XMFLOAT3 getRotation() const;
     void setRotation(float pitch, float yaw, float roll);
     void setRotation(DirectX::XMFLOAT3 rotation);
+    void addRotation(float pitch, float yaw, float roll);
+    void addRotation(DirectX::XMFLOAT3 rotation);
+
+    void setLookAt(float x, float y, float z);
+    void setLookAt(DirectX::XMFLOAT3 focus);
 
     DirectX::XMMATRIX getViewMatrix() const;
     DirectX::XMMATRIX getPerspectiveMatrix(float aspect) const;

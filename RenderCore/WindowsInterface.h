@@ -2,7 +2,6 @@
 #define WINDOWS_INTERFACE_H
 
 #include "pch.h"
-#include "InputManager.h"
 #include "Engine.h"
 
 namespace rcore {

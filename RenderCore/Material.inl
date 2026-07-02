@@ -8,7 +8,7 @@
 namespace rcore {
 
   template<typename TProperties>
-  Material<TProperties>::Material(Shader const& shader, int bufferSlot, uint8_t shaderStages) : m_shader{ shader }, m_bufferSlot{ bufferSlot }, m_shaderStages{ shaderStages } {
+  Material<TProperties>::Material(Shader const& shader, int bufferSlot, uint8_t shaderStages) : m_shader{ shader }, m_properties{ }, m_bufferSlot { bufferSlot }, m_shaderStages{ shaderStages } {
     if (m_shader.valid() &&
         createBuffer()
     ) {
@@ -28,6 +28,8 @@ namespace rcore {
   bool Material<TProperties>::uploadProperties() const {
     HRESULT result;
 
+    activateShader();
+
     D3D11_MAPPED_SUBRESOURCE mappedResource;
     result = D3D11Device::get().rawContext()->Map(m_propertiesBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
     if (FAILED(result)) {
@@ -44,6 +46,20 @@ namespace rcore {
     if (m_shaderStages & ShaderStage::Pixel) D3D11Device::get().rawContext()->PSSetConstantBuffers(m_bufferSlot, 1, m_propertiesBuffer.GetAddressOf());
 
     return true;
+  }
+
+  template<typename TProperties>
+  void Material<TProperties>::uploadTextures(std::span<ID3D11ShaderResourceView*> const& textureViews, UINT startSlot) const {
+    activateShader();
+    if (m_shaderStages & ShaderStage::Vertex) D3D11Device::get().rawContext()->VSSetShaderResources(startSlot, static_cast<UINT>(textureViews.size()), textureViews.data());
+    if (m_shaderStages & ShaderStage::Pixel) D3D11Device::get().rawContext()->PSSetShaderResources(startSlot, static_cast<UINT>(textureViews.size()), textureViews.data());
+  }
+
+  template<typename TProperties>
+  void Material<TProperties>::uploadSamplers(std::span<ID3D11SamplerState*> const& samplerViews, UINT startSlot) const {
+    activateShader();
+    if (m_shaderStages & ShaderStage::Vertex) D3D11Device::get().rawContext()->VSSetSamplers(startSlot, static_cast<UINT>(samplerViews.size()), samplerViews.data());
+    if (m_shaderStages & ShaderStage::Pixel) D3D11Device::get().rawContext()->PSSetSamplers(startSlot, static_cast<UINT>(samplerViews.size()), samplerViews.data());
   }
 
   template<typename TProperties>

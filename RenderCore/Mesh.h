@@ -9,8 +9,10 @@ namespace rcore {
     std::vector<DirectX::XMFLOAT4> vertices;
     std::vector<DirectX::XMFLOAT2> uvs;
     std::vector<DirectX::XMFLOAT3> normals;
-    UINT vertexCount = 0;
-    UINT indexCount = 0;
+    std::vector<DirectX::XMFLOAT3> tangents;
+    std::vector<DirectX::XMFLOAT3> binormals;
+    std::vector<UINT> indices;
+    bool hasTangents = false;
   };
 
 }

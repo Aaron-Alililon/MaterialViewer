@@ -137,9 +137,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CameraController.cpp" />
     <ClCompile Include="EditorLayer.cpp" />
     <ClCompile Include="MaterialEditor.cpp" />
     <ClCompile Include="ModelSphere.cpp" />
+    <ClCompile Include="Skybox.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\RenderCore\RenderCore.vcxproj">
@@ -147,13 +149,19 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CameraController.h" />
     <ClInclude Include="EditorLayer.h" />
     <ClInclude Include="ModelSphere.h" />
+    <ClInclude Include="Skybox.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="data\log.txt" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="models\icosphere_extreme.glb" />
+    <None Include="models\sphere.glb" />
+    <None Include="models\sphere_extreme.glb" />
+    <None Include="models\sphere_high.glb" />
     <None Include="PixelShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
@@ -171,6 +179,44 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="models\sphere.obj">
+      <FileType>Document</FileType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="textures\marsel.tga" />
+    <Image Include="textures\oiiai.tga" />
+    <Image Include="textures\rocks\albedo.png" />
+    <Image Include="textures\rocks\displacement.png" />
+    <Image Include="textures\rocks\normal.png" />
+    <Image Include="textures\rocks\roughness.png" />
+    <Image Include="textures\skybox\back.png" />
+    <Image Include="textures\skybox\bottom.png" />
+    <Image Include="textures\skybox\left.png" />
+    <Image Include="textures\skybox\middle.png" />
+    <Image Include="textures\skybox\right.png" />
+    <Image Include="textures\skybox\top.png" />
+    <Image Include="textures\skybox\cubemap.png" />
+    <Image Include="textures\tiles\albedo.png" />
+    <Image Include="textures\tiles\displacement.png" />
+    <Image Include="textures\tiles\normal.png" />
+    <Image Include="textures\tiles\roughness.png" />
+    <Image Include="textures\wall.tga" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="models\monkey.obj">
+      <FileType>Document</FileType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="models\skybox.obj">
+      <FileType>Document</FileType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="SkyboxPixelShader.hlsl">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="SkyboxVertexShader.hlsl">
       <FileType>Document</FileType>
     </None>
   </ItemGroup>

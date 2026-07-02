@@ -69,6 +69,10 @@ namespace rcore {
   }
 
   LRESULT CALLBACK Window::handleMessage(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam) {
+    for (auto const& layer : m_layers) {
+      if (!layer->onEvent(hwnd, umsg, wparam, lparam)) break;
+    }
+
     return m_winInterface.handleMessage(hwnd, umsg, wparam, lparam);
   }
 

@@ -3,14 +3,13 @@
 EditorLayer::EditorLayer(std::weak_ptr<rcore::Window> window, rcore::D3DContextDesc contextDesc) : Layer(window), m_ctxDesc{ contextDesc } {
   auto inputDesc = rcore::Preset3D::makeStandardInputDescription();
 
-  m_cam = { 0, 0, -10 };
   m_matrixBuffer = std::make_shared<rcore::MatrixBuffer>(0);
   m_modelSphere = std::make_unique<ModelSphere>(inputDesc);
+  m_skybox = std::make_unique<Skybox>(inputDesc);
 }
 
 void EditorLayer::update(rcore::FrameState const& frame) {
-  m_matrixBuffer->setProjectionMatrix(m_cam.getPerspectiveMatrix((float)frame.width / frame.height));
-  m_matrixBuffer->setViewMatrix(m_cam.getViewMatrix());
+  m_camController.setMatrices(m_matrixBuffer, (float)frame.width / frame.height);
 }
 
 void EditorLayer::render(rcore::FrameState const& frame) {
@@ -22,4 +21,11 @@ void EditorLayer::render(rcore::FrameState const& frame) {
   rcore::D3D11Device::get().rawContext()->ClearDepthStencilView(window->getDepthStencilView(), D3D11_CLEAR_DEPTH, 1.0f, 0);
 
   m_modelSphere->render(frame, *m_matrixBuffer);
+  m_skybox->render(frame, *m_matrixBuffer);
+}
+
+bool EditorLayer::onEvent(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam) {
+  m_camController.onEvent(hwnd, umsg, wparam, lparam);
+
+  return true;
 }
