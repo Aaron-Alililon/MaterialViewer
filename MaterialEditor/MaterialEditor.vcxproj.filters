@@ -122,6 +122,9 @@
     <ClInclude Include="imconfig.h">
       <Filter>Header Files\ImGUI</Filter>
     </ClInclude>
+    <ClInclude Include="Setting.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="data\log.txt">

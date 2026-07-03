@@ -2,6 +2,10 @@
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
+void SettingsLayer::addFloatSlider(std::string label, float* value, float min, float max, std::function<void(float)> onChange) {
+  m_settings.push_back(std::make_unique<FloatSliderSetting>(std::move(label), value, min, max, onChange));
+}
+
 SettingsLayer::SettingsLayer(std::weak_ptr<rcore::Window> window, rcore::D3DContextDesc contextDesc) : Layer{window} {
   ImGui::CreateContext();
   ImGui_ImplWin32_Init(window.lock()->getHandle());
@@ -24,10 +28,19 @@ void SettingsLayer::render(rcore::FrameState const& frame) {
   ImGui_ImplWin32_NewFrame();
   ImGui::NewFrame();
 
-  static float value = 0.5f;
-  ImGui::SetNextWindowPos(ImVec2(20, 20), ImGuiCond_Always);
-  ImGui::Begin("Test", nullptr, ImGuiWindowFlags_NoMove);
-  ImGui::SliderFloat("Slider", &value, 0.0f, 1.0f);
+  ImGuiIO& io = ImGui::GetIO();
+  ImGui::SetNextWindowPos(ImVec2(io.DisplaySize.x - 20.0f, 20.0f), ImGuiCond_Always, ImVec2(1.0f, 0.0f));
+  ImGui::Begin("Settings", nullptr,
+      ImGuiWindowFlags_AlwaysAutoResize |
+      ImGuiWindowFlags_NoMove |
+      ImGuiWindowFlags_NoResize |
+      ImGuiWindowFlags_NoCollapse
+  );
+
+  for (auto& setting : m_settings) {
+    setting->draw();
+  }
+
   ImGui::End();
 
   ImGui::Render();

@@ -34,10 +34,13 @@ namespace rcore {
     template<std::derived_from<Layer> T, class... Args>
     void addLayer(Args&&... args);
 
+    template<std::derived_from<Layer> T>
+    std::weak_ptr<T> getLayer();
+
   private:
     WindowsInterface m_winInterface;
     std::unique_ptr<D3D11Context> m_context;
-    std::vector<std::unique_ptr<Layer>> m_layers;
+    std::vector<std::shared_ptr<Layer>> m_layers;
     FrameState m_frameState;
     int m_width, m_height;
     LARGE_INTEGER m_lastFrameTime;

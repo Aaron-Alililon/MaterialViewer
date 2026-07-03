@@ -16,7 +16,6 @@
 class ModelSphere {
 private:
   struct __declspec(align(16)) MaterialProperties {
-    DirectX::XMFLOAT4 albedo;
     DirectX::XMFLOAT4 sunDirection;
     float globalIllumination;
     DirectX::XMFLOAT3 _;
@@ -28,8 +27,13 @@ public:
 
 public:
   void render(rcore::FrameState const& frame, rcore::MatrixBuffer& matrixBuffer);
+  void onDisplacementChange(float displacement);
+
+public:
+  float displacement = 0.15f;
 
 private:
+  MaterialProperties m_properties;
   std::shared_ptr<rcore::StaticIndexedVertexBuffer<rcore::Preset3D::StandardVertexType>> m_SIVBuffer;
   std::shared_ptr<rcore::Texture> m_textureAlbedo, m_textureNormal, m_textureDisplacement, m_textureRoughness;
   std::shared_ptr<rcore::Sampler> m_sampler;

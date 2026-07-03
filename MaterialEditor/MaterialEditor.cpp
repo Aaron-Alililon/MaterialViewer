@@ -5,22 +5,14 @@
 
 // TODO
 // Fix per frame material data binding
-// Variable editor
+// Fix variable editor alignment
+// Implement separate buffer uploading
 // Support multiple light sources
 // PBR shader
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline, int iCmdshow) {
   rcore::DeviceDesc devDesc;
   rcore::initDevice(devDesc);
-
-  // --- Model Window ---
-  rcore::WindowDesc modelWindDesc = rcore::Preset3D::makeStandardWindowDescription(L"Material Editor - View", 1600, 1200);
-  auto modelWindow = rcore::makeWindow(modelWindDesc);
-
-  rcore::D3DContextDesc modelCtxDesc = rcore::Preset3D::makeStandardContextDescription(modelWindDesc.width(), modelWindDesc.height());
-  rcore::makeD3D11Context(modelWindow, modelCtxDesc);
-
-  modelWindow.lock()->addLayer<ViewLayer>(modelCtxDesc);
 
   // --- Settings Window ---
   rcore::WindowDesc settingsWindDesc = rcore::Preset3D::makeStandardWindowDescription(L"Material Editor - Settings", 400, 800);
@@ -31,6 +23,15 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
   rcore::makeD3D11Context(settingsWindow, settingsCtxDesc);
 
   settingsWindow.lock()->addLayer<SettingsLayer>(settingsCtxDesc);
+
+  // --- Model Window ---
+  rcore::WindowDesc modelWindDesc = rcore::Preset3D::makeStandardWindowDescription(L"Material Editor - View", 1600, 1200);
+  auto modelWindow = rcore::makeWindow(modelWindDesc);
+
+  rcore::D3DContextDesc modelCtxDesc = rcore::Preset3D::makeStandardContextDescription(modelWindDesc.width(), modelWindDesc.height());
+  rcore::makeD3D11Context(modelWindow, modelCtxDesc);
+
+  modelWindow.lock()->addLayer<ViewLayer>(settingsWindow, modelCtxDesc);
 
   rcore::init();
 }

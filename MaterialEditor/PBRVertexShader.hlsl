@@ -9,7 +9,6 @@ cbuffer MatrixBuffer : register(b0) {
 };
 
 cbuffer PropertiesBuffer : register(b1) {
-    float4 albedo;
     float4 sunDirection;
     float globalIllumination;
     float3 _;

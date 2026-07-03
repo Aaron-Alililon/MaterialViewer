@@ -6,6 +6,7 @@
 #include "MatrixBuffer.h"
 #include "Preset3D.h"
 
+#include "SettingsLayer.h"
 #include "CameraController.h"
 #include "ModelSphere.h"
 #include "Skybox.h"
@@ -13,7 +14,7 @@
 class ViewLayer : public rcore::Layer {
 
 public:
-  ViewLayer(std::weak_ptr<rcore::Window> window, rcore::D3DContextDesc contextDesc);
+  ViewLayer(std::weak_ptr<rcore::Window> window, std::weak_ptr<rcore::Window> settingsWindow, rcore::D3DContextDesc contextDesc);
 
 public:
   void update(rcore::FrameState const& frame) override;
@@ -21,6 +22,7 @@ public:
   bool onEvent(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam) override;
 
 private:
+  std::weak_ptr<rcore::Window> m_settingsWindow;
   rcore::D3DContextDesc m_ctxDesc;
   CameraController m_camController;
   std::shared_ptr<rcore::MatrixBuffer> m_matrixBuffer;
