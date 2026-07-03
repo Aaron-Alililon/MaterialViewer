@@ -10,10 +10,10 @@
 #include "ModelSphere.h"
 #include "Skybox.h"
 
-class EditorLayer : public rcore::Layer {
+class ViewLayer : public rcore::Layer {
 
 public:
-  EditorLayer(std::weak_ptr<rcore::Window> window, rcore::D3DContextDesc contextDesc);
+  ViewLayer(std::weak_ptr<rcore::Window> window, rcore::D3DContextDesc contextDesc);
 
 public:
   void update(rcore::FrameState const& frame) override;

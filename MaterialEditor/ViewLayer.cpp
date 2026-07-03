@@ -1,6 +1,6 @@
-#include "EditorLayer.h"
+#include "ViewLayer.h"
 
-EditorLayer::EditorLayer(std::weak_ptr<rcore::Window> window, rcore::D3DContextDesc contextDesc) : Layer(window), m_ctxDesc{ contextDesc } {
+ViewLayer::ViewLayer(std::weak_ptr<rcore::Window> window, rcore::D3DContextDesc contextDesc) : Layer(window), m_ctxDesc{ contextDesc } {
   auto inputDesc = rcore::Preset3D::makeStandardInputDescription();
 
   m_matrixBuffer = std::make_shared<rcore::MatrixBuffer>(0);
@@ -8,11 +8,11 @@ EditorLayer::EditorLayer(std::weak_ptr<rcore::Window> window, rcore::D3DContextD
   m_skybox = std::make_unique<Skybox>(inputDesc);
 }
 
-void EditorLayer::update(rcore::FrameState const& frame) {
+void ViewLayer::update(rcore::FrameState const& frame) {
   m_camController.setMatrices(m_matrixBuffer, (float)frame.width / frame.height);
 }
 
-void EditorLayer::render(rcore::FrameState const& frame) {
+void ViewLayer::render(rcore::FrameState const& frame) {
   auto window = m_window.lock();
   if (!window) return;
 
@@ -24,7 +24,7 @@ void EditorLayer::render(rcore::FrameState const& frame) {
   m_skybox->render(frame, *m_matrixBuffer);
 }
 
-bool EditorLayer::onEvent(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam) {
+bool ViewLayer::onEvent(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam) {
   m_camController.onEvent(hwnd, umsg, wparam, lparam);
 
   return true;

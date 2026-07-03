@@ -138,7 +138,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CameraController.cpp" />
-    <ClCompile Include="EditorLayer.cpp" />
+    <ClCompile Include="imgui.cpp" />
+    <ClCompile Include="imgui_draw.cpp" />
+    <ClCompile Include="imgui_tables.cpp" />
+    <ClCompile Include="imgui_widgets.cpp" />
+    <ClCompile Include="SettingsLayer.cpp" />
+    <ClCompile Include="ViewLayer.cpp" />
+    <ClCompile Include="imgui_impl_dx11.cpp" />
+    <ClCompile Include="imgui_impl_win32.cpp" />
     <ClCompile Include="MaterialEditor.cpp" />
     <ClCompile Include="ModelSphere.cpp" />
     <ClCompile Include="Skybox.cpp" />
@@ -150,7 +157,16 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CameraController.h" />
-    <ClInclude Include="EditorLayer.h" />
+    <ClInclude Include="imconfig.h" />
+    <ClInclude Include="imgui.h" />
+    <ClInclude Include="imgui_internal.h" />
+    <ClInclude Include="imstb_rectpack.h" />
+    <ClInclude Include="imstb_textedit.h" />
+    <ClInclude Include="imstb_truetype.h" />
+    <ClInclude Include="SettingsLayer.h" />
+    <ClInclude Include="ViewLayer.h" />
+    <ClInclude Include="imgui_impl_dx11.h" />
+    <ClInclude Include="imgui_impl_win32.h" />
     <ClInclude Include="ModelSphere.h" />
     <ClInclude Include="Skybox.h" />
   </ItemGroup>
