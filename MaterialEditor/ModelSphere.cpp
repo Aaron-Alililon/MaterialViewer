@@ -12,17 +12,11 @@ ModelSphere::ModelSphere(std::vector<D3D11_INPUT_ELEMENT_DESC> const& inputDesc)
   m_sampler = std::make_shared<rcore::Sampler>(rcore::Preset3D::makeStandardLinearSamplerDescription());
 
   rcore::Shader shader = { L"PBRVertexShader.hlsl", L"PBRPixelShader.hlsl", inputDesc };
-
   m_material = std::make_shared<rcore::Material<MaterialProperties>>(shader, 1, rcore::Pixel | rcore::Vertex);
-  m_properties = {
-    { 1.0f, 1.0f, 0.0f, 0.0f },
-    0.3f,
-    { 0, 0, 0 },
-    displacement
-  };
-  m_material->setProperties(m_properties);
 
   m_sphere = std::make_unique<rcore::Model>(m_material, m_SIVBuffer);
+
+  onValueChange();
 }
 
 void ModelSphere::render(rcore::FrameState const& frame, rcore::MatrixBuffer& matrixBuffer) {
@@ -35,7 +29,13 @@ void ModelSphere::render(rcore::FrameState const& frame, rcore::MatrixBuffer& ma
   m_sphere->drawIndexed(matrixBuffer);
 }
 
-void ModelSphere::onDisplacementChange(float displacement) {
-  m_properties.displacementStrength = displacement;
+void ModelSphere::onValueChange() {
+  m_properties = {
+    { 1.0f, 1.0f, 0.0f, 0.0f },
+    giStrength,
+    { 0, 0, 0 },
+    displacement
+  };
+
   m_material->setProperties(m_properties);
 }

@@ -28,7 +28,8 @@ namespace rcore {
     HWND getHandle() const;
     std::pair<int, int> getSize() const;
     IDXGISwapChain* getSwapChain() const;
-    ID3D11RenderTargetView* getRenderTargetView() const;
+    ID3D11RenderTargetView* getSceneRenderTargetView() const;
+    ID3D11RenderTargetView* getUIRenderTargetView() const;
     ID3D11DepthStencilView* getDepthStencilView() const;
 
     template<std::derived_from<Layer> T, class... Args>

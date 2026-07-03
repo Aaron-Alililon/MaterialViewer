@@ -21,6 +21,8 @@ public:
   void render(rcore::FrameState const& frame) override;
   bool onEvent(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam) override;
 
+  void createSettings() const;
+
 private:
   std::weak_ptr<rcore::Window> m_settingsWindow;
   rcore::D3DContextDesc m_ctxDesc;

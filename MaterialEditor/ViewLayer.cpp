@@ -7,22 +7,7 @@ ViewLayer::ViewLayer(std::weak_ptr<rcore::Window> window, std::weak_ptr<rcore::W
   m_modelSphere = std::make_unique<ModelSphere>(inputDesc);
   m_skybox = std::make_unique<Skybox>(inputDesc);
 
-  auto lockedSettings = m_settingsWindow.lock();
-  if (lockedSettings) {
-    auto lockedSettingsLayer = lockedSettings->getLayer<SettingsLayer>().lock();
-    if (lockedSettingsLayer) {
-
-      lockedSettingsLayer->addFloatSlider(
-        "Displacement strength",
-        &m_modelSphere->displacement,
-        0, 1,
-        [this](float newValue) { m_modelSphere->onDisplacementChange(newValue); }
-      );
-
-    }
-  }
-
-  
+  createSettings();
 }
 
 void ViewLayer::update(rcore::FrameState const& frame) {
@@ -34,7 +19,7 @@ void ViewLayer::render(rcore::FrameState const& frame) {
   if (!window) return;
 
   float bgCol[] = { 0.1f, 0.15f, 0.2f, 1.0f };
-  rcore::D3D11Device::get().rawContext()->ClearRenderTargetView(window->getRenderTargetView(), bgCol);
+  rcore::D3D11Device::get().rawContext()->ClearRenderTargetView(window->getSceneRenderTargetView(), bgCol);
   rcore::D3D11Device::get().rawContext()->ClearDepthStencilView(window->getDepthStencilView(), D3D11_CLEAR_DEPTH, 1.0f, 0);
 
   m_modelSphere->render(frame, *m_matrixBuffer);
@@ -53,4 +38,28 @@ bool ViewLayer::onEvent(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam) {
   }
 
   return true;
+}
+
+void ViewLayer::createSettings() const {
+  auto lockedSettings = m_settingsWindow.lock();
+  if (lockedSettings) {
+    auto lockedSettingsLayer = lockedSettings->getLayer<SettingsLayer>().lock();
+    if (lockedSettingsLayer) {
+
+      lockedSettingsLayer->addFloatSlider(
+        "Displacement strength",
+        &m_modelSphere->displacement,
+        0, 1,
+        [this]() { m_modelSphere->onValueChange(); }
+      );
+
+      lockedSettingsLayer->addFloatSlider(
+        "Global Illumination Strength",
+        &m_modelSphere->giStrength,
+        0, 1,
+        [this]() { m_modelSphere->onValueChange(); }
+      );
+
+    }
+  }
 }

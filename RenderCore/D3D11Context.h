@@ -14,6 +14,7 @@ namespace rcore {
 
   public:
     void activate();
+    void resolveToBackBuffer();
     void presentSwapChain() const;
 
   private:
@@ -33,6 +34,9 @@ namespace rcore {
     Microsoft::WRL::ComPtr<ID3D11DepthStencilView> m_depthStencilView;
     Microsoft::WRL::ComPtr<ID3D11RasterizerState> m_rasterState;
     D3D11_VIEWPORT m_viewport;
+
+    Microsoft::WRL::ComPtr<ID3D11Texture2D> m_msaaRenderTargetTexture;
+    Microsoft::WRL::ComPtr<ID3D11RenderTargetView> m_msaaRenderTargetView;
 
     friend Window;
   };

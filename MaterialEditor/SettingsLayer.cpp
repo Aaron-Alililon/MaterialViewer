@@ -2,7 +2,7 @@
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
-void SettingsLayer::addFloatSlider(std::string label, float* value, float min, float max, std::function<void(float)> onChange) {
+void SettingsLayer::addFloatSlider(std::string label, float* value, float min, float max, std::function<void()> onChange) {
   m_settings.push_back(std::make_unique<FloatSliderSetting>(std::move(label), value, min, max, onChange));
 }
 
@@ -21,20 +21,21 @@ void SettingsLayer::render(rcore::FrameState const& frame) {
   if (!window) return;
 
   float bgCol[] = { 0.1f, 0.15f, 0.2f, 1.0f };
-  rcore::D3D11Device::get().rawContext()->ClearRenderTargetView(window->getRenderTargetView(), bgCol);
-  rcore::D3D11Device::get().rawContext()->ClearDepthStencilView(window->getDepthStencilView(), D3D11_CLEAR_DEPTH, 1.0f, 0);
+  rcore::D3D11Device::get().rawContext()->ClearRenderTargetView(window->getUIRenderTargetView(), bgCol);
 
   ImGui_ImplDX11_NewFrame();
   ImGui_ImplWin32_NewFrame();
   ImGui::NewFrame();
 
   ImGuiIO& io = ImGui::GetIO();
-  ImGui::SetNextWindowPos(ImVec2(io.DisplaySize.x - 20.0f, 20.0f), ImGuiCond_Always, ImVec2(1.0f, 0.0f));
+  ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_Always);
+  ImGui::SetNextWindowSize(io.DisplaySize, ImGuiCond_Always);
+
   ImGui::Begin("Settings", nullptr,
-      ImGuiWindowFlags_AlwaysAutoResize |
       ImGuiWindowFlags_NoMove |
       ImGuiWindowFlags_NoResize |
-      ImGuiWindowFlags_NoCollapse
+      ImGuiWindowFlags_NoCollapse |
+      ImGuiWindowFlags_NoTitleBar
   );
 
   for (auto& setting : m_settings) {

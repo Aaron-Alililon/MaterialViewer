@@ -27,10 +27,11 @@ public:
 
 public:
   void render(rcore::FrameState const& frame, rcore::MatrixBuffer& matrixBuffer);
-  void onDisplacementChange(float displacement);
+  void onValueChange();
 
 public:
   float displacement = 0.15f;
+  float giStrength = 0.6f;
 
 private:
   MaterialProperties m_properties;

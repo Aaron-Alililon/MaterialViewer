@@ -16,7 +16,7 @@
 
 class SettingsLayer : public rcore::Layer {
 public:
-  void addFloatSlider(std::string label, float* value, float min, float max, std::function<void(float)> onChange = nullptr);
+  void addFloatSlider(std::string label, float* value, float min, float max, std::function<void()> onChange = nullptr);
 
 public:
   SettingsLayer(std::weak_ptr<rcore::Window> window, rcore::D3DContextDesc contextDesc);
@@ -25,6 +25,8 @@ public:
   void update(rcore::FrameState const& frame) override;
   void render(rcore::FrameState const& frame) override;
   bool onEvent(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam) override;
+
+  bool isUI() const override { return true; }
 
 private:
   std::vector<std::unique_ptr<ISetting>> m_settings;

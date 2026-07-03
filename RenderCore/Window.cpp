@@ -48,7 +48,17 @@ namespace rcore {
     if (!m_context) return;
 
     for (auto const& layer : m_layers) {
-      layer->render(m_frameState);
+      if (!layer->isUI()) {
+        layer->render(m_frameState);
+      }
+    }
+
+    m_context->resolveToBackBuffer();
+
+    for (auto const& layer : m_layers) {
+      if (layer->isUI()) {
+        layer->render(m_frameState);
+      }
     }
   }
 
@@ -92,7 +102,11 @@ namespace rcore {
     return m_context->m_swapChain.Get();
   }
 
-  ID3D11RenderTargetView* Window::getRenderTargetView() const {
+  ID3D11RenderTargetView* Window::getSceneRenderTargetView() const {
+    return m_context->m_msaaRenderTargetView.Get();
+  }
+
+  ID3D11RenderTargetView* Window::getUIRenderTargetView() const {
     return m_context->m_renderTargetView.Get();
   }
 

@@ -22,7 +22,7 @@ namespace rcore {
 		if (!m_valid) return;
 
 		ID3D11DeviceContext* deviceContext = D3D11Device::get().rawContext();
-		ID3D11RenderTargetView* rawRTV = m_renderTargetView.Get();
+		ID3D11RenderTargetView* rawRTV = m_msaaRenderTargetView.Get();
 
 		deviceContext->OMSetDepthStencilState(m_depthStencilState.Get(), 1);
 		deviceContext->OMSetRenderTargets(1, &rawRTV, m_depthStencilView.Get());
@@ -30,9 +30,19 @@ namespace rcore {
 		deviceContext->RSSetViewports(1, &m_viewport);
 	}
 
-	void D3D11Context::presentSwapChain() const {
+	void D3D11Context::resolveToBackBuffer() {
 		if (!m_valid) return;
 
+		Microsoft::WRL::ComPtr<ID3D11Texture2D> backBuffer;
+		m_swapChain->GetBuffer(0, IID_PPV_ARGS(&backBuffer));
+		D3D11Device::get().rawContext()->ResolveSubresource(backBuffer.Get(), 0, m_msaaRenderTargetTexture.Get(), 0, DXGI_FORMAT_R8G8B8A8_UNORM);
+
+		ID3D11RenderTargetView* rawBackBufferRTV = m_renderTargetView.Get();
+		D3D11Device::get().rawContext()->OMSetRenderTargets(1, &rawBackBufferRTV, nullptr);
+	}
+
+	void D3D11Context::presentSwapChain() const {
+		if (!m_valid) return;
 		m_swapChain->Present(1, 0);
 	}
 
@@ -42,7 +52,7 @@ namespace rcore {
 
 		ZeroMemory(&swapChainDesc, sizeof(swapChainDesc));
 
-		swapChainDesc.BufferCount = 1;
+		swapChainDesc.BufferCount = 2;
 		swapChainDesc.BufferDesc.Width = windowSize.first;
 		swapChainDesc.BufferDesc.Height = windowSize.second;
 		swapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
@@ -50,12 +60,12 @@ namespace rcore {
 		swapChainDesc.BufferDesc.RefreshRate.Denominator = 1;
 		swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 		swapChainDesc.OutputWindow = windowHandle;
-		swapChainDesc.SampleDesc.Count = 4; // 1 if no MSAA
+		swapChainDesc.SampleDesc.Count = 1;
 		swapChainDesc.SampleDesc.Quality = 0;
 		swapChainDesc.Windowed = true;
 		swapChainDesc.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
 		swapChainDesc.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
-		swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
+		swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
 		swapChainDesc.Flags = 0;
 
 		Microsoft::WRL::ComPtr<IDXGIDevice> dxgiDevice;
@@ -101,6 +111,24 @@ namespace rcore {
 		result = D3D11Device::get().raw()->CreateRenderTargetView(backBufferPtr.Get(), NULL, &m_renderTargetView);
 		if (FAILED(result)) {
 			RCORE_LOG(ERR, "Failed to create render target view");
+			return false;
+		}
+
+		D3D11_TEXTURE2D_DESC msaaDesc{};
+		backBufferPtr->GetDesc(&msaaDesc);
+		msaaDesc.SampleDesc.Count = 4;
+		msaaDesc.SampleDesc.Quality = 0;
+		msaaDesc.BindFlags = D3D11_BIND_RENDER_TARGET;
+
+		result = D3D11Device::get().raw()->CreateTexture2D(&msaaDesc, nullptr, &m_msaaRenderTargetTexture);
+		if (FAILED(result)) {
+			RCORE_LOG(ERR, "Failed to create msaa render target texture");
+			return false;
+		}
+
+		result = D3D11Device::get().raw()->CreateRenderTargetView(m_msaaRenderTargetTexture.Get(), nullptr, &m_msaaRenderTargetView);
+		if (FAILED(result)) {
+			RCORE_LOG(ERR, "Failed to create msaa render target view");
 			return false;
 		}
 
