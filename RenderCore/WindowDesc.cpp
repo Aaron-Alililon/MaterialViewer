@@ -29,4 +29,19 @@ namespace rcore {
     return m_height;
   }
 
+  void WindowDesc::windowPosX(std::optional<int> x) {
+    m_windowPosX = x;
+  }
+
+  std::optional<int> WindowDesc::windowPosX() const {
+    return m_windowPosX;
+  }
+
+  void WindowDesc::windowPosY(std::optional<int> y) {
+    m_windowPosY = y;
+  }
+  std::optional<int> WindowDesc::windowPosY() const {
+    return m_windowPosY;
+  }
+
 }

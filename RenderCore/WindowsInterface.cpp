@@ -15,7 +15,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
 
 namespace rcore {
 
-	WindowsInterface::WindowsInterface(LPCWSTR applicationName, int screenWidth, int screenHeight) : m_windowClosing{ false }, m_applicationName { applicationName } {
+	WindowsInterface::WindowsInterface(LPCWSTR applicationName, int screenWidth, int screenHeight, std::optional<int> windowPosX, std::optional<int> windowPosY) : m_windowClosing{ false }, m_applicationName { applicationName } {
 		m_hinstance = GetModuleHandle(NULL);
 
 		WNDCLASSEX wc{};
@@ -34,8 +34,8 @@ namespace rcore {
 
 		RegisterClassEx(&wc);
 
-		int posX = (GetSystemMetrics(SM_CXSCREEN) - screenWidth) / 2;
-		int posY = (GetSystemMetrics(SM_CYSCREEN) - screenHeight) / 2;
+		int posX = (windowPosX.has_value()) ? windowPosX.value() : (GetSystemMetrics(SM_CXSCREEN) - screenWidth) / 2;
+		int posY = (windowPosY.has_value()) ? windowPosY.value() : (GetSystemMetrics(SM_CYSCREEN) - screenHeight) / 2;
 		
 		m_hwnd = CreateWindowEx(WS_EX_APPWINDOW, m_applicationName, m_applicationName,
 			WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX,

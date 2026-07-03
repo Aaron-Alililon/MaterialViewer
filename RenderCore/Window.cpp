@@ -4,7 +4,7 @@
 namespace rcore {
 
   Window::Window(WindowDesc const& descriptor) :
-    m_winInterface{ descriptor.name(), descriptor.width(), descriptor.height() },
+    m_winInterface{ descriptor.name(), descriptor.width(), descriptor.height(), descriptor.windowPosX(), descriptor.windowPosY() },
     m_context{ nullptr },
     m_frameState{},
     m_width{ descriptor.width() },

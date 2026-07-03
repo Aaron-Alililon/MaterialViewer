@@ -16,10 +16,19 @@ namespace rcore {
     void height(int height);
     int height() const;
 
+    void windowPosX(std::optional<int> x);
+    std::optional<int> windowPosX() const;
+
+    void windowPosY(std::optional<int> y);
+    std::optional<int> windowPosY() const;
+
   private:
     LPCWSTR m_name = L"Window";
     int m_width = 400;
     int m_height = 400;
+    std::optional<int> m_windowPosX{};
+    std::optional<int> m_windowPosY{};
+
   };
 
 }
