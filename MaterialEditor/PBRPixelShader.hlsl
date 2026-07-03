@@ -4,8 +4,8 @@ SamplerState sampleType : register(s0);
 
 cbuffer PropertiesBuffer : register(b1) {
     float4 sunDirection;
+    float2 uvScale;
     float globalIllumination;
-    float3 _;
     float displacementStrength;
 };
 

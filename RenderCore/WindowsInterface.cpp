@@ -34,12 +34,18 @@ namespace rcore {
 
 		RegisterClassEx(&wc);
 
-		int posX = (windowPosX.has_value()) ? windowPosX.value() : (GetSystemMetrics(SM_CXSCREEN) - screenWidth) / 2;
-		int posY = (windowPosY.has_value()) ? windowPosY.value() : (GetSystemMetrics(SM_CYSCREEN) - screenHeight) / 2;
+		RECT windowRect = { 0, 0, screenWidth, screenHeight };
+		AdjustWindowRectEx(&windowRect, WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX, FALSE, WS_EX_APPWINDOW);
+
+		int adjustedWidth = windowRect.right - windowRect.left;
+		int adjustedHeight = windowRect.bottom - windowRect.top;
+
+		int posX = (windowPosX.has_value()) ? windowPosX.value() : (GetSystemMetrics(SM_CXSCREEN) - adjustedWidth) / 2;
+		int posY = (windowPosY.has_value()) ? windowPosY.value() : (GetSystemMetrics(SM_CYSCREEN) - adjustedHeight) / 2;
 		
 		m_hwnd = CreateWindowEx(WS_EX_APPWINDOW, m_applicationName, m_applicationName,
-			WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX,
-			posX, posY, screenWidth, screenHeight, NULL, NULL, m_hinstance, NULL);
+			WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX, // | WS_THICKFRAME, // TODO Window resize event needs to resize the D3D11Context stuff
+			posX, posY, adjustedWidth, adjustedHeight, NULL, NULL, m_hinstance, NULL);
 
 		ShowWindow(m_hwnd, SW_SHOW);
 		SetForegroundWindow(m_hwnd);

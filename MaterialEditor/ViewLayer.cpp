@@ -47,6 +47,20 @@ void ViewLayer::createSettings() const {
     if (lockedSettingsLayer) {
 
       lockedSettingsLayer->addFloatSlider(
+        "Texture u scale",
+        &m_modelSphere->uScale,
+        0.0001, 20,
+        [this]() { m_modelSphere->onValueChange(); }
+      );
+
+      lockedSettingsLayer->addFloatSlider(
+        "Texture v scale",
+        &m_modelSphere->vScale,
+        0.0001, 20,
+        [this]() { m_modelSphere->onValueChange(); }
+      );
+
+      lockedSettingsLayer->addFloatSlider(
         "Displacement strength",
         &m_modelSphere->displacement,
         0, 1,

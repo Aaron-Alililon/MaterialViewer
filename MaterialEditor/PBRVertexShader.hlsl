@@ -10,8 +10,8 @@ cbuffer MatrixBuffer : register(b0) {
 
 cbuffer PropertiesBuffer : register(b1) {
     float4 sunDirection;
+    float2 uvScale;
     float globalIllumination;
-    float3 _;
     float displacementStrength;
 };
 
@@ -34,7 +34,7 @@ struct PixelInputType {
 PixelInputType VSMain(VertexInputType input) {
     PixelInputType output;
     
-    output.uv = input.uv * float2(8.0f, 4.0f);
+    output.uv = input.uv * uvScale;
     
     float displacement = displacementTex.SampleLevel(sampleType, output.uv, 0).r;
     float4 displaced = input.position + float4(input.normal * displacement * displacementStrength, 0.0);

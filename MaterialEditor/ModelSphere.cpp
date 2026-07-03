@@ -32,8 +32,8 @@ void ModelSphere::render(rcore::FrameState const& frame, rcore::MatrixBuffer& ma
 void ModelSphere::onValueChange() {
   m_properties = {
     { 1.0f, 1.0f, 0.0f, 0.0f },
+    { uScale, vScale },
     giStrength,
-    { 0, 0, 0 },
     displacement
   };
 

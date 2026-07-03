@@ -17,8 +17,8 @@ class ModelSphere {
 private:
   struct __declspec(align(16)) MaterialProperties {
     DirectX::XMFLOAT4 sunDirection;
+    DirectX::XMFLOAT2 uvScale;
     float globalIllumination;
-    DirectX::XMFLOAT3 _;
     float displacementStrength;
   };
 
@@ -30,6 +30,8 @@ public:
   void onValueChange();
 
 public:
+  float uScale = 8.0f;
+  float vScale = 4.0f;
   float displacement = 0.15f;
   float giStrength = 0.6f;
 

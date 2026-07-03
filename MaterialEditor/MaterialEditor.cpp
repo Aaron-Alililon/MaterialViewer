@@ -4,11 +4,13 @@
 #include "Preset3D.h"
 
 // TODO
-// Fix per frame material data binding
-// Fix variable editor alignment
+// Fix per frame material data binding (why only textures and samplers, not cbuffers?)
 // Implement separate buffer uploading
 // Support multiple light sources
 // PBR shader
+
+// INFO
+// WS_EX_ACCEPTFILES for accepting files
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline, int iCmdshow) {
   rcore::DeviceDesc devDesc;
