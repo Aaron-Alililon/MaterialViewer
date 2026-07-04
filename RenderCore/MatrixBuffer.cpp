@@ -3,34 +3,25 @@
 
 namespace rcore {
 
-  MatrixBuffer::MatrixBuffer(int bufferSlot) : m_bufferSlot{ bufferSlot } {
-    if (createBuffer()) {
-      m_valid = true;
-    }
-  }
+  MatrixBuffer::MatrixBuffer(int bufferSlot) : CBuffer{ bufferSlot } {}
 
   void MatrixBuffer::setWorldMatrix(DirectX::XMMATRIX const& worldMatrix) {
-    m_matrices.world = worldMatrix;
+    m_data.world = worldMatrix;
   }
 
   void MatrixBuffer::setViewMatrix(DirectX::XMMATRIX const& viewMatrix) {
-    m_matrices.view = viewMatrix;
+    m_data.view = viewMatrix;
   }
 
   void MatrixBuffer::setProjectionMatrix(DirectX::XMMATRIX const& projectionMatrix) {
-    m_matrices.projection = projectionMatrix;
+    m_data.projection = projectionMatrix;
   }
 
-  void MatrixBuffer::setMatrices(MatrixBufferType const& matrices) {
-    m_matrices = matrices;
-  }
-
-
-  bool MatrixBuffer::uploadMatrices() const {
+  bool MatrixBuffer::uploadBuffer() const {
     HRESULT result;
 
     D3D11_MAPPED_SUBRESOURCE mappedResource;
-    result = D3D11Device::get().rawContext()->Map(m_matrixBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+    result = D3D11Device::get().rawContext()->Map(m_buffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
     if (FAILED(result)) {
       RCORE_LOG(ERR, "Failed to map matrix buffer");
       return false;
@@ -38,34 +29,14 @@ namespace rcore {
 
     MatrixBufferType* dataPtr = reinterpret_cast<MatrixBufferType*>(mappedResource.pData);
 
-    dataPtr->world = XMMatrixTranspose(m_matrices.world);
-    dataPtr->view = XMMatrixTranspose(m_matrices.view);
-    dataPtr->projection = XMMatrixTranspose(m_matrices.projection);
-    dataPtr->worldInverseTranspose = XMMatrixInverse(nullptr, m_matrices.world);
+    dataPtr->world = XMMatrixTranspose(m_data.world);
+    dataPtr->view = XMMatrixTranspose(m_data.view);
+    dataPtr->projection = XMMatrixTranspose(m_data.projection);
+    dataPtr->worldInverseTranspose = XMMatrixInverse(nullptr, m_data.world);
 
-    D3D11Device::get().rawContext()->Unmap(m_matrixBuffer.Get(), 0);
+    D3D11Device::get().rawContext()->Unmap(m_buffer.Get(), 0);
 
-    D3D11Device::get().rawContext()->VSSetConstantBuffers(m_bufferSlot, 1, m_matrixBuffer.GetAddressOf());
-
-    return true;
-  }
-
-  bool MatrixBuffer::createBuffer() {
-    HRESULT result;
-
-    D3D11_BUFFER_DESC matrixBufferDesc{};
-    matrixBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-    matrixBufferDesc.ByteWidth = sizeof(MatrixBufferType);
-    matrixBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-    matrixBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-    matrixBufferDesc.MiscFlags = 0;
-    matrixBufferDesc.StructureByteStride = 0;
-
-    result = D3D11Device::get().raw()->CreateBuffer(&matrixBufferDesc, NULL, &m_matrixBuffer);
-    if (FAILED(result)) {
-      RCORE_LOG(ERR, "Failed to create matrix buffer");
-      return false;
-    }
+    D3D11Device::get().rawContext()->VSSetConstantBuffers(m_bufferSlot, 1, m_buffer.GetAddressOf());
 
     return true;
   }
