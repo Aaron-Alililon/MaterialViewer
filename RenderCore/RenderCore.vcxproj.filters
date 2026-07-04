@@ -177,6 +177,12 @@
     <ClInclude Include="CBuffer.h">
       <Filter>Header Files\D3D11\Buffers</Filter>
     </ClInclude>
+    <ClInclude Include="LightBuffer.h">
+      <Filter>Header Files\D3D11\Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="DBuffer.h">
+      <Filter>Header Files\D3D11\Buffers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp">
@@ -248,6 +254,9 @@
     <ClCompile Include="GLTFLoader.cpp">
       <Filter>Source Files\Model</Filter>
     </ClCompile>
+    <ClCompile Include="LightBuffer.cpp">
+      <Filter>Source Files\D3D11\Buffers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="StaticIndexedVertexBuffer.inl">
@@ -263,6 +272,9 @@
       <Filter>Header Files\Core</Filter>
     </None>
     <None Include="CBuffer.inl">
+      <Filter>Header Files\D3D11\Buffers</Filter>
+    </None>
+    <None Include="DBuffer.inl">
       <Filter>Header Files\D3D11\Buffers</Filter>
     </None>
   </ItemGroup>

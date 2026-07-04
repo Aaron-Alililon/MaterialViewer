@@ -4,10 +4,10 @@ ModelSphere::ModelSphere(std::vector<D3D11_INPUT_ELEMENT_DESC> const& inputDesc)
   m_SIVBuffer = rcore::Preset3D::makeStandardSIVBuffer<rcore::GLTFLoader>("models/sphere_extreme.glb");
 
   auto [texDesc, srvDesc] = rcore::Preset3D::makeStandardTextureDescriptionPair();
-  m_textureAlbedo = std::make_shared<rcore::Texture>(rcore::LoaderTag<rcore::PNGLoader>{}, "textures/rocks/albedo.png", texDesc, srvDesc);
-  m_textureNormal = std::make_shared<rcore::Texture>(rcore::LoaderTag<rcore::PNGLoader>{}, "textures/rocks/normal.png", texDesc, srvDesc);
-  m_textureDisplacement = std::make_shared<rcore::Texture>(rcore::LoaderTag<rcore::PNGLoader>{}, "textures/rocks/displacement.png", texDesc, srvDesc);
-  m_textureRoughness = std::make_shared<rcore::Texture>(rcore::LoaderTag<rcore::PNGLoader>{}, "textures/rocks/roughness.png", texDesc, srvDesc);
+  m_textureAlbedo = std::make_shared<rcore::Texture>(rcore::LoaderTag<rcore::PNGLoader>{}, "textures/tiles/albedo.png", texDesc, srvDesc);
+  m_textureNormal = std::make_shared<rcore::Texture>(rcore::LoaderTag<rcore::PNGLoader>{}, "textures/tiles/normal.png", texDesc, srvDesc);
+  m_textureDisplacement = std::make_shared<rcore::Texture>(rcore::LoaderTag<rcore::PNGLoader>{}, "textures/tiles/displacement.png", texDesc, srvDesc);
+  m_textureRoughness = std::make_shared<rcore::Texture>(rcore::LoaderTag<rcore::PNGLoader>{}, "textures/tiles/roughness.png", texDesc, srvDesc);
 
   m_sampler = std::make_shared<rcore::Sampler>(rcore::Preset3D::makeStandardLinearSamplerDescription());
 

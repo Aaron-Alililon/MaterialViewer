@@ -1,3 +1,5 @@
+#define MAX_LIGHTS 3
+
 Texture2D albedoTex : register(t0);
 Texture2D normalTex : register(t1);
 SamplerState sampleType : register(s0);
@@ -7,6 +9,18 @@ cbuffer PropertiesBuffer : register(b1) {
     float2 uvScale;
     float globalIllumination;
     float displacementStrength;
+};
+
+struct LightData {
+    float4 position;
+    float4 direction;
+    float4 color;
+};
+
+StructuredBuffer<LightData> directionals : register(t5);
+
+cbuffer NumDirectionalsBuffer : register(b2) {
+    int numDirectionals;
 };
 
 struct PixelInputType {
@@ -29,7 +43,11 @@ float4 PSMain(PixelInputType input) : SV_TARGET {
     );
     float3 worldNormal = normalize(mul(textureNormal, TBN));
     
-    float lambert = max(globalIllumination, saturate(dot(worldNormal, normalize(sunDirection.xyz))));
+    float3 lambert = 0;
+    for (int i = 0; i < numDirectionals; i++) {
+        lambert = saturate(lambert + max(0, dot(worldNormal, normalize(directionals[i].direction.xyz))) * directionals[i].color.rgb);
+    }
+    lambert = max(globalIllumination, lambert);
     float3 diffuse = textureColor.rgb * lambert;
     
     return float4(diffuse, 1);

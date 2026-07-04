@@ -10,7 +10,7 @@ Skybox::Skybox(std::vector<D3D11_INPUT_ELEMENT_DESC> const& inputDesc) {
 
   rcore::Shader shader = { L"SkyboxVertexShader.hlsl", L"SkyboxPixelShader.hlsl", inputDesc };
 
-  m_material = std::make_shared<rcore::Material<MaterialProperties>>(shader, 2, rcore::Pixel);
+  m_material = std::make_shared<rcore::Material<MaterialProperties>>(shader, 3, rcore::Pixel);
 
   m_box = std::make_unique<rcore::Model>(m_material, m_SIVBuffer);
   m_box->setScale(1000, 1000, 1000);

@@ -5,6 +5,7 @@
 #include "Rcore.h"
 #include "MatrixBuffer.h"
 #include "Preset3D.h"
+#include "LightBuffer.h"
 
 #include "SettingsLayer.h"
 #include "CameraController.h"
@@ -28,6 +29,7 @@ private:
   rcore::D3DContextDesc m_ctxDesc;
   CameraController m_camController;
   std::shared_ptr<rcore::MatrixBuffer> m_matrixBuffer;
+  std::shared_ptr<rcore::LightBuffer> m_directionalLightBuffer;
   std::unique_ptr<ModelSphere> m_modelSphere;
   std::unique_ptr<Skybox> m_skybox;
 };

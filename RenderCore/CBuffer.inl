@@ -6,7 +6,7 @@
 namespace rcore {
 
   template<typename TBuffer>
-  CBuffer<TBuffer>::CBuffer(int bufferSlot) : m_bufferSlot{ bufferSlot } {
+  CBuffer<TBuffer>::CBuffer(int bufferSlot, uint8_t shaderStages) : m_bufferSlot{ bufferSlot }, m_shaderStages{ shaderStages } {
     if (createBuffer()) {
       m_valid = true;
     }
@@ -19,10 +19,13 @@ namespace rcore {
 
   template<typename TBuffer>
   bool CBuffer<TBuffer>::uploadBuffer() const {
-    HRESULT result;
+    if (!m_valid) {
+      RCORE_LOG(WARN, "Tried uploading invalid constant buffer");
+      return false;
+    }
 
     D3D11_MAPPED_SUBRESOURCE mappedResource;
-    result = D3D11Device::get().rawContext()->Map(m_buffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+    HRESULT result = D3D11Device::get().rawContext()->Map(m_buffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
     if (FAILED(result)) {
       RCORE_LOG(ERR, "Failed to map constant buffer");
       return false;
@@ -34,7 +37,8 @@ namespace rcore {
 
     D3D11Device::get().rawContext()->Unmap(m_buffer.Get(), 0);
 
-    D3D11Device::get().rawContext()->VSSetConstantBuffers(m_bufferSlot, 1, m_buffer.GetAddressOf());
+    if (m_shaderStages & ShaderStage::Vertex) D3D11Device::get().rawContext()->VSSetConstantBuffers(m_bufferSlot, 1, m_buffer.GetAddressOf());
+    if (m_shaderStages & ShaderStage::Pixel) D3D11Device::get().rawContext()->PSSetConstantBuffers(m_bufferSlot, 1, m_buffer.GetAddressOf());
 
     return true;
   }

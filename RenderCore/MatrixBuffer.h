@@ -15,7 +15,7 @@ namespace rcore {
 
   class MatrixBuffer : public CBuffer<MatrixBufferType> {
   public:
-    MatrixBuffer(int bufferSlot);
+    MatrixBuffer(int bufferSlot, uint8_t shaderStages = ShaderStage::Vertex);
 
   public:
     void setWorldMatrix(DirectX::XMMATRIX const& worldMatrix);

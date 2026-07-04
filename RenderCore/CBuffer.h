@@ -3,13 +3,14 @@
 
 #include "pch.h"
 #include "D3D11Device.h"
+#include "ShaderStage.h"
 
 namespace rcore {
 
   template<typename TBuffer>
   class CBuffer {
   public:
-    CBuffer(int bufferSlot);
+    CBuffer(int bufferSlot, uint8_t shaderStages);
     virtual ~CBuffer() = default;
 
   public:
@@ -21,8 +22,9 @@ namespace rcore {
 
   protected:
     bool m_valid = false;
+    uint8_t m_shaderStages;
     TBuffer m_data{};
-    int m_bufferSlot = 0;
+    int m_bufferSlot;
     Microsoft::WRL::ComPtr<ID3D11Buffer> m_buffer;
   };
 

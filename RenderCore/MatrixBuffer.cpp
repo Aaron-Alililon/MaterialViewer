@@ -3,7 +3,7 @@
 
 namespace rcore {
 
-  MatrixBuffer::MatrixBuffer(int bufferSlot) : CBuffer{ bufferSlot } {}
+  MatrixBuffer::MatrixBuffer(int bufferSlot, uint8_t shaderStages) : CBuffer{ bufferSlot, shaderStages } {}
 
   void MatrixBuffer::setWorldMatrix(DirectX::XMMATRIX const& worldMatrix) {
     m_data.world = worldMatrix;

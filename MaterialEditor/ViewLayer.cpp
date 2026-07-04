@@ -4,8 +4,16 @@ ViewLayer::ViewLayer(std::weak_ptr<rcore::Window> window, std::weak_ptr<rcore::W
   auto inputDesc = rcore::Preset3D::makeStandardInputDescription();
 
   m_matrixBuffer = std::make_shared<rcore::MatrixBuffer>(0);
+  m_directionalLightBuffer = std::make_shared<rcore::LightBuffer>(5, 2);
   m_modelSphere = std::make_unique<ModelSphere>(inputDesc);
   m_skybox = std::make_unique<Skybox>(inputDesc);
+
+  rcore::LightBufferType directionals[] = {
+    {{ 0, 0, 0, 0 }, { 1, 1, 0, 0 }, { 1, 1, 1, 1 }},
+    {{ 0, 0, 0, 0 }, { 1, -1, 0, 0 }, { 1, 1, 1, 1 }}
+  };
+  m_directionalLightBuffer->setData(directionals);
+  m_directionalLightBuffer->uploadBuffer();
 
   createSettings();
 }
