@@ -4,10 +4,9 @@
 #include "Preset3D.h"
 
 // TODO
-// Fix per frame material data binding (why only textures and samplers, not cbuffers?)
-// Implement separate buffer uploading
-// Support multiple light sources
 // PBR shader
+// Resizable windows
+// Changeable scene
 
 // INFO
 // WS_EX_ACCEPTFILES for accepting files

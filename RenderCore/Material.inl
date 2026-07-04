@@ -8,7 +8,7 @@
 namespace rcore {
 
   template<typename TProperties>
-  Material<TProperties>::Material(Shader const& shader, int bufferSlot, uint8_t shaderStages) : m_shader{ shader }, m_properties{ }, m_bufferSlot { bufferSlot }, m_shaderStages{ shaderStages } {
+  Material<TProperties>::Material(Shader const& shader, uint8_t shaderStages) : m_shader{ shader }, m_shaderStages{ shaderStages } {
     if (m_shader.valid() &&
         createBuffer()
     ) {
@@ -17,18 +17,8 @@ namespace rcore {
   }
 
   template<typename TProperties>
-  bool Material<TProperties>::setProperties(TProperties properties, bool updateShader) {
-    m_properties = properties;
-
-    if (updateShader) return uploadProperties();
-    return true;
-  }
-
-  template<typename TProperties>
-  bool Material<TProperties>::uploadProperties() const {
+  bool Material<TProperties>::uploadProperties(TProperties const& properties, std::optional<UINT> startSlot) {
     HRESULT result;
-
-    activateShader();
 
     D3D11_MAPPED_SUBRESOURCE mappedResource;
     result = D3D11Device::get().rawContext()->Map(m_propertiesBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
@@ -38,38 +28,79 @@ namespace rcore {
     }
 
     TProperties* dataPtr = reinterpret_cast<TProperties*>(mappedResource.pData);
-    *dataPtr = m_properties;
+    *dataPtr = properties;
 
     D3D11Device::get().rawContext()->Unmap(m_propertiesBuffer.Get(), 0);
 
-    if (m_shaderStages & ShaderStage::Vertex) D3D11Device::get().rawContext()->VSSetConstantBuffers(m_bufferSlot, 1, m_propertiesBuffer.GetAddressOf());
-    if (m_shaderStages & ShaderStage::Pixel) D3D11Device::get().rawContext()->PSSetConstantBuffers(m_bufferSlot, 1, m_propertiesBuffer.GetAddressOf());
+    m_propertiesSlot = (startSlot.has_value()) ? startSlot.value() : m_propertiesSlot;
 
     return true;
   }
 
   template<typename TProperties>
-  void Material<TProperties>::uploadTextures(std::span<ID3D11ShaderResourceView*> const& textureViews, UINT startSlot) const {
-    activateShader();
-    if (m_shaderStages & ShaderStage::Vertex) D3D11Device::get().rawContext()->VSSetShaderResources(startSlot, static_cast<UINT>(textureViews.size()), textureViews.data());
-    if (m_shaderStages & ShaderStage::Pixel) D3D11Device::get().rawContext()->PSSetShaderResources(startSlot, static_cast<UINT>(textureViews.size()), textureViews.data());
+  void Material<TProperties>::setTextures(std::span<ID3D11ShaderResourceView*> const& textureViews, std::optional<UINT> startSlot) {
+    m_textureViews.assign(textureViews.begin(), textureViews.end());
+    m_texturesSlot = startSlot.value_or(m_texturesSlot);
   }
 
   template<typename TProperties>
-  void Material<TProperties>::uploadSamplers(std::span<ID3D11SamplerState*> const& samplerViews, UINT startSlot) const {
-    activateShader();
-    if (m_shaderStages & ShaderStage::Vertex) D3D11Device::get().rawContext()->VSSetSamplers(startSlot, static_cast<UINT>(samplerViews.size()), samplerViews.data());
-    if (m_shaderStages & ShaderStage::Pixel) D3D11Device::get().rawContext()->PSSetSamplers(startSlot, static_cast<UINT>(samplerViews.size()), samplerViews.data());
+  void Material<TProperties>::setSamplers(std::span<ID3D11SamplerState*> const& samplerViews, std::optional<UINT> startSlot) {
+    m_samplerViews.assign(samplerViews.begin(), samplerViews.end());
+    m_samplersSlot = startSlot.value_or(m_samplersSlot);
+  }
+
+  template<typename TProperties>
+  void Material<TProperties>::activateProperties() const {
+    if (!validateShaderStages()) return;
+    if (!m_propertiesBuffer) return;
+    if (m_shaderStages & ShaderStage::Vertex) D3D11Device::get().rawContext()->VSSetConstantBuffers(m_propertiesSlot, 1, m_propertiesBuffer.GetAddressOf());
+    if (m_shaderStages & ShaderStage::Pixel) D3D11Device::get().rawContext()->PSSetConstantBuffers(m_propertiesSlot, 1, m_propertiesBuffer.GetAddressOf());
+  }
+
+  template<typename TProperties>
+  void Material<TProperties>::activateTextures() const {
+    if (!validateShaderStages()) return;
+    if (m_textureViews.size() == 0) return;
+    if (m_shaderStages & ShaderStage::Vertex) D3D11Device::get().rawContext()->VSSetShaderResources(m_texturesSlot, static_cast<UINT>(m_textureViews.size()), m_textureViews.data());
+    if (m_shaderStages & ShaderStage::Pixel) D3D11Device::get().rawContext()->PSSetShaderResources(m_texturesSlot, static_cast<UINT>(m_textureViews.size()), m_textureViews.data());
+  }
+
+  template<typename TProperties>
+  void Material<TProperties>::activateSamplers() const {
+    if (!validateShaderStages()) return;
+    if (m_samplerViews.size() == 0) return;
+    if (m_shaderStages & ShaderStage::Vertex) D3D11Device::get().rawContext()->VSSetSamplers(m_samplersSlot, static_cast<UINT>(m_samplerViews.size()), m_samplerViews.data());
+    if (m_shaderStages & ShaderStage::Pixel) D3D11Device::get().rawContext()->PSSetSamplers(m_samplersSlot, static_cast<UINT>(m_samplerViews.size()), m_samplerViews.data());
   }
 
   template<typename TProperties>
   void Material<TProperties>::activateShader() const {
+    if (!validateShaderStages()) return;
     m_shader.activate();
+  }
+
+  template<typename TProperties>
+  void Material<TProperties>::activate() const {
+    if (!validateShaderStages()) return;
+    activateProperties();
+    activateTextures();
+    activateSamplers();
+    activateShader();
   }
 
   template<typename TProperties>
   bool Material<TProperties>::valid() const {
     return m_valid;
+  }
+
+  template<typename TProperties>
+  bool Material<TProperties>::validateShaderStages() const {
+    if (m_shaderStages == 0) {
+      RCORE_LOG(WARN, "Tried using a material with no shader stage set");
+      return false;
+    }
+
+    return true;
   }
 
   template<typename TProperties>

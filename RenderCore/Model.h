@@ -14,7 +14,7 @@ namespace rcore {
     Model(std::shared_ptr<MaterialBase> const& material, std::shared_ptr<IVertexBuffer> const& vertexBuffer);
 
   public:
-    void drawIndexed(MatrixBuffer& matrixBuffer);
+    void drawIndexed(MatrixBuffer& matrixBuffer, bool activateMaterial = true);
 
     Transform getTransform() const;
     void setTransform(Transform const& transform);

@@ -4,15 +4,21 @@ ModelSphere::ModelSphere(std::vector<D3D11_INPUT_ELEMENT_DESC> const& inputDesc)
   m_SIVBuffer = rcore::Preset3D::makeStandardSIVBuffer<rcore::GLTFLoader>("models/sphere_extreme.glb");
 
   auto [texDesc, srvDesc] = rcore::Preset3D::makeStandardTextureDescriptionPair();
-  m_textureAlbedo = std::make_shared<rcore::Texture>(rcore::LoaderTag<rcore::PNGLoader>{}, "textures/tiles/albedo.png", texDesc, srvDesc);
-  m_textureNormal = std::make_shared<rcore::Texture>(rcore::LoaderTag<rcore::PNGLoader>{}, "textures/tiles/normal.png", texDesc, srvDesc);
-  m_textureDisplacement = std::make_shared<rcore::Texture>(rcore::LoaderTag<rcore::PNGLoader>{}, "textures/tiles/displacement.png", texDesc, srvDesc);
-  m_textureRoughness = std::make_shared<rcore::Texture>(rcore::LoaderTag<rcore::PNGLoader>{}, "textures/tiles/roughness.png", texDesc, srvDesc);
+  m_textureAlbedo = std::make_shared<rcore::Texture>(rcore::LoaderTag<rcore::PNGLoader>{}, "textures/rocks/albedo.png", texDesc, srvDesc);
+  m_textureNormal = std::make_shared<rcore::Texture>(rcore::LoaderTag<rcore::PNGLoader>{}, "textures/rocks/normal.png", texDesc, srvDesc);
+  m_textureDisplacement = std::make_shared<rcore::Texture>(rcore::LoaderTag<rcore::PNGLoader>{}, "textures/rocks/displacement.png", texDesc, srvDesc);
+  m_textureRoughness = std::make_shared<rcore::Texture>(rcore::LoaderTag<rcore::PNGLoader>{}, "textures/rocks/roughness.png", texDesc, srvDesc);
 
   m_sampler = std::make_shared<rcore::Sampler>(rcore::Preset3D::makeStandardLinearSamplerDescription());
 
   rcore::Shader shader = { L"PBRVertexShader.hlsl", L"PBRPixelShader.hlsl", inputDesc };
-  m_material = std::make_shared<rcore::Material<MaterialProperties>>(shader, 1, rcore::Pixel | rcore::Vertex);
+  m_material = std::make_shared<rcore::Material<MaterialProperties>>(shader, rcore::Pixel | rcore::Vertex);
+
+  ID3D11ShaderResourceView* srv[] = { m_textureAlbedo->getTextureView(), m_textureNormal->getTextureView(), m_textureDisplacement->getTextureView(), m_textureRoughness->getTextureView() };
+  m_material->setTextures(srv, 0);
+
+  ID3D11SamplerState* sState[] = { m_sampler->getSamplerState() };
+  m_material->setSamplers(sState, 0);
 
   m_sphere = std::make_unique<rcore::Model>(m_material, m_SIVBuffer);
 
@@ -20,12 +26,6 @@ ModelSphere::ModelSphere(std::vector<D3D11_INPUT_ELEMENT_DESC> const& inputDesc)
 }
 
 void ModelSphere::render(rcore::FrameState const& frame, rcore::MatrixBuffer& matrixBuffer) {
-  ID3D11ShaderResourceView* srv[] = { m_textureAlbedo->getTextureView(), m_textureNormal->getTextureView(), m_textureDisplacement->getTextureView(), m_textureRoughness->getTextureView() };
-  m_material->uploadTextures(srv, 0);
-
-  ID3D11SamplerState* sState[] = { m_sampler->getSamplerState() };
-  m_material->uploadSamplers(sState, 0);
-
   m_sphere->drawIndexed(matrixBuffer);
 }
 
@@ -37,5 +37,5 @@ void ModelSphere::onValueChange() {
     displacement
   };
 
-  m_material->setProperties(m_properties);
+  m_material->uploadProperties(m_properties, 1);
 }
