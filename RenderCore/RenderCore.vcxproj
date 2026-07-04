@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="CBuffer.h" />
     <ClInclude Include="cgltf.h" />
     <ClInclude Include="D3D11Context.h" />
     <ClInclude Include="D3D11Device.h" />
@@ -34,7 +35,7 @@
     <ClInclude Include="MaterialBase.h" />
     <ClInclude Include="MatrixBuffer.h" />
     <ClInclude Include="Mesh.h" />
-    <ClInclude Include="MeshLoaderBase.h" />
+    <ClInclude Include="IMeshLoader.h" />
     <ClInclude Include="ObjLoader.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="pch.h" />
@@ -48,9 +49,9 @@
     <ClInclude Include="stb_image.h" />
     <ClInclude Include="Targa32Loader.h" />
     <ClInclude Include="Texture.h" />
-    <ClInclude Include="TextureLoaderBase.h" />
+    <ClInclude Include="ITextureLoader.h" />
     <ClInclude Include="Transform.h" />
-    <ClInclude Include="VertexBufferBase.h" />
+    <ClInclude Include="IVertexBuffer.h" />
     <ClInclude Include="Window.h" />
     <ClInclude Include="WindowDesc.h" />
     <ClInclude Include="WindowsInterface.h" />
@@ -93,6 +94,7 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <None Include="CBuffer.inl" />
     <None Include="Material.inl" />
     <None Include="Preset3D.inl" />
     <None Include="StaticIndexedVertexBuffer.inl" />

@@ -1,13 +1,13 @@
-#ifndef TEXTURE_LOADER_BASE_H
-#define TEXTURE_LOADER_BASE_H
+#ifndef I_TEXTURE_LOADER_H
+#define I_TEXTURE_LOADER_H
 
 #include "pch.h"
 
 namespace rcore {
 
-  class TextureLoaderBase {
+  class ITextureLoader {
   public:
-    virtual ~TextureLoaderBase() = default;
+    virtual ~ITextureLoader() = default;
     virtual unsigned char* readTexture(std::string const& path, std::pair<UINT, UINT>* outImageSize) = 0;
   };
 

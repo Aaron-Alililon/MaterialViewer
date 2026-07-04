@@ -1,11 +1,11 @@
 #ifndef TARGA_32_LOADER_H
 #define TARGA_32_LOADER_H
 
-#include "TextureLoaderBase.h"
+#include "ITextureLoader.h"
 
 namespace rcore {
   
-  class Targa32Loader : public TextureLoaderBase {
+  class Targa32Loader : public ITextureLoader {
   private:
     struct TargaHeader {
       unsigned char data1[12];

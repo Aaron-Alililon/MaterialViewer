@@ -1,14 +1,14 @@
-#ifndef MESH_LOADER_BASE_H
-#define MESH_LOADER_BASE_H
+#ifndef I_MESH_LOADER_H
+#define I_MESH_LOADER_H
 
 #include "pch.h"
 #include "Mesh.h"
 
 namespace rcore {
 
-  class MeshLoaderBase {
+  class IMeshLoader {
   public:
-    virtual ~MeshLoaderBase() = default;
+    virtual ~IMeshLoader() = default;
     virtual Mesh readMesh(std::string const& path) const = 0;
   };
 

@@ -1,11 +1,11 @@
 #ifndef OBJ_LOADER_H
 #define OBJ_LOADER_H
 
-#include "MeshLoaderBase.h"
+#include "IMeshLoader.h"
 
 namespace rcore {
 
-  class ObjLoader : public MeshLoaderBase {
+  class ObjLoader : public IMeshLoader {
 
 		enum ModelDataType {
 			vertex,

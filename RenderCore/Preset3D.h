@@ -32,7 +32,7 @@ namespace rcore {
 
     static std::vector<D3D11_INPUT_ELEMENT_DESC> makeStandardInputDescription();
     
-    template<std::derived_from<MeshLoaderBase> TLoader>
+    template<std::derived_from<IMeshLoader> TLoader>
     static std::shared_ptr<StaticIndexedVertexBuffer<StandardVertexType>> makeStandardSIVBuffer(std::string const& meshFile);
     static std::shared_ptr<StaticIndexedVertexBuffer<StandardVertexType>> makeStandardSIVBuffer(Mesh const& mesh);
 

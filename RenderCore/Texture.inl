@@ -5,14 +5,14 @@
 
 namespace rcore {
 
-  template<std::derived_from<TextureLoaderBase> TLoader>
+  template<std::derived_from<ITextureLoader> TLoader>
   Texture::Texture(LoaderTag<TLoader>, std::string const& path, D3D11_TEXTURE2D_DESC const& textureDescriptor, D3D11_SHADER_RESOURCE_VIEW_DESC const& resourceViewDescriptor, UINT width, UINT height) {
 		if (loadTexture<TLoader>(path, textureDescriptor, resourceViewDescriptor, width, height)) {
 			m_valid = true;
 		}
   }
 
-	template<std::derived_from<TextureLoaderBase> TLoader>
+	template<std::derived_from<ITextureLoader> TLoader>
 	bool Texture::loadTexture(std::string const& path, D3D11_TEXTURE2D_DESC const& textureDescriptor, D3D11_SHADER_RESOURCE_VIEW_DESC const& resourceViewDescriptor, UINT width, UINT height) {
 		HRESULT result;
 		D3D11_TEXTURE2D_DESC mutableTextureDescriptor{ textureDescriptor };

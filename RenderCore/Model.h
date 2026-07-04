@@ -5,13 +5,13 @@
 #include "MaterialBase.h"
 #include "D3D11Device.h"
 #include "MatrixBuffer.h"
-#include "VertexBufferBase.h"
+#include "IVertexBuffer.h"
 
 namespace rcore {
 
   class Model {
   public:
-    Model(std::shared_ptr<MaterialBase> const& material, std::shared_ptr<VertexBufferBase> const& vertexBuffer);
+    Model(std::shared_ptr<MaterialBase> const& material, std::shared_ptr<IVertexBuffer> const& vertexBuffer);
 
   public:
     void drawIndexed(MatrixBuffer& matrixBuffer);
@@ -35,7 +35,7 @@ namespace rcore {
     bool m_valid = false;
     Transform m_transform{};
     std::shared_ptr<MaterialBase> m_material;
-    std::shared_ptr<VertexBufferBase> m_vertexBuffer;
+    std::shared_ptr<IVertexBuffer> m_vertexBuffer;
   };
 
 }

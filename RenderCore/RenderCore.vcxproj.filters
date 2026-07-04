@@ -141,10 +141,10 @@
     <ClInclude Include="MaterialBase.h">
       <Filter>Header Files\Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="VertexBufferBase.h">
+    <ClInclude Include="IVertexBuffer.h">
       <Filter>Header Files\D3D11\Buffers</Filter>
     </ClInclude>
-    <ClInclude Include="TextureLoaderBase.h">
+    <ClInclude Include="ITextureLoader.h">
       <Filter>Header Files\Resource</Filter>
     </ClInclude>
     <ClInclude Include="Preset3D.h">
@@ -168,11 +168,14 @@
     <ClInclude Include="cgltf.h">
       <Filter>Header Files\Lib</Filter>
     </ClInclude>
-    <ClInclude Include="MeshLoaderBase.h">
+    <ClInclude Include="IMeshLoader.h">
       <Filter>Header Files\Model</Filter>
     </ClInclude>
     <ClInclude Include="GLTFLoader.h">
       <Filter>Header Files\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="CBuffer.h">
+      <Filter>Header Files\D3D11\Buffers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -258,6 +261,9 @@
     </None>
     <None Include="Preset3D.inl">
       <Filter>Header Files\Core</Filter>
+    </None>
+    <None Include="CBuffer.inl">
+      <Filter>Header Files\D3D11\Buffers</Filter>
     </None>
   </ItemGroup>
 </Project>

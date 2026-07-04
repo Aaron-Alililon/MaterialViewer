@@ -49,14 +49,14 @@ void ViewLayer::createSettings() const {
       lockedSettingsLayer->addFloatSlider(
         "Texture u scale",
         &m_modelSphere->uScale,
-        0.0001, 20,
+        0.0001f, 20,
         [this]() { m_modelSphere->onValueChange(); }
       );
 
       lockedSettingsLayer->addFloatSlider(
         "Texture v scale",
         &m_modelSphere->vScale,
-        0.0001, 20,
+        0.0001f, 20,
         [this]() { m_modelSphere->onValueChange(); }
       );
 

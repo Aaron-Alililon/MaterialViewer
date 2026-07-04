@@ -3,7 +3,7 @@
 
 namespace rcore {
 
-  Model::Model(std::shared_ptr<MaterialBase> const& material, std::shared_ptr<VertexBufferBase> const& vertexBuffer) : m_material{ material }, m_vertexBuffer{ vertexBuffer } {
+  Model::Model(std::shared_ptr<MaterialBase> const& material, std::shared_ptr<IVertexBuffer> const& vertexBuffer) : m_material{ material }, m_vertexBuffer{ vertexBuffer } {
     if (m_material &&
         m_material->valid() &&
         m_vertexBuffer &&
@@ -22,7 +22,7 @@ namespace rcore {
     m_material->activateShader();
 
     matrixBuffer.setWorldMatrix(m_transform.getWorldMatrix());
-    matrixBuffer.uploadMatrices();
+    matrixBuffer.uploadBuffer();
 
     UINT indexCount = m_vertexBuffer->bind();
 

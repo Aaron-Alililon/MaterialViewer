@@ -1,13 +1,13 @@
 #ifndef GLTF_LOADER_H
 #define GLTF_LOADER_H
 
-#include "MeshLoaderBase.h"
+#include "IMeshLoader.h"
 
 struct cgltf_accessor; // Forward declared
 
 namespace rcore {
 
-  class GLTFLoader : public MeshLoaderBase {
+  class GLTFLoader : public IMeshLoader {
   public:
     Mesh readMesh(std::string const& path) const override;
 
