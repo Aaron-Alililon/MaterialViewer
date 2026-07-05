@@ -82,7 +82,7 @@ float3 reflectance(float3 normal, float3 view, float3 albedo, float roughness, f
     
     float3 d = (1.0f - F) * (1.0f - metallic);
         
-    return lightColor * dot(normal, lightDirection) * (d * albedo + specular(F, D, G, NdotV, NdotL));
+    return lightColor * NdotL * (d * albedo + specular(F, D, G, NdotV, NdotL));
 }
 
 float4 PSMain(PixelInputType input) : SV_TARGET {
@@ -109,5 +109,5 @@ float4 PSMain(PixelInputType input) : SV_TARGET {
         float3 lightDirection = directionals[i].direction;
         reflectanceSum += reflectance(worldNormal, view, albedo, roughness, metallic, lightColor, lightDirection);
     }
-    return float4(max(globalIllumination * albedo * ao, reflectanceSum), 1);
+    return float4(globalIllumination * albedo * ao + reflectanceSum, 1);
 }
