@@ -22,25 +22,31 @@ private:
     float displacementStrength;
   };
 
+  struct __declspec(align(16)) CameraBufferData {
+    DirectX::XMFLOAT4 camPosition;
+  };
+
 public:
   ModelSphere(std::vector<D3D11_INPUT_ELEMENT_DESC> const& inputDesc);
 
 public:
   void render(rcore::FrameState const& frame, rcore::MatrixBuffer& matrixBuffer);
   void onValueChange();
+  void onCamChange(DirectX::XMFLOAT3 pos) const;
 
 public:
-  float uScale = 8.0f;
+  float uScale = 4.0f;
   float vScale = 4.0f;
-  float displacement = 0.15f;
-  float giStrength = 0.6f;
+  float displacement = 0.006f;
+  float giStrength = 0.8f;
 
 private:
   MaterialProperties m_properties;
   std::shared_ptr<rcore::StaticIndexedVertexBuffer<rcore::Preset3D::StandardVertexType>> m_SIVBuffer;
-  std::shared_ptr<rcore::Texture> m_textureAlbedo, m_textureNormal, m_textureDisplacement, m_textureRoughness;
+  std::shared_ptr<rcore::Texture> m_textureAlbedo, m_textureNormal, m_textureDisplacement, m_textureRoughness, m_textureMetallic, m_textureAmbientOcclusion;
   std::shared_ptr<rcore::Sampler> m_sampler;
   std::shared_ptr<rcore::Material<MaterialProperties>> m_material;
+  std::unique_ptr<rcore::CBuffer<CameraBufferData>> m_camBuffer;
   std::unique_ptr<rcore::Model> m_sphere;
 };
 

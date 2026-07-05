@@ -25,6 +25,7 @@ struct VertexInputType {
 
 struct PixelInputType {
     float4 position : SV_POSITION;
+    float4 worldPos : TEXCOORD1;
     float3 normal : NORMAL;
     float2 uv : TEXCOORD0;
     float3 tangent : TANGENT;
@@ -36,13 +37,13 @@ PixelInputType VSMain(VertexInputType input) {
     
     output.uv = input.uv * uvScale;
     
-    float displacement = displacementTex.SampleLevel(sampleType, output.uv, 0).r;
+    float displacement = displacementTex.SampleLevel(sampleType, output.uv, 0).r * 2.0f - 1.0f;
     float4 displaced = input.position + float4(input.normal * displacement * displacementStrength, 0.0);
     
     input.position.w = 1.0f;
 
-    output.position = mul(displaced, worldMatrix);
-    output.position = mul(output.position, viewMatrix);
+    output.worldPos = mul(displaced, worldMatrix);
+    output.position = mul(output.worldPos, viewMatrix);
     output.position = mul(output.position, projectionMatrix);
     
     output.normal = mul(input.normal, (float3x3) worldInverseTranspose);

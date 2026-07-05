@@ -200,8 +200,17 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="textures\marsel.tga" />
-    <Image Include="textures\oiiai.tga" />
+    <Image Include="textures\paving\albedo.png" />
+    <Image Include="textures\paving\ambientOcclusion.png" />
+    <Image Include="textures\paving\displacement.png" />
+    <Image Include="textures\paving\metallic.png" />
+    <Image Include="textures\paving\normal.png" />
+    <Image Include="textures\paving\roughness.png" />
+    <Image Include="textures\plates\albedo.png" />
+    <Image Include="textures\plates\displacement.png" />
+    <Image Include="textures\plates\metallic.png" />
+    <Image Include="textures\plates\normal.png" />
+    <Image Include="textures\plates\roughness.png" />
     <Image Include="textures\rocks\albedo.png" />
     <Image Include="textures\rocks\displacement.png" />
     <Image Include="textures\rocks\normal.png" />
@@ -217,7 +226,6 @@
     <Image Include="textures\tiles\displacement.png" />
     <Image Include="textures\tiles\normal.png" />
     <Image Include="textures\tiles\roughness.png" />
-    <Image Include="textures\wall.tga" />
   </ItemGroup>
   <ItemGroup>
     <None Include="models\monkey.obj">

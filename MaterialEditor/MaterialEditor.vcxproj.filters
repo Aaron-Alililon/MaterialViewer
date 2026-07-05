@@ -43,6 +43,12 @@
     <Filter Include="Source Files\Layer">
       <UniqueIdentifier>{c7ff492f-2b5c-4325-9dd2-18b6a6ed02ed}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\textures\plates">
+      <UniqueIdentifier>{b3c4aa0a-3482-4466-a8e7-4ed860b4e5e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\textures\paving">
+      <UniqueIdentifier>{6ddb755b-32d3-423d-a40c-5679861ae92f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MaterialEditor.cpp">
@@ -167,15 +173,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="textures\marsel.tga">
-      <Filter>Resource Files\textures</Filter>
-    </Image>
-    <Image Include="textures\oiiai.tga">
-      <Filter>Resource Files\textures</Filter>
-    </Image>
-    <Image Include="textures\wall.tga">
-      <Filter>Resource Files\textures</Filter>
-    </Image>
     <Image Include="textures\tiles\roughness.png">
       <Filter>Resource Files\textures\tiles</Filter>
     </Image>
@@ -220,6 +217,39 @@
     </Image>
     <Image Include="textures\skybox\right.png">
       <Filter>Resource Files\textures\skybox</Filter>
+    </Image>
+    <Image Include="textures\plates\roughness.png">
+      <Filter>Resource Files\textures\plates</Filter>
+    </Image>
+    <Image Include="textures\plates\albedo.png">
+      <Filter>Resource Files\textures\plates</Filter>
+    </Image>
+    <Image Include="textures\plates\displacement.png">
+      <Filter>Resource Files\textures\plates</Filter>
+    </Image>
+    <Image Include="textures\plates\metallic.png">
+      <Filter>Resource Files\textures\plates</Filter>
+    </Image>
+    <Image Include="textures\plates\normal.png">
+      <Filter>Resource Files\textures\plates</Filter>
+    </Image>
+    <Image Include="textures\paving\roughness.png">
+      <Filter>Resource Files\textures\paving</Filter>
+    </Image>
+    <Image Include="textures\paving\albedo.png">
+      <Filter>Resource Files\textures\paving</Filter>
+    </Image>
+    <Image Include="textures\paving\ambientOcclusion.png">
+      <Filter>Resource Files\textures\paving</Filter>
+    </Image>
+    <Image Include="textures\paving\displacement.png">
+      <Filter>Resource Files\textures\paving</Filter>
+    </Image>
+    <Image Include="textures\paving\metallic.png">
+      <Filter>Resource Files\textures\paving</Filter>
+    </Image>
+    <Image Include="textures\paving\normal.png">
+      <Filter>Resource Files\textures\paving</Filter>
     </Image>
   </ItemGroup>
 </Project>

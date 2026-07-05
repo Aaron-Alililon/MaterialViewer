@@ -10,7 +10,10 @@ public:
 
 public:
   void setMatrices(std::weak_ptr<rcore::MatrixBuffer> matrixBuffer, float resolution);
-  void onEvent(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam);
+  void updatePosition();
+  bool onEvent(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam);
+
+  DirectX::XMFLOAT3 getPosition() const;
 
 private:
   float m_radius = 10.0f;

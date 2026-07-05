@@ -4,16 +4,19 @@ ViewLayer::ViewLayer(std::weak_ptr<rcore::Window> window, std::weak_ptr<rcore::W
   auto inputDesc = rcore::Preset3D::makeStandardInputDescription();
 
   m_matrixBuffer = std::make_shared<rcore::MatrixBuffer>(0);
-  m_directionalLightBuffer = std::make_shared<rcore::LightBuffer>(5, 2);
+  m_directionalLightBuffer = std::make_shared<rcore::LightBuffer>(6, 2);
   m_modelSphere = std::make_unique<ModelSphere>(inputDesc);
   m_skybox = std::make_unique<Skybox>(inputDesc);
 
   rcore::LightBufferType directionals[] = {
-    {{ 0, 0, 0, 0 }, { 1, 1, 0, 0 }, { 1, 1, 1, 1 }},
-    {{ 0, 0, 0, 0 }, { 1, -1, 0, 0 }, { 1, 1, 1, 1 }}
+    {{ 0, 0, 0, 0 }, { 1, 0.5f, 0, 0 }, { 1, 0.976f, 0.925f, 1 }},
+    {{ 0, 0, 0, 0 }, { 1, -0.5f, 0, 0 }, { 0.9f, 0.876f, 0.825f, 1 }}
   };
   m_directionalLightBuffer->setData(directionals);
   m_directionalLightBuffer->uploadBuffer();
+
+  m_camController.updatePosition();
+  m_modelSphere->onCamChange(m_camController.getPosition());
 
   createSettings();
 }
@@ -35,7 +38,10 @@ void ViewLayer::render(rcore::FrameState const& frame) {
 }
 
 bool ViewLayer::onEvent(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam) {
-  m_camController.onEvent(hwnd, umsg, wparam, lparam);
+  if (m_camController.onEvent(hwnd, umsg, wparam, lparam)) {
+    m_camController.updatePosition();
+    m_modelSphere->onCamChange(m_camController.getPosition());
+  }
 
   switch (umsg) {
     case WM_CLOSE: {

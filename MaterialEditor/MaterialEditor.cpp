@@ -4,9 +4,8 @@
 #include "Preset3D.h"
 
 // TODO
-// PBR shader
 // Resizable windows
-// Changeable scene
+// Changeable scene (Model sphere, cube, plane, ...; Skybox sky, studio, ...)
 
 // INFO
 // WS_EX_ACCEPTFILES for accepting files
