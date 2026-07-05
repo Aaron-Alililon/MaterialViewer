@@ -1,17 +1,17 @@
-#define MAX_LIGHTS 3
-
 Texture2D albedoTex : register(t0);
 Texture2D normalTex : register(t1);
+Texture2D displacementTex : register(t2);
 Texture2D roughnessTex : register(t3);
 Texture2D metallicTex : register(t4);
 Texture2D ambientOcclusionTex : register(t5);
 SamplerState sampleType : register(s0);
 
 cbuffer PropertiesBuffer : register(b1) {
-    float4 sunDirection;
     float2 uvScale;
     float globalIllumination;
     float displacementStrength;
+    bool usePOM;
+    float2 minMaxPOMLayers;
 };
 
 struct LightData {
@@ -38,6 +38,35 @@ struct PixelInputType {
     float3 tangent : TANGENT;
     float3 binormal : BINORMAL;
 };
+
+float2 parallaxMapping(float2 uv, float3 tangentView) {
+    float numLayers = lerp(minMaxPOMLayers.y, minMaxPOMLayers.x, max(dot(float3(0.0, 0.0, 1.0), tangentView), 0.0));
+    
+    float layerDepth = 1.0 / numLayers;
+    float currentLayerDepth = 0.0;
+    
+    float2 P = tangentView.xy * displacementStrength;
+    float2 deltaTexCoords = P / numLayers;
+    
+    float2 currentTexCoords = uv;
+    float currentDepthMapValue = 1.0f - displacementTex.SampleLevel(sampleType, currentTexCoords, 0).r;
+  
+    while (currentLayerDepth < currentDepthMapValue) {
+        currentTexCoords -= deltaTexCoords;
+        currentDepthMapValue = 1.0f - displacementTex.SampleLevel(sampleType, currentTexCoords, 0).r;
+        currentLayerDepth += layerDepth;
+    }
+    
+    float2 prevTexCoords = currentTexCoords + deltaTexCoords;
+    
+    float afterDepth = currentDepthMapValue - currentLayerDepth;
+    float beforeDepth = 1.0f - displacementTex.SampleLevel(sampleType, prevTexCoords, 0).r - currentLayerDepth + layerDepth;
+ 
+    float weight = afterDepth / (afterDepth - beforeDepth);
+    float2 finalTexCoords = prevTexCoords * weight + currentTexCoords * (1.0 - weight);
+
+    return finalTexCoords;
+}
 
 float3 F_Schlick(float VdotH, float3 F0) {
     return F0 + (1.0 - F0) * pow(saturate(1.0 - VdotH), 5.0);
@@ -85,29 +114,37 @@ float3 reflectance(float3 normal, float3 view, float3 albedo, float roughness, f
     return lightColor * NdotL * (d * albedo + specular(F, D, G, NdotV, NdotL));
 }
 
-float4 PSMain(PixelInputType input) : SV_TARGET {
-    float3 albedo = albedoTex.Sample(sampleType, input.uv).xyz;
-    float roughness = roughnessTex.Sample(sampleType, input.uv).r;
-    float metallic = metallicTex.Sample(sampleType, input.uv).r;
-    float ao = ambientOcclusionTex.Sample(sampleType, input.uv).r;
+float4 PSMain(PixelInputType input) : SV_TARGET
+{
+    float3 N = normalize(input.normal);
+    float3 T = normalize(input.tangent - N * dot(N, input.tangent));
+    float3 B = cross(N, T);
+    float3x3 TBN = float3x3(T, B, N);
     
-    float3 normal = normalTex.Sample(sampleType, input.uv).rgb * 2.0 - 1.0;
-    normal = float3(normal.r, normal.g * -1, normal.b);
+    float3x3 inverseTBN = transpose(TBN);
     
-    float3x3 TBN = float3x3(
-        normalize(input.tangent),
-        normalize(input.binormal),
-        normalize(input.normal)
-    );
+    float3 viewVector = normalize(camPosition.xyz - input.worldPos.xyz);
+    float3 tangentViewVector = normalize(mul(inverseTBN, viewVector));
+    float2 parallaxMappedUVs = parallaxMapping(input.uv, tangentViewVector);
+    
+    if (parallaxMappedUVs.x > uvScale.x || parallaxMappedUVs.y > uvScale.y || parallaxMappedUVs.x < 0.0 || parallaxMappedUVs.y < 0.0)
+        discard;
+    
+    float3 albedo = albedoTex.Sample(sampleType, parallaxMappedUVs).xyz;
+    float roughness = roughnessTex.Sample(sampleType, parallaxMappedUVs).r;
+    float metallic = metallicTex.Sample(sampleType, parallaxMappedUVs).r;
+    float ao = ambientOcclusionTex.Sample(sampleType, parallaxMappedUVs).r;
+    
+    float3 normal = normalTex.Sample(sampleType, parallaxMappedUVs).rgb * 2.0 - 1.0;
+    normal.g *= -1;
     float3 worldNormal = normalize(mul(normal, TBN));
-    
-    float3 view = normalize(camPosition.xyz - input.worldPos.xyz);
     
     float3 reflectanceSum = 0;
     for (int i = 0; i < numDirectionals; i++) {
-        float3 lightColor = directionals[i].color;
-        float3 lightDirection = directionals[i].direction;
-        reflectanceSum += reflectance(worldNormal, view, albedo, roughness, metallic, lightColor, lightDirection);
+        float3 lightColor = directionals[i].color.xyz;
+        float3 lightDirection = directionals[i].direction.xyz;
+        reflectanceSum += reflectance(worldNormal, viewVector, albedo, roughness, metallic, lightColor, lightDirection);
     }
+    
     return float4(globalIllumination * albedo * ao + reflectanceSum, 1);
 }

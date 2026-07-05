@@ -75,6 +75,13 @@ void ViewLayer::createSettings() const {
       );
 
       lockedSettingsLayer->addFloatSlider(
+        "Global Illumination Strength",
+        &m_modelSphere->giStrength,
+        0, 1,
+        [this]() { m_modelSphere->onValueChange(); }
+      );
+
+      lockedSettingsLayer->addFloatSlider(
         "Displacement strength",
         &m_modelSphere->displacement,
         0, 1,
@@ -82,9 +89,16 @@ void ViewLayer::createSettings() const {
       );
 
       lockedSettingsLayer->addFloatSlider(
-        "Global Illumination Strength",
-        &m_modelSphere->giStrength,
-        0, 1,
+        "POM minimum layers",
+        &m_modelSphere->minPOMLayers,
+        1, 100,
+        [this]() { m_modelSphere->onValueChange(); }
+      );
+
+      lockedSettingsLayer->addFloatSlider(
+        "POM maximum layers",
+        &m_modelSphere->maxPOMLayers,
+        1, 100,
         [this]() { m_modelSphere->onValueChange(); }
       );
 

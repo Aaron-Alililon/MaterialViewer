@@ -171,6 +171,9 @@
     <None Include="SkyboxVertexShader.hlsl">
       <Filter>Source Files\Shaders</Filter>
     </None>
+    <None Include="models\plane.glb">
+      <Filter>Resource Files\models</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="textures\tiles\roughness.png">

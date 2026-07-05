@@ -16,10 +16,11 @@
 class ModelSphere {
 private:
   struct __declspec(align(16)) MaterialProperties {
-    DirectX::XMFLOAT4 sunDirection;
     DirectX::XMFLOAT2 uvScale;
     float globalIllumination;
     float displacementStrength;
+    bool usePOM;
+    DirectX::XMFLOAT2 minMaxPOMLayers;
   };
 
   struct __declspec(align(16)) CameraBufferData {
@@ -37,8 +38,12 @@ public:
 public:
   float uScale = 4.0f;
   float vScale = 4.0f;
-  float displacement = 0.006f;
   float giStrength = 0.8f;
+  float displacement = 0.15f;
+  bool usePOM = true;
+  float minPOMLayers = 8;
+  float maxPOMLayers = 32;
+
 
 private:
   MaterialProperties m_properties;
