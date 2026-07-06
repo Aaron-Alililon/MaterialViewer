@@ -90,6 +90,10 @@ namespace rcore {
     m_context = std::move(context);
   }
 
+  void Window::bindContextStates() const {
+    m_context->bindStates();
+  }
+
   HWND Window::getHandle() const {
     return m_winInterface.m_hwnd;
   }

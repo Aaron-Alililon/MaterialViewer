@@ -52,6 +52,15 @@ namespace rcore {
     return depthStencilDesc;
   }
 
+  D3D11_DEPTH_STENCIL_DESC Preset3D::makeDisabledDepthStencilDescription() {
+    D3D11_DEPTH_STENCIL_DESC depthStencilDesc = makeStandardDepthStencilDescription();
+
+    depthStencilDesc.DepthEnable = false;
+    depthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+
+    return depthStencilDesc;
+  }
+
   D3D11_DEPTH_STENCIL_VIEW_DESC Preset3D::makeStandardDepthStencilViewDescription() {
     D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc{};
 
@@ -75,6 +84,14 @@ namespace rcore {
     rasterDesc.MultisampleEnable = true; // false if no MSAA
     rasterDesc.ScissorEnable = false;
     rasterDesc.SlopeScaledDepthBias = 0.0f;
+
+    return rasterDesc;
+  }
+
+  D3D11_RASTERIZER_DESC Preset3D::makeNoCullingRasterDescription() {
+    D3D11_RASTERIZER_DESC rasterDesc = makeStandardRasterDescription();
+
+    rasterDesc.CullMode = D3D11_CULL_NONE;
 
     return rasterDesc;
   }

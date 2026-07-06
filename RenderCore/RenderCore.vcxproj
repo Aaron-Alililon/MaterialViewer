@@ -26,6 +26,7 @@
     <ClInclude Include="D3D11Device.h" />
     <ClInclude Include="D3DContextDesc.h" />
     <ClInclude Include="DBuffer.h" />
+    <ClInclude Include="DepthStencilState.h" />
     <ClInclude Include="DeviceDesc.h" />
     <ClInclude Include="Engine.h" />
     <ClInclude Include="FrameState.h" />
@@ -42,6 +43,7 @@
     <ClInclude Include="Model.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="PNGLoader.h" />
+    <ClInclude Include="RasterizerState.h" />
     <ClInclude Include="Rcore.h" />
     <ClInclude Include="Preset3D.h" />
     <ClInclude Include="Sampler.h" />
@@ -63,6 +65,7 @@
     <ClCompile Include="D3D11Context.cpp" />
     <ClCompile Include="D3D11Device.cpp" />
     <ClCompile Include="D3DContextDesc.cpp" />
+    <ClCompile Include="DepthStencilState.cpp" />
     <ClCompile Include="DeviceDesc.cpp" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="GLTFLoader.cpp" />
@@ -80,6 +83,7 @@
     </ClCompile>
     <ClCompile Include="PNGLoader.cpp" />
     <ClCompile Include="Preset3D.cpp" />
+    <ClCompile Include="RasterizerState.cpp" />
     <ClCompile Include="Sampler.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Targa32Loader.cpp" />

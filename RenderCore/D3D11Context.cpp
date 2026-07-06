@@ -13,6 +13,7 @@ namespace rcore {
 			createViewport(window->getSize())
 		) {
 			m_valid = true;
+			bindStates();
 		} else {
 			RCORE_LOG(ERR, "Failed to create D3D11Context");
 		}
@@ -22,12 +23,14 @@ namespace rcore {
 		if (!m_valid) return;
 
 		ID3D11DeviceContext* deviceContext = D3D11Device::get().rawContext();
-		ID3D11RenderTargetView* rawRTV = m_msaaRenderTargetView.Get();
 
-		deviceContext->OMSetDepthStencilState(m_depthStencilState.Get(), 1);
-		deviceContext->OMSetRenderTargets(1, &rawRTV, m_depthStencilView.Get());
-		deviceContext->RSSetState(m_rasterState.Get());
+		deviceContext->OMSetRenderTargets(1, m_msaaRenderTargetView.GetAddressOf(), m_depthStencilView.Get());
 		deviceContext->RSSetViewports(1, &m_viewport);
+	}
+
+	void D3D11Context::bindStates() {
+		m_depthStencilState.bind();
+		m_rasterState.bind();
 	}
 
 	void D3D11Context::resolveToBackBuffer() {
@@ -144,11 +147,8 @@ namespace rcore {
 			return false;
 		}
 
-		result = D3D11Device::get().raw()->CreateDepthStencilState(&stencilDescriptor, &m_depthStencilState);
-		if (FAILED(result)) {
-			RCORE_LOG(ERR, "Failed to create depth stencil state");
-			return false;
-		}
+		m_depthStencilState = { stencilDescriptor };
+		if (!m_depthStencilState.isValid()) return false;
 
 		result = D3D11Device::get().raw()->CreateDepthStencilView(m_depthStencilBuffer.Get(), &stencilViewDescriptor, &m_depthStencilView);
 		if (FAILED(result)) {
@@ -160,13 +160,8 @@ namespace rcore {
 	}
 
 	bool D3D11Context::createRasterState(D3D11_RASTERIZER_DESC const& rasterDescriptor) {
-		HRESULT result;
-
-		result = D3D11Device::get().raw()->CreateRasterizerState(&rasterDescriptor, &m_rasterState);
-		if (FAILED(result)) {
-			RCORE_LOG(ERR, "Failed to create raster state");
-			return false;
-		}
+		m_rasterState = { rasterDescriptor };
+		if (!m_rasterState.isValid()) return false;
 
 		return true;
 	}

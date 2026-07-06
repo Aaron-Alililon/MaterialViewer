@@ -26,8 +26,10 @@ namespace rcore {
 
     static D3D11_TEXTURE2D_DESC makeStandardDepthBufferDescription(UINT width, UINT height);
     static D3D11_DEPTH_STENCIL_DESC makeStandardDepthStencilDescription();
+    static D3D11_DEPTH_STENCIL_DESC makeDisabledDepthStencilDescription();
     static D3D11_DEPTH_STENCIL_VIEW_DESC makeStandardDepthStencilViewDescription();
     static D3D11_RASTERIZER_DESC makeStandardRasterDescription();
+    static D3D11_RASTERIZER_DESC makeNoCullingRasterDescription();
     static D3DContextDesc makeStandardContextDescription(UINT width, UINT height);
 
     static std::vector<D3D11_INPUT_ELEMENT_DESC> makeStandardInputDescription();

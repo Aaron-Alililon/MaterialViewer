@@ -3,6 +3,8 @@
 
 #include "D3DContextDesc.h"
 #include "D3D11Device.h"
+#include "DepthStencilState.h"
+#include "RasterizerState.h"
 
 namespace rcore {
 
@@ -14,6 +16,7 @@ namespace rcore {
 
   public:
     void activate();
+    void bindStates();
     void resolveToBackBuffer();
     void presentSwapChain() const;
 
@@ -30,9 +33,9 @@ namespace rcore {
     Microsoft::WRL::ComPtr<IDXGISwapChain> m_swapChain;
     Microsoft::WRL::ComPtr<ID3D11RenderTargetView> m_renderTargetView;
     Microsoft::WRL::ComPtr<ID3D11Texture2D> m_depthStencilBuffer;
-    Microsoft::WRL::ComPtr<ID3D11DepthStencilState> m_depthStencilState;
+    DepthStencilState m_depthStencilState;
     Microsoft::WRL::ComPtr<ID3D11DepthStencilView> m_depthStencilView;
-    Microsoft::WRL::ComPtr<ID3D11RasterizerState> m_rasterState;
+    RasterizerState m_rasterState;
     D3D11_VIEWPORT m_viewport;
 
     Microsoft::WRL::ComPtr<ID3D11Texture2D> m_msaaRenderTargetTexture;

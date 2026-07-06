@@ -64,6 +64,12 @@
     <Filter Include="Header Files\Lib">
       <UniqueIdentifier>{66437f4c-cad4-405d-ad27-2f71932127b7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\D3D11\States">
+      <UniqueIdentifier>{63810542-0b6d-4802-953e-868280d3f0b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\D3D11\States">
+      <UniqueIdentifier>{c06e98b1-0841-438c-897d-a21dd3fa3ad0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine.h">
@@ -183,6 +189,12 @@
     <ClInclude Include="DBuffer.h">
       <Filter>Header Files\D3D11\Buffers</Filter>
     </ClInclude>
+    <ClInclude Include="DepthStencilState.h">
+      <Filter>Header Files\D3D11\States</Filter>
+    </ClInclude>
+    <ClInclude Include="RasterizerState.h">
+      <Filter>Header Files\D3D11\States</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp">
@@ -256,6 +268,12 @@
     </ClCompile>
     <ClCompile Include="LightBuffer.cpp">
       <Filter>Source Files\D3D11\Buffers</Filter>
+    </ClCompile>
+    <ClCompile Include="DepthStencilState.cpp">
+      <Filter>Source Files\D3D11\States</Filter>
+    </ClCompile>
+    <ClCompile Include="RasterizerState.cpp">
+      <Filter>Source Files\D3D11\States</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
