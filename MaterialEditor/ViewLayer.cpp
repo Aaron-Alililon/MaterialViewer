@@ -1,6 +1,6 @@
 #include "ViewLayer.h"
 
-ViewLayer::ViewLayer(std::weak_ptr<rcore::Window> window, std::weak_ptr<rcore::Window> settingsWindow, rcore::D3DContextDesc contextDesc) : Layer(window), m_settingsWindow{ settingsWindow }, m_ctxDesc { contextDesc } {
+ViewLayer::ViewLayer(std::weak_ptr<rcore::Window> window, std::weak_ptr<rcore::Window> settingsWindow, rcore::D3DContextDesc contextDesc) : Layer(window), m_settingsWindow{ settingsWindow }, m_ctxDesc{ contextDesc } {
   auto inputDesc = rcore::Preset3D::makeStandardInputDescription();
 
   m_matrixBuffer = std::make_shared<rcore::MatrixBuffer>(0);
@@ -18,6 +18,8 @@ ViewLayer::ViewLayer(std::weak_ptr<rcore::Window> window, std::weak_ptr<rcore::W
   m_camController.updatePosition();
   m_modelSphere->onCamChange(m_camController.getPosition());
 
+  m_nbcsTexGen = std::make_unique<NBCSTextureGenerator>(m_window);
+
   createSettings();
 }
 
@@ -33,8 +35,8 @@ void ViewLayer::render(rcore::FrameState const& frame) {
   rcore::D3D11Device::get().rawContext()->ClearRenderTargetView(window->getSceneRenderTargetView(), bgCol);
   rcore::D3D11Device::get().rawContext()->ClearDepthStencilView(window->getDepthStencilView(), D3D11_CLEAR_DEPTH, 1.0f, 0);
 
-  m_modelSphere->render(frame, *m_matrixBuffer);
   m_skybox->render(frame, *m_matrixBuffer);
+  m_modelSphere->render(frame, *m_matrixBuffer);
 }
 
 bool ViewLayer::onEvent(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam) {

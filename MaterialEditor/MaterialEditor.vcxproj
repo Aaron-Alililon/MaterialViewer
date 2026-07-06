@@ -142,6 +142,7 @@
     <ClCompile Include="imgui_draw.cpp" />
     <ClCompile Include="imgui_tables.cpp" />
     <ClCompile Include="imgui_widgets.cpp" />
+    <ClCompile Include="NBCSTextureGenerator.cpp" />
     <ClCompile Include="SettingsLayer.cpp" />
     <ClCompile Include="ViewLayer.cpp" />
     <ClCompile Include="imgui_impl_dx11.cpp" />
@@ -163,6 +164,7 @@
     <ClInclude Include="imstb_rectpack.h" />
     <ClInclude Include="imstb_textedit.h" />
     <ClInclude Include="imstb_truetype.h" />
+    <ClInclude Include="NBCSTextureGenerator.h" />
     <ClInclude Include="Setting.h" />
     <ClInclude Include="SettingsLayer.h" />
     <ClInclude Include="ViewLayer.h" />

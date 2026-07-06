@@ -11,6 +11,7 @@
 #include "CameraController.h"
 #include "ModelSphere.h"
 #include "Skybox.h"
+#include "NBCSTextureGenerator.h"
 
 class ViewLayer : public rcore::Layer {
 
@@ -32,6 +33,7 @@ private:
   std::shared_ptr<rcore::LightBuffer> m_directionalLightBuffer;
   std::unique_ptr<ModelSphere> m_modelSphere;
   std::unique_ptr<Skybox> m_skybox;
+  std::unique_ptr<NBCSTextureGenerator> m_nbcsTexGen;
 };
 
 #endif

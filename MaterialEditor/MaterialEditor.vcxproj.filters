@@ -87,6 +87,9 @@
     <ClCompile Include="imgui_tables.cpp">
       <Filter>Source Files\ImGUI</Filter>
     </ClCompile>
+    <ClCompile Include="NBCSTextureGenerator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ModelSphere.h">
@@ -129,6 +132,9 @@
       <Filter>Header Files\ImGUI</Filter>
     </ClInclude>
     <ClInclude Include="Setting.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NBCSTextureGenerator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
