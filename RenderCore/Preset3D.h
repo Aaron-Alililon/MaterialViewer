@@ -36,9 +36,14 @@ namespace rcore {
     
     template<std::derived_from<IMeshLoader> TLoader>
     static std::shared_ptr<StaticIndexedVertexBuffer<StandardVertexType>> makeStandardSIVBuffer(std::string const& meshFile);
+    template<std::derived_from<IMeshLoader> TLoader, std::derived_from<Preset3D::StandardVertexType> TBufferType>
+    static std::shared_ptr<StaticIndexedVertexBuffer<TBufferType>> makeExtendedSIVBuffer(std::string const& meshFile);
+    template<std::derived_from<Preset3D::StandardVertexType> TBufferType>
+    static std::shared_ptr<StaticIndexedVertexBuffer<TBufferType>> makeExtendedSIVBuffer(Mesh const& mesh);
     static std::shared_ptr<StaticIndexedVertexBuffer<StandardVertexType>> makeStandardSIVBuffer(Mesh const& mesh);
 
     static D3D11_TEXTURE2D_DESC makeStandardTextureDescription();
+    static D3D11_TEXTURE2D_DESC makeRenderTargetTextureDescription(UINT width, UINT height);
     static D3D11_SHADER_RESOURCE_VIEW_DESC makeStandardTextureShaderResourceViewDescription();
     static std::pair<D3D11_TEXTURE2D_DESC, D3D11_SHADER_RESOURCE_VIEW_DESC> makeStandardTextureDescriptionPair();
 

@@ -24,6 +24,7 @@ namespace rcore {
     bool isWindowByHandle(HWND hwnd) const;
     LRESULT CALLBACK handleMessage(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam);
     void setContext(std::unique_ptr<D3D11Context> context);
+    void activateContext() const;
     void bindContextStates() const;
 
     HWND getHandle() const;

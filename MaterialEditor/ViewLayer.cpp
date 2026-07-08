@@ -4,7 +4,7 @@ ViewLayer::ViewLayer(std::weak_ptr<rcore::Window> window, std::weak_ptr<rcore::W
   auto inputDesc = rcore::Preset3D::makeStandardInputDescription();
 
   m_matrixBuffer = std::make_shared<rcore::MatrixBuffer>(0);
-  m_directionalLightBuffer = std::make_shared<rcore::LightBuffer>(6, 2);
+  m_directionalLightBuffer = std::make_shared<rcore::LightBuffer>(8, 2);
   m_modelSphere = std::make_unique<ModelSphere>(inputDesc);
   m_skybox = std::make_unique<Skybox>(inputDesc);
 
@@ -18,7 +18,8 @@ ViewLayer::ViewLayer(std::weak_ptr<rcore::Window> window, std::weak_ptr<rcore::W
   m_camController.updatePosition();
   m_modelSphere->onCamChange(m_camController.getPosition());
 
-  m_nbcsTexGen = std::make_unique<NBCSTextureGenerator>(m_window);
+  m_nbcsTexGen = std::make_unique<NBCSTextureGenerator>(m_window, m_modelSphere->getSIVBuffer());
+  m_modelSphere->onNBCSBakeFinish(m_nbcsTexGen->getSRVs());
 
   createSettings();
 }

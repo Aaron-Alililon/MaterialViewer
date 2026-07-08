@@ -46,6 +46,7 @@
     <ClInclude Include="RasterizerState.h" />
     <ClInclude Include="Rcore.h" />
     <ClInclude Include="Preset3D.h" />
+    <ClInclude Include="RenderTarget.h" />
     <ClInclude Include="Sampler.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="ShaderStage.h" />
@@ -84,6 +85,7 @@
     <ClCompile Include="PNGLoader.cpp" />
     <ClCompile Include="Preset3D.cpp" />
     <ClCompile Include="RasterizerState.cpp" />
+    <ClCompile Include="RenderTarget.cpp" />
     <ClCompile Include="Sampler.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Targa32Loader.cpp" />

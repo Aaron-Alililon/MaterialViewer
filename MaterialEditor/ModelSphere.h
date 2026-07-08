@@ -14,12 +14,18 @@
 #include "PNGLoader.h"
 
 class ModelSphere {
+public:
+  struct ExtendedVertexType : rcore::Preset3D::StandardVertexType {
+    float sTangent = 0.0f;
+    float sBinormal = 0.0f;
+  };
+
 private:
   struct __declspec(align(16)) MaterialProperties {
     DirectX::XMFLOAT2 uvScale;
     float globalIllumination;
     float displacementStrength;
-    bool usePOM;
+    float usePOM;
     DirectX::XMFLOAT2 minMaxPOMLayers;
   };
 
@@ -34,22 +40,24 @@ public:
   void render(rcore::FrameState const& frame, rcore::MatrixBuffer& matrixBuffer);
   void onValueChange();
   void onCamChange(DirectX::XMFLOAT3 pos) const;
+  void onNBCSBakeFinish(std::pair<ID3D11ShaderResourceView*, ID3D11ShaderResourceView*> SRVs) const;
+
+  std::weak_ptr<rcore::StaticIndexedVertexBuffer<ExtendedVertexType>> getSIVBuffer() const;
 
 public:
-  float uScale = 4.0f;
-  float vScale = 4.0f;
+  float uScale = 1.0f;
+  float vScale = 1.0f;
   float giStrength = 0.8f;
   float displacement = 0.15f;
-  bool usePOM = true;
+  bool usePOM = false;
   float minPOMLayers = 8;
   float maxPOMLayers = 32;
 
-
 private:
   MaterialProperties m_properties;
-  std::shared_ptr<rcore::StaticIndexedVertexBuffer<rcore::Preset3D::StandardVertexType>> m_SIVBuffer;
+  std::shared_ptr<rcore::StaticIndexedVertexBuffer<ExtendedVertexType>> m_SIVBuffer;
   std::shared_ptr<rcore::Texture> m_textureAlbedo, m_textureNormal, m_textureDisplacement, m_textureRoughness, m_textureMetallic, m_textureAmbientOcclusion;
-  std::shared_ptr<rcore::Sampler> m_sampler;
+  std::shared_ptr<rcore::Sampler> m_pointSampler, m_linearSampler;
   std::shared_ptr<rcore::Material<MaterialProperties>> m_material;
   std::unique_ptr<rcore::CBuffer<CameraBufferData>> m_camBuffer;
   std::unique_ptr<rcore::Model> m_sphere;

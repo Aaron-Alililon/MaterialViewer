@@ -158,7 +158,7 @@ namespace rcore {
     std::vector<StandardVertexType> verts;
 
     for (size_t i = 0; i < mesh.vertices.size(); i++) {
-      StandardVertexType vert;
+      StandardVertexType vert{};
       
       vert.position = mesh.vertices.at(i);
       vert.normal = mesh.normals.at(i);
@@ -190,6 +190,16 @@ namespace rcore {
     desc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
     desc.CPUAccessFlags = 0;
     desc.MiscFlags = D3D11_RESOURCE_MISC_GENERATE_MIPS;
+
+    return desc;
+  }
+
+  D3D11_TEXTURE2D_DESC Preset3D::makeRenderTargetTextureDescription(UINT width, UINT height) {
+    D3D11_TEXTURE2D_DESC desc = makeStandardTextureDescription();
+
+    desc.Width = width;
+    desc.Height = height;
+    desc.MipLevels = 1;
 
     return desc;
   }

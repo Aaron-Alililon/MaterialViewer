@@ -90,6 +90,10 @@ namespace rcore {
     m_context = std::move(context);
   }
 
+  void Window::activateContext() const {
+    m_context->activate();
+  }
+
   void Window::bindContextStates() const {
     m_context->bindStates();
   }

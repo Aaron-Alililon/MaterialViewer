@@ -195,6 +195,9 @@
     <ClInclude Include="RasterizerState.h">
       <Filter>Header Files\D3D11\States</Filter>
     </ClInclude>
+    <ClInclude Include="RenderTarget.h">
+      <Filter>Header Files\Resource</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp">
@@ -274,6 +277,9 @@
     </ClCompile>
     <ClCompile Include="RasterizerState.cpp">
       <Filter>Source Files\D3D11\States</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderTarget.cpp">
+      <Filter>Source Files\Resource</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

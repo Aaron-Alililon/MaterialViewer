@@ -19,13 +19,22 @@ namespace rcore {
       return;
     }
 
+    matrixBuffer.setWorldMatrix(m_transform.getWorldMatrix());
+    matrixBuffer.uploadBuffer();
+
+    drawIndexed(activateMaterial);
+  }
+
+  void Model::drawIndexed(bool activateMaterial) {
+    if (!m_valid) {
+      RCORE_LOG(WARN, "Tried drawing invalid model");
+      return;
+    }
+
     // Sophisticated renderers will batch models by material and only activate once
     if (activateMaterial) {
       m_material->activate();
     }
-
-    matrixBuffer.setWorldMatrix(m_transform.getWorldMatrix());
-    matrixBuffer.uploadBuffer();
 
     UINT indexCount = m_vertexBuffer->bind();
 

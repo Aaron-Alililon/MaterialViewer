@@ -20,21 +20,30 @@ namespace rcore {
   }
 
 	void D3D11Context::activate() {
-		if (!m_valid) return;
+		if (!m_valid) {
+			RCORE_LOG(WARN, "Tried activating invalid context");
+			return;
+		}
 
-		ID3D11DeviceContext* deviceContext = D3D11Device::get().rawContext();
-
-		deviceContext->OMSetRenderTargets(1, m_msaaRenderTargetView.GetAddressOf(), m_depthStencilView.Get());
-		deviceContext->RSSetViewports(1, &m_viewport);
+		D3D11Device::get().rawContext()->OMSetRenderTargets(1, m_msaaRenderTargetView.GetAddressOf(), m_depthStencilView.Get());
+		D3D11Device::get().rawContext()->RSSetViewports(1, &m_viewport);
 	}
 
 	void D3D11Context::bindStates() {
+		if (!m_valid) {
+			RCORE_LOG(WARN, "Tried binding states of invalid context");
+			return;
+		}
+
 		m_depthStencilState.bind();
 		m_rasterState.bind();
 	}
 
 	void D3D11Context::resolveToBackBuffer() {
-		if (!m_valid) return;
+		if (!m_valid) {
+			RCORE_LOG(WARN, "Tried resolving to backbuffer of invalid context");
+			return;
+		}
 
 		Microsoft::WRL::ComPtr<ID3D11Texture2D> backBuffer;
 		m_swapChain->GetBuffer(0, IID_PPV_ARGS(&backBuffer));
@@ -45,7 +54,11 @@ namespace rcore {
 	}
 
 	void D3D11Context::presentSwapChain() const {
-		if (!m_valid) return;
+		if (!m_valid) {
+			RCORE_LOG(WARN, "Tried presenting swap chain of invalid context");
+			return;
+		}
+
 		m_swapChain->Present(1, 0);
 	}
 
@@ -111,7 +124,7 @@ namespace rcore {
 			return false;
 		}
 
-		result = D3D11Device::get().raw()->CreateRenderTargetView(backBufferPtr.Get(), NULL, &m_renderTargetView);
+		result = D3D11Device::get().raw()->CreateRenderTargetView(backBufferPtr.Get(), nullptr, &m_renderTargetView);
 		if (FAILED(result)) {
 			RCORE_LOG(ERR, "Failed to create render target view");
 			return false;

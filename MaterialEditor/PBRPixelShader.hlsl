@@ -4,13 +4,17 @@ Texture2D displacementTex : register(t2);
 Texture2D roughnessTex : register(t3);
 Texture2D metallicTex : register(t4);
 Texture2D ambientOcclusionTex : register(t5);
-SamplerState sampleType : register(s0);
+Texture2D tangentMapTex : register(t6);
+Texture2D binormalMapTex : register(t7);
+
+SamplerState pointSampleType : register(s0);
+SamplerState linearSampleType : register(s1);
 
 cbuffer PropertiesBuffer : register(b1) {
     float2 uvScale;
     float globalIllumination;
     float displacementStrength;
-    bool usePOM;
+    float usePOM;
     float2 minMaxPOMLayers;
 };
 
@@ -20,7 +24,7 @@ struct LightData {
     float4 color;
 };
 
-StructuredBuffer<LightData> directionals : register(t6);
+StructuredBuffer<LightData> directionals : register(t8);
 
 cbuffer NumDirectionalsBuffer : register(b2) {
     int numDirectionals;
@@ -49,18 +53,18 @@ float2 parallaxMapping(float2 uv, float3 tangentView) {
     float2 deltaTexCoords = P / numLayers;
     
     float2 currentTexCoords = uv;
-    float currentDepthMapValue = 1.0f - displacementTex.SampleLevel(sampleType, currentTexCoords, 0).r;
+    float currentDepthMapValue = 1.0f - displacementTex.SampleLevel(linearSampleType, currentTexCoords, 0).r;
   
     while (currentLayerDepth < currentDepthMapValue) {
         currentTexCoords -= deltaTexCoords;
-        currentDepthMapValue = 1.0f - displacementTex.SampleLevel(sampleType, currentTexCoords, 0).r;
+        currentDepthMapValue = 1.0f - displacementTex.SampleLevel(linearSampleType, currentTexCoords, 0).r;
         currentLayerDepth += layerDepth;
     }
     
     float2 prevTexCoords = currentTexCoords + deltaTexCoords;
     
     float afterDepth = currentDepthMapValue - currentLayerDepth;
-    float beforeDepth = 1.0f - displacementTex.SampleLevel(sampleType, prevTexCoords, 0).r - currentLayerDepth + layerDepth;
+    float beforeDepth = 1.0f - displacementTex.SampleLevel(linearSampleType, prevTexCoords, 0).r - currentLayerDepth + layerDepth;
  
     float weight = afterDepth / (afterDepth - beforeDepth);
     float2 finalTexCoords = prevTexCoords * weight + currentTexCoords * (1.0 - weight);
@@ -121,21 +125,26 @@ float4 PSMain(PixelInputType input) : SV_TARGET
     float3 B = cross(N, T);
     float3x3 TBN = float3x3(T, B, N);
     
-    float3x3 inverseTBN = transpose(TBN);
-    
     float3 viewVector = normalize(camPosition.xyz - input.worldPos.xyz);
-    float3 tangentViewVector = normalize(mul(inverseTBN, viewVector));
-    float2 parallaxMappedUVs = parallaxMapping(input.uv, tangentViewVector);
     
-    if (parallaxMappedUVs.x > uvScale.x || parallaxMappedUVs.y > uvScale.y || parallaxMappedUVs.x < 0.0 || parallaxMappedUVs.y < 0.0)
-        discard;
+    float2 mappedUVs = input.uv;
     
-    float3 albedo = albedoTex.Sample(sampleType, parallaxMappedUVs).xyz;
-    float roughness = roughnessTex.Sample(sampleType, parallaxMappedUVs).r;
-    float metallic = metallicTex.Sample(sampleType, parallaxMappedUVs).r;
-    float ao = ambientOcclusionTex.Sample(sampleType, parallaxMappedUVs).r;
+    if (usePOM) {
+        float3x3 inverseTBN = transpose(TBN);
     
-    float3 normal = normalTex.Sample(sampleType, parallaxMappedUVs).rgb * 2.0 - 1.0;
+        float3 tangentViewVector = normalize(mul(inverseTBN, viewVector));
+        mappedUVs = parallaxMapping(input.uv, tangentViewVector);
+    
+        if (mappedUVs.x > uvScale.x || mappedUVs.y > uvScale.y || mappedUVs.x < 0.0 || mappedUVs.y < 0.0)
+            discard;
+    }
+    
+    float3 albedo = albedoTex.Sample(linearSampleType, mappedUVs).xyz;
+    float roughness = roughnessTex.Sample(linearSampleType, mappedUVs).r;
+    float metallic = metallicTex.Sample(linearSampleType, mappedUVs).r;
+    float ao = ambientOcclusionTex.Sample(linearSampleType, mappedUVs).r;
+    
+    float3 normal = normalTex.Sample(linearSampleType, mappedUVs).rgb * 2.0 - 1.0;
     normal.g *= -1;
     float3 worldNormal = normalize(mul(normal, TBN));
     
@@ -147,4 +156,5 @@ float4 PSMain(PixelInputType input) : SV_TARGET
     }
     
     return float4(globalIllumination * albedo * ao + reflectanceSum, 1);
+
 }
