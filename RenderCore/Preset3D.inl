@@ -6,21 +6,21 @@
 namespace rcore {
 
   template<std::derived_from<IMeshLoader> TLoader>
-  std::shared_ptr<StaticIndexedVertexBuffer<Preset3D::StandardVertexType>> Preset3D::makeStandardSIVBuffer(std::string const& meshFile) {
+  std::shared_ptr<StaticIndexedVertexBuffer<Preset3D::StandardVertexType>> Preset3D::makeStandardSIVBuffer(std::string const& meshFile, bool keepCPUData) {
     TLoader loader{ };
     Mesh mesh = loader.readMesh(meshFile);
-    return makeStandardSIVBuffer(mesh);
+    return makeStandardSIVBuffer(mesh, keepCPUData);
   }
 
   template<std::derived_from<IMeshLoader> TLoader, std::derived_from<Preset3D::StandardVertexType> TBufferType>
-  std::shared_ptr<StaticIndexedVertexBuffer<TBufferType>> Preset3D::makeExtendedSIVBuffer(std::string const& meshFile) {
+  std::shared_ptr<StaticIndexedVertexBuffer<TBufferType>> Preset3D::makeExtendedSIVBuffer(std::string const& meshFile, bool keepCPUData) {
     TLoader loader{ };
     Mesh mesh = loader.readMesh(meshFile);
-    return makeExtendedSIVBuffer<TBufferType>(mesh);
+    return makeExtendedSIVBuffer<TBufferType>(mesh, keepCPUData);
   }
 
   template<std::derived_from<Preset3D::StandardVertexType> TBufferType>
-  std::shared_ptr<StaticIndexedVertexBuffer<TBufferType>> Preset3D::makeExtendedSIVBuffer(Mesh const& mesh) {
+  std::shared_ptr<StaticIndexedVertexBuffer<TBufferType>> Preset3D::makeExtendedSIVBuffer(Mesh const& mesh, bool keepCPUData) {
     std::vector<TBufferType> verts;
 
     for (size_t i = 0; i < mesh.vertices.size(); i++) {
@@ -41,7 +41,7 @@ namespace rcore {
       verts.push_back(vert);
     }
 
-    return std::make_shared<StaticIndexedVertexBuffer<TBufferType>>(verts, mesh.indices);
+    return std::make_shared<StaticIndexedVertexBuffer<TBufferType>>(verts, mesh.indices, keepCPUData);
   }
 
 }

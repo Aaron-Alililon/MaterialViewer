@@ -35,12 +35,12 @@ namespace rcore {
     static std::vector<D3D11_INPUT_ELEMENT_DESC> makeStandardInputDescription();
     
     template<std::derived_from<IMeshLoader> TLoader>
-    static std::shared_ptr<StaticIndexedVertexBuffer<StandardVertexType>> makeStandardSIVBuffer(std::string const& meshFile);
+    static std::shared_ptr<StaticIndexedVertexBuffer<StandardVertexType>> makeStandardSIVBuffer(std::string const& meshFile, bool keepCPUData = false);
     template<std::derived_from<IMeshLoader> TLoader, std::derived_from<Preset3D::StandardVertexType> TBufferType>
-    static std::shared_ptr<StaticIndexedVertexBuffer<TBufferType>> makeExtendedSIVBuffer(std::string const& meshFile);
+    static std::shared_ptr<StaticIndexedVertexBuffer<TBufferType>> makeExtendedSIVBuffer(std::string const& meshFile, bool keepCPUData = false);
     template<std::derived_from<Preset3D::StandardVertexType> TBufferType>
-    static std::shared_ptr<StaticIndexedVertexBuffer<TBufferType>> makeExtendedSIVBuffer(Mesh const& mesh);
-    static std::shared_ptr<StaticIndexedVertexBuffer<StandardVertexType>> makeStandardSIVBuffer(Mesh const& mesh);
+    static std::shared_ptr<StaticIndexedVertexBuffer<TBufferType>> makeExtendedSIVBuffer(Mesh const& mesh, bool keepCPUData = false);
+    static std::shared_ptr<StaticIndexedVertexBuffer<StandardVertexType>> makeStandardSIVBuffer(Mesh const& mesh, bool keepCPUData = false);
 
     static D3D11_TEXTURE2D_DESC makeStandardTextureDescription();
     static D3D11_TEXTURE2D_DESC makeRenderTargetTextureDescription(UINT width, UINT height);

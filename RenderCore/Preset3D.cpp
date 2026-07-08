@@ -154,7 +154,7 @@ namespace rcore {
     return inputDesc;
   }
 
-  std::shared_ptr<StaticIndexedVertexBuffer<Preset3D::StandardVertexType>> Preset3D::makeStandardSIVBuffer(Mesh const& mesh) {
+  std::shared_ptr<StaticIndexedVertexBuffer<Preset3D::StandardVertexType>> Preset3D::makeStandardSIVBuffer(Mesh const& mesh, bool keepCPUData) {
     std::vector<StandardVertexType> verts;
 
     for (size_t i = 0; i < mesh.vertices.size(); i++) {
@@ -175,7 +175,7 @@ namespace rcore {
       verts.push_back(vert);
     }
 
-    return std::make_shared<StaticIndexedVertexBuffer<StandardVertexType>>(verts, mesh.indices);
+    return std::make_shared<StaticIndexedVertexBuffer<StandardVertexType>>(verts, mesh.indices, keepCPUData);
   }
 
   D3D11_TEXTURE2D_DESC Preset3D::makeStandardTextureDescription() {

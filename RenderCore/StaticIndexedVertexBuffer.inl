@@ -8,7 +8,12 @@
 namespace rcore {
 
   template<typename TVertex>
-  StaticIndexedVertexBuffer<TVertex>::StaticIndexedVertexBuffer(std::vector<TVertex> const& vertices, std::vector<UINT> const& indices) {
+  StaticIndexedVertexBuffer<TVertex>::StaticIndexedVertexBuffer(std::vector<TVertex> const& vertices, std::vector<UINT> const& indices, bool keepCPUData) {
+    if (keepCPUData) {
+      m_vertices = vertices;
+      m_indices = indices;
+    }
+
     m_indexAmount = static_cast<UINT>(indices.size());
 
     if (createVertexBuffer(vertices) &&
@@ -37,6 +42,16 @@ namespace rcore {
   template<typename TVertex>
   bool StaticIndexedVertexBuffer<TVertex>::valid() const {
     return m_valid;
+  }
+
+  template<typename TVertex>
+  std::vector<TVertex> StaticIndexedVertexBuffer<TVertex>::getVertices() const {
+    return m_vertices;
+  }
+
+  template<typename TVertex>
+  std::vector<UINT> StaticIndexedVertexBuffer<TVertex>::getIndices() const {
+    return m_indices;
   }
 
   template<typename TVertex>
