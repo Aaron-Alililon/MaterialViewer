@@ -31,12 +31,11 @@ private:
   void bakeTangentBinormalTextures(std::weak_ptr<rcore::Window> const& window, rcore::StaticIndexedVertexBuffer<ExtendedVertexType> sivBuffer);
 
 private:
-  UINT m_textureWidth = 512;
-  UINT m_textureHeight = 512;
+  UINT m_textureWidth = 1024;
+  UINT m_textureHeight = 1024;
   rcore::DepthStencilState m_depthStencilState;
   rcore::RasterizerState m_rasterizerState;
-  std::unique_ptr<rcore::RenderTarget> m_tangentTexture;
-  std::unique_ptr<rcore::RenderTarget> m_binormalTexture;
+  std::unique_ptr<rcore::RenderTarget> m_normalTexture, m_tangentTexture;
 };
 
 #endif

@@ -4,8 +4,11 @@
 #include "Preset3D.h"
 
 // TODO
-// Resizable windows
+// Clean up NBCS stuff
+// Make switchable displacement algorithm
 // Changeable scene (Model sphere, cube, plane, ...; Skybox sky, studio, ...)
+// Resizable windows
+// Drag-and-drop textures
 
 // INFO
 // WS_EX_ACCEPTFILES for accepting files

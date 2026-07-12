@@ -19,7 +19,8 @@ private:
     DirectX::XMFLOAT2 uvScale;
     float globalIllumination;
     float displacementStrength;
-    float usePOM;
+    float useNBCS;
+    float nbcsStepSizeFactor;
     DirectX::XMFLOAT2 minMaxPOMLayers;
   };
 
@@ -39,13 +40,14 @@ public:
   std::weak_ptr<rcore::StaticIndexedVertexBuffer<rcore::Preset3D::StandardVertexType>> getSIVBuffer() const;
 
 public:
-  float uScale = 1.0f;
-  float vScale = 1.0f;
+  float uScale = 8.0f;
+  float vScale = 4.0f;
   float giStrength = 0.8f;
   float displacement = 0.15f;
-  bool usePOM = true;
-  float minPOMLayers = 8;
-  float maxPOMLayers = 32;
+  bool useNBCS = true;
+  float nbcsStepSizeFactor = 5.0f; // 2.5 or less for plane, 5.0 for sphere
+  float minPOMLayers = 100;
+  float maxPOMLayers = 250;
 
 private:
   MaterialProperties m_properties;

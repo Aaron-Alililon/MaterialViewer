@@ -3,7 +3,7 @@
 ViewLayer::ViewLayer(std::weak_ptr<rcore::Window> window, std::weak_ptr<rcore::Window> settingsWindow, rcore::D3DContextDesc contextDesc) : Layer(window), m_settingsWindow{ settingsWindow }, m_ctxDesc{ contextDesc } {
   auto inputDesc = rcore::Preset3D::makeStandardInputDescription();
 
-  m_matrixBuffer = std::make_shared<rcore::MatrixBuffer>(0);
+  m_matrixBuffer = std::make_shared<rcore::MatrixBuffer>(0, rcore::Vertex | rcore::Pixel);
   m_directionalLightBuffer = std::make_shared<rcore::LightBuffer>(8, 2);
   m_modelSphere = std::make_unique<ModelSphere>(inputDesc);
   m_skybox = std::make_unique<Skybox>(inputDesc);
@@ -87,21 +87,28 @@ void ViewLayer::createSettings() const {
       lockedSettingsLayer->addFloatSlider(
         "Displacement strength",
         &m_modelSphere->displacement,
-        0, 1,
+        0, 2,
+        [this]() { m_modelSphere->onValueChange(); }
+      );
+
+      lockedSettingsLayer->addFloatSlider(
+        "NBCS Step Size Factor",
+        &m_modelSphere->nbcsStepSizeFactor,
+        1, 10,
         [this]() { m_modelSphere->onValueChange(); }
       );
 
       lockedSettingsLayer->addFloatSlider(
         "POM minimum layers",
         &m_modelSphere->minPOMLayers,
-        1, 100,
+        1, 500,
         [this]() { m_modelSphere->onValueChange(); }
       );
 
       lockedSettingsLayer->addFloatSlider(
         "POM maximum layers",
         &m_modelSphere->maxPOMLayers,
-        1, 100,
+        1, 500,
         [this]() { m_modelSphere->onValueChange(); }
       );
 

@@ -12,7 +12,7 @@ NBCSTextureGenerator::NBCSTextureGenerator(std::weak_ptr<rcore::Window> const& w
 }
 
 std::pair<ID3D11ShaderResourceView*, ID3D11ShaderResourceView*> NBCSTextureGenerator::getSRVs() const {
-  return std::make_pair(m_tangentTexture->getSRV(), m_binormalTexture->getSRV());
+  return std::make_pair(m_normalTexture->getSRV(), m_tangentTexture->getSRV());
 }
 
 std::vector<std::pair<float, float>> NBCSTextureGenerator::computeTangentScales(std::vector<rcore::Preset3D::StandardVertexType> const& vertices, std::vector<uint32_t> const& indices) {
@@ -85,10 +85,10 @@ bool NBCSTextureGenerator::prepareTextures() {
   D3D11_TEXTURE2D_DESC textureDesc = rcore::Preset3D::makeRenderTargetTextureDescription(m_textureWidth, m_textureHeight);
   textureDesc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
 
+  m_normalTexture = std::make_unique<rcore::RenderTarget>(textureDesc);
   m_tangentTexture = std::make_unique<rcore::RenderTarget>(textureDesc);
-  m_binormalTexture = std::make_unique<rcore::RenderTarget>(textureDesc);
 
-  return m_tangentTexture->isValid() && m_binormalTexture->isValid();
+  return m_tangentTexture->isValid() && m_normalTexture->isValid();
 }
 
 std::shared_ptr<rcore::Material<NBCSTextureGenerator::EmptyMaterialProperties>> NBCSTextureGenerator::material() const {
@@ -123,7 +123,7 @@ void NBCSTextureGenerator::bakeTangentBinormalTextures(std::weak_ptr<rcore::Wind
   m_depthStencilState.bind();
   m_rasterizerState.bind();
 
-  ID3D11RenderTargetView* rtvs[] = { m_tangentTexture->getRTV(), m_binormalTexture->getRTV() };
+  ID3D11RenderTargetView* rtvs[] = { m_normalTexture->getRTV(), m_tangentTexture->getRTV() };
   rcore::D3D11Device::get().rawContext()->OMSetRenderTargets(2, rtvs, nullptr);
 
   D3D11_VIEWPORT bakeViewport{};
@@ -133,8 +133,8 @@ void NBCSTextureGenerator::bakeTangentBinormalTextures(std::weak_ptr<rcore::Wind
   bakeViewport.MaxDepth = 1.0f;
   rcore::D3D11Device::get().rawContext()->RSSetViewports(1, &bakeViewport);
 
+  m_normalTexture->clearRTV();
   m_tangentTexture->clearRTV();
-  m_binormalTexture->clearRTV();
 
   auto eSivBPtr = std::make_shared<rcore::StaticIndexedVertexBuffer<ExtendedVertexType>>(sivBuffer);
   rcore::Model model{ material(), eSivBPtr };

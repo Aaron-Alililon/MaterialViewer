@@ -36,7 +36,8 @@ namespace rcore {
 
     D3D11Device::get().rawContext()->Unmap(m_buffer.Get(), 0);
 
-    D3D11Device::get().rawContext()->VSSetConstantBuffers(m_bufferSlot, 1, m_buffer.GetAddressOf());
+    if (m_shaderStages & Vertex) D3D11Device::get().rawContext()->VSSetConstantBuffers(m_bufferSlot, 1, m_buffer.GetAddressOf());
+    if (m_shaderStages & Pixel) D3D11Device::get().rawContext()->PSSetConstantBuffers(m_bufferSlot, 1, m_buffer.GetAddressOf());
 
     return true;
   }

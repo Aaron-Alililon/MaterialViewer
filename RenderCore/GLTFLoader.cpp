@@ -62,9 +62,9 @@ namespace rcore {
 
         mesh.tangents[i] = t;
         mesh.binormals[i] = {
-            (n.y * t.z - n.z * t.y) * w,
-            (n.z * t.x - n.x * t.z) * w,
-            (n.x * t.y - n.y * t.x) * w
+            (n.y * t.z - n.z * t.y) * w * -1,
+            (n.z * t.x - n.x * t.z) * w * -1,
+            (n.x * t.y - n.y * t.x) * w * -1
         };
       } else {
         mesh.tangents[i] = { 1.0f, 0.0f, 0.0f };

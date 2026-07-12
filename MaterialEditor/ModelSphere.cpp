@@ -1,10 +1,10 @@
 #include "ModelSphere.h"
 
 ModelSphere::ModelSphere(std::vector<D3D11_INPUT_ELEMENT_DESC> const& inputDesc) {
-  m_SIVBuffer = rcore::Preset3D::makeStandardSIVBuffer<rcore::GLTFLoader>("models/sphere_high.glb", true);
+  m_SIVBuffer = rcore::Preset3D::makeStandardSIVBuffer<rcore::GLTFLoader>("models/plane.glb", true);
 
   auto [texDesc, srvDesc] = rcore::Preset3D::makeStandardTextureDescriptionPair();
-  std::string textureFamily = "plates";
+  std::string textureFamily = "rocks";
   m_textureAlbedo = std::make_shared<rcore::Texture>(rcore::LoaderTag<rcore::PNGLoader>{}, "textures/" + textureFamily + "/albedo.png", texDesc, srvDesc);
   m_textureNormal = std::make_shared<rcore::Texture>(rcore::LoaderTag<rcore::PNGLoader>{}, "textures/" + textureFamily + "/normal.png", texDesc, srvDesc);
   m_textureDisplacement = std::make_shared<rcore::Texture>(rcore::LoaderTag<rcore::PNGLoader>{}, "textures/" + textureFamily + "/displacement.png", texDesc, srvDesc);
@@ -41,7 +41,8 @@ void ModelSphere::onValueChange() {
     { uScale, vScale },
     giStrength,
     displacement,
-    (usePOM) ? 1.0f : 0.0f,
+    (useNBCS) ? 1.0f : 0.0f,
+    nbcsStepSizeFactor,
     { minPOMLayers, maxPOMLayers }
   };
 

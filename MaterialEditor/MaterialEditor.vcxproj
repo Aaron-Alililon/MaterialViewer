@@ -177,9 +177,12 @@
     <Text Include="data\log.txt" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="models\cubesphere.glb" />
+    <None Include="models\cylinder.glb" />
     <None Include="models\icosphere_extreme.glb" />
     <None Include="models\plane.glb" />
     <None Include="models\sphere.glb" />
+    <None Include="models\sphere_abnormal.glb" />
     <None Include="models\sphere_extreme.glb" />
     <None Include="models\sphere_high.glb" />
     <None Include="PBRPixelShader.hlsl">
