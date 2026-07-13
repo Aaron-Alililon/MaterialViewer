@@ -54,8 +54,8 @@ void ModelSphere::onCamChange(DirectX::XMFLOAT3 pos) const {
   m_camBuffer->uploadBuffer();
 }
 
-void ModelSphere::onNBCSBakeFinish(std::pair<ID3D11ShaderResourceView*, ID3D11ShaderResourceView*> SRVs) const {
-  ID3D11ShaderResourceView* srv[] = { m_textureAlbedo->getTextureView(), m_textureNormal->getTextureView(), m_textureDisplacement->getTextureView(), m_textureRoughness->getTextureView(), m_textureMetallic->getTextureView(), m_textureAmbientOcclusion->getTextureView(), SRVs.first, SRVs.second };
+void ModelSphere::onNBCSBakeFinish(ID3D11ShaderResourceView* normalMapSRV, ID3D11ShaderResourceView* tangentMapSRV) const {
+  ID3D11ShaderResourceView* srv[] = { m_textureAlbedo->getTextureView(), m_textureNormal->getTextureView(), m_textureDisplacement->getTextureView(), m_textureRoughness->getTextureView(), m_textureMetallic->getTextureView(), m_textureAmbientOcclusion->getTextureView(), normalMapSRV, tangentMapSRV };
   m_material->setTextures(srv, 0);
 }
 

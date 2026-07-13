@@ -21,21 +21,25 @@ private:
 
 public:
   NBCSTextureGenerator(std::weak_ptr<rcore::Window> const& window, std::weak_ptr<rcore::StaticIndexedVertexBuffer<rcore::Preset3D::StandardVertexType>> sivBuffer);
-  std::pair<ID3D11ShaderResourceView*, ID3D11ShaderResourceView*> getSRVs() const;
+
+public:
+  std::pair<std::shared_ptr<rcore::RenderTarget>, std::shared_ptr<rcore::RenderTarget>> getTextures() const;
 
 private:
   std::vector<std::pair<float, float>> computeTangentScales(std::vector<rcore::Preset3D::StandardVertexType> const& vertices, std::vector<uint32_t> const& indices);
-  rcore::StaticIndexedVertexBuffer<ExtendedVertexType> makeExtendedSIVBuffer(std::weak_ptr<rcore::StaticIndexedVertexBuffer<rcore::Preset3D::StandardVertexType>> sivBuffer);
+  bool makeExtendedSIVBuffer(std::weak_ptr<rcore::StaticIndexedVertexBuffer<rcore::Preset3D::StandardVertexType>> sivBuffer);
+  bool makeMaterial();
   bool prepareTextures();
-  std::shared_ptr<rcore::Material<NBCSTextureGenerator::EmptyMaterialProperties>> material() const;
-  void bakeTangentBinormalTextures(std::weak_ptr<rcore::Window> const& window, rcore::StaticIndexedVertexBuffer<ExtendedVertexType> sivBuffer);
+  void bakeTangentBinormalTextures(std::weak_ptr<rcore::Window> const& window);
 
 private:
-  UINT m_textureWidth = 1024;
-  UINT m_textureHeight = 1024;
+  const UINT m_textureWidth = 512;
+  const UINT m_textureHeight = 512;
   rcore::DepthStencilState m_depthStencilState;
   rcore::RasterizerState m_rasterizerState;
-  std::unique_ptr<rcore::RenderTarget> m_normalTexture, m_tangentTexture;
+  std::shared_ptr<rcore::Material<NBCSTextureGenerator::EmptyMaterialProperties>> m_material;
+  std::shared_ptr<rcore::StaticIndexedVertexBuffer<ExtendedVertexType>> m_extendedSIVBuffer;
+  std::shared_ptr<rcore::RenderTarget> m_normalTexture, m_tangentTexture;
 };
 
 #endif

@@ -4,15 +4,18 @@ NBCSTextureGenerator::NBCSTextureGenerator(std::weak_ptr<rcore::Window> const& w
     m_depthStencilState{ rcore::Preset3D::makeDisabledDepthStencilDescription() },
     m_rasterizerState{ rcore::Preset3D::makeNoCullingRasterDescription() }
 {
-  if (prepareTextures()) {
-    bakeTangentBinormalTextures(window, makeExtendedSIVBuffer(sivBuffer));
+  if (makeExtendedSIVBuffer(sivBuffer) &&
+      makeMaterial() &&
+      prepareTextures()
+  ) {
+    bakeTangentBinormalTextures(window);
   } else {
     RCORE_LOG(rcore::ERR, "Failed to prepare NBCS textures");
   }
 }
 
-std::pair<ID3D11ShaderResourceView*, ID3D11ShaderResourceView*> NBCSTextureGenerator::getSRVs() const {
-  return std::make_pair(m_normalTexture->getSRV(), m_tangentTexture->getSRV());
+std::pair<std::shared_ptr<rcore::RenderTarget>, std::shared_ptr<rcore::RenderTarget>> NBCSTextureGenerator::getTextures() const {
+  return std::make_pair(m_normalTexture, m_tangentTexture);
 }
 
 std::vector<std::pair<float, float>> NBCSTextureGenerator::computeTangentScales(std::vector<rcore::Preset3D::StandardVertexType> const& vertices, std::vector<uint32_t> const& indices) {
@@ -32,7 +35,7 @@ std::vector<std::pair<float, float>> NBCSTextureGenerator::computeTangentScales(
     float du2 = v2.uv.x - v0.uv.x, dv2 = v2.uv.y - v0.uv.y;
 
     float denom = du1 * dv2 - du2 * dv1;
-    if (fabs(denom) < 1e-8f) continue; // degenerate UV triangle, skip
+    if (fabs(denom) < 1e-8f) continue;
     float f = 1.0f / denom;
 
     DirectX::XMFLOAT3 tRaw = {
@@ -62,7 +65,7 @@ std::vector<std::pair<float, float>> NBCSTextureGenerator::computeTangentScales(
   return scales;
 }
 
-rcore::StaticIndexedVertexBuffer<NBCSTextureGenerator::ExtendedVertexType> NBCSTextureGenerator::makeExtendedSIVBuffer(std::weak_ptr<rcore::StaticIndexedVertexBuffer<rcore::Preset3D::StandardVertexType>> sivBuffer) {
+bool NBCSTextureGenerator::makeExtendedSIVBuffer(std::weak_ptr<rcore::StaticIndexedVertexBuffer<rcore::Preset3D::StandardVertexType>> sivBuffer) {
   auto lockedSIVBuffer = sivBuffer.lock();
 
   auto standardVerts = lockedSIVBuffer->getVertices();
@@ -78,20 +81,12 @@ rcore::StaticIndexedVertexBuffer<NBCSTextureGenerator::ExtendedVertexType> NBCST
     eVert.sBinormal = sBinormal;
   }
 
-  return rcore::StaticIndexedVertexBuffer<NBCSTextureGenerator::ExtendedVertexType>{ extendedVerts, lockedSIVBuffer->getIndices() };
+  m_extendedSIVBuffer = std::make_shared<rcore::StaticIndexedVertexBuffer<NBCSTextureGenerator::ExtendedVertexType>>(extendedVerts, lockedSIVBuffer->getIndices());
+
+  return m_extendedSIVBuffer->valid();
 }
 
-bool NBCSTextureGenerator::prepareTextures() {
-  D3D11_TEXTURE2D_DESC textureDesc = rcore::Preset3D::makeRenderTargetTextureDescription(m_textureWidth, m_textureHeight);
-  textureDesc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
-
-  m_normalTexture = std::make_unique<rcore::RenderTarget>(textureDesc);
-  m_tangentTexture = std::make_unique<rcore::RenderTarget>(textureDesc);
-
-  return m_tangentTexture->isValid() && m_normalTexture->isValid();
-}
-
-std::shared_ptr<rcore::Material<NBCSTextureGenerator::EmptyMaterialProperties>> NBCSTextureGenerator::material() const {
+bool NBCSTextureGenerator::makeMaterial() {
   std::vector<D3D11_INPUT_ELEMENT_DESC> inputDesc = rcore::Preset3D::makeStandardInputDescription();
   D3D11_INPUT_ELEMENT_DESC sTangent{};
   sTangent.SemanticName = "TEXCOORD";
@@ -116,10 +111,22 @@ std::shared_ptr<rcore::Material<NBCSTextureGenerator::EmptyMaterialProperties>> 
   inputDesc.push_back(sBinormal);
 
   rcore::Shader shader = { L"NBCSTexVertexShader.hlsl", L"NBCSTexPixelShader.hlsl", inputDesc };
-  return std::make_shared<rcore::Material<NBCSTextureGenerator::EmptyMaterialProperties>>(shader, rcore::Pixel);
+  m_material = std::make_shared<rcore::Material<NBCSTextureGenerator::EmptyMaterialProperties>>(shader, rcore::Pixel);
+
+  return m_material->valid();
 }
 
-void NBCSTextureGenerator::bakeTangentBinormalTextures(std::weak_ptr<rcore::Window> const& window, rcore::StaticIndexedVertexBuffer<ExtendedVertexType> sivBuffer) {
+bool NBCSTextureGenerator::prepareTextures() {
+  D3D11_TEXTURE2D_DESC textureDesc = rcore::Preset3D::makeRenderTargetTextureDescription(m_textureWidth, m_textureHeight);
+  textureDesc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
+
+  m_normalTexture = std::make_shared<rcore::RenderTarget>(textureDesc);
+  m_tangentTexture = std::make_shared<rcore::RenderTarget>(textureDesc);
+
+  return m_tangentTexture->isValid() && m_normalTexture->isValid();
+}
+
+void NBCSTextureGenerator::bakeTangentBinormalTextures(std::weak_ptr<rcore::Window> const& window) {
   m_depthStencilState.bind();
   m_rasterizerState.bind();
 
@@ -136,8 +143,7 @@ void NBCSTextureGenerator::bakeTangentBinormalTextures(std::weak_ptr<rcore::Wind
   m_normalTexture->clearRTV();
   m_tangentTexture->clearRTV();
 
-  auto eSivBPtr = std::make_shared<rcore::StaticIndexedVertexBuffer<ExtendedVertexType>>(sivBuffer);
-  rcore::Model model{ material(), eSivBPtr };
+  rcore::Model model{ m_material, m_extendedSIVBuffer };
   model.drawIndexed();
 
   auto lockedWindow = window.lock();

@@ -35,7 +35,7 @@ public:
   void render(rcore::FrameState const& frame, rcore::MatrixBuffer& matrixBuffer);
   void onValueChange();
   void onCamChange(DirectX::XMFLOAT3 pos) const;
-  void onNBCSBakeFinish(std::pair<ID3D11ShaderResourceView*, ID3D11ShaderResourceView*> SRVs) const;
+  void onNBCSBakeFinish(ID3D11ShaderResourceView* normalMapSRV, ID3D11ShaderResourceView* tangentMapSRV) const;
 
   std::weak_ptr<rcore::StaticIndexedVertexBuffer<rcore::Preset3D::StandardVertexType>> getSIVBuffer() const;
 

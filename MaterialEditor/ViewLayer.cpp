@@ -18,8 +18,9 @@ ViewLayer::ViewLayer(std::weak_ptr<rcore::Window> window, std::weak_ptr<rcore::W
   m_camController.updatePosition();
   m_modelSphere->onCamChange(m_camController.getPosition());
 
-  m_nbcsTexGen = std::make_unique<NBCSTextureGenerator>(m_window, m_modelSphere->getSIVBuffer());
-  m_modelSphere->onNBCSBakeFinish(m_nbcsTexGen->getSRVs());
+  NBCSTextureGenerator nbcsTexGen{ m_window, m_modelSphere->getSIVBuffer() };
+  m_nbcsTextures = nbcsTexGen.getTextures();
+  m_modelSphere->onNBCSBakeFinish(m_nbcsTextures.first->getSRV(), m_nbcsTextures.second->getSRV());
 
   createSettings();
 }
