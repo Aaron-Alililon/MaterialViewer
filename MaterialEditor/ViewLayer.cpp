@@ -65,14 +65,14 @@ void ViewLayer::createSettings() const {
     if (lockedSettingsLayer) {
 
       lockedSettingsLayer->addFloatSlider(
-        "Texture u scale",
+        "Texture U Scale",
         &m_modelSphere->uScale,
         0.0001f, 20,
         [this]() { m_modelSphere->onValueChange(); }
       );
 
       lockedSettingsLayer->addFloatSlider(
-        "Texture v scale",
+        "Texture V Scale",
         &m_modelSphere->vScale,
         0.0001f, 20,
         [this]() { m_modelSphere->onValueChange(); }
@@ -86,9 +86,16 @@ void ViewLayer::createSettings() const {
       );
 
       lockedSettingsLayer->addFloatSlider(
-        "Displacement strength",
+        "Displacement Strength",
         &m_modelSphere->displacement,
         0, 2,
+        [this]() { m_modelSphere->onValueChange(); }
+      );
+
+      lockedSettingsLayer->addDropdown(
+        "Displacement Method",
+        &m_modelSphere->displacementMethod,
+        std::vector<std::string>{ "Vertex Offset", "Parallax Occlusion Mapping", "Normal-Based Curved Silhouettes" },
         [this]() { m_modelSphere->onValueChange(); }
       );
 
@@ -100,14 +107,14 @@ void ViewLayer::createSettings() const {
       );
 
       lockedSettingsLayer->addFloatSlider(
-        "POM minimum layers",
+        "POM/NBCS minimum layers",
         &m_modelSphere->minPOMLayers,
         1, 500,
         [this]() { m_modelSphere->onValueChange(); }
       );
 
       lockedSettingsLayer->addFloatSlider(
-        "POM maximum layers",
+        "POM/NBCS maximum layers",
         &m_modelSphere->maxPOMLayers,
         1, 500,
         [this]() { m_modelSphere->onValueChange(); }

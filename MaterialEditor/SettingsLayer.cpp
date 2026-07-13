@@ -6,6 +6,14 @@ void SettingsLayer::addFloatSlider(std::string label, float* value, float min, f
   m_settings.push_back(std::make_unique<FloatSliderSetting>(std::move(label), value, min, max, onChange));
 }
 
+void SettingsLayer::addCheckbox(std::string label, bool* value, std::function<void()> onChange) {
+  m_settings.push_back(std::make_unique<CheckboxSetting>(std::move(label), value, onChange));
+}
+
+void SettingsLayer::addDropdown(std::string label, int* selectedIndex, std::vector<std::string> options, std::function<void()> onChange) {
+  m_settings.push_back(std::make_unique<DropdownSetting>(std::move(label), selectedIndex, options, onChange));
+}
+
 SettingsLayer::SettingsLayer(std::weak_ptr<rcore::Window> window, rcore::D3DContextDesc contextDesc) : Layer{window} {
   ImGui::CreateContext();
   ImGui_ImplWin32_Init(window.lock()->getHandle());

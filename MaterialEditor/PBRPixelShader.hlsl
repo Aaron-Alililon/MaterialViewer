@@ -1,3 +1,5 @@
+#define POM_DISPLACEMENT_FACTOR 2.0f
+#define NBCS_DISPLACEMENT_FACTOR 4.0f
 #define NBCS_BINARY_STEPS 5
 
 Texture2D albedoTex : register(t0);
@@ -23,7 +25,7 @@ cbuffer PropertiesBuffer : register(b1) {
   float2 uvScale;
   float globalIllumination;
   float displacementStrength;
-  float useNBCS;
+  int displacementMethod;
   float nbcsStepSizeFactor;
   float2 minMaxPOMLayers;
 };
@@ -54,32 +56,32 @@ struct PixelInputType {
 };
 
 float2 parallaxMapping(float2 uv, float3 tangentView) {
-    float numLayers = lerp(minMaxPOMLayers.y, minMaxPOMLayers.x, max(dot(float3(0.0, 0.0, 1.0), tangentView), 0.0));
+  float numLayers = lerp(minMaxPOMLayers.y, minMaxPOMLayers.x, max(dot(float3(0.0, 0.0, 1.0), tangentView), 0.0));
     
-    float layerDepth = 1.0 / numLayers;
-    float currentLayerDepth = 0.0;
+  float layerDepth = 1.0 / numLayers;
+  float currentLayerDepth = 0.0;
     
-    float2 P = tangentView.xy * displacementStrength;
-    float2 deltaTexCoords = P / numLayers;
+  float2 P = tangentView.xy * (displacementStrength * POM_DISPLACEMENT_FACTOR);
+  float2 deltaTexCoords = P / numLayers;
     
-    float2 currentTexCoords = uv;
-    float currentDepthMapValue = 1.0f - displacementTex.SampleLevel(linearSampleType, currentTexCoords, 0).r;
+  float2 currentTexCoords = uv;
+  float currentDepthMapValue = 1.0f - displacementTex.SampleLevel(linearSampleType, currentTexCoords, 0).r;
   
-    while (currentLayerDepth < currentDepthMapValue) {
-        currentTexCoords -= deltaTexCoords;
-        currentDepthMapValue = 1.0f - displacementTex.SampleLevel(linearSampleType, currentTexCoords, 0).r;
-        currentLayerDepth += layerDepth;
-    }
+  while (currentLayerDepth < currentDepthMapValue) {
+    currentTexCoords -= deltaTexCoords;
+    currentDepthMapValue = 1.0f - displacementTex.SampleLevel(linearSampleType, currentTexCoords, 0).r;
+    currentLayerDepth += layerDepth;
+  }
     
-    float2 prevTexCoords = currentTexCoords + deltaTexCoords;
+  float2 prevTexCoords = currentTexCoords + deltaTexCoords;
     
-    float afterDepth = currentDepthMapValue - currentLayerDepth;
-    float beforeDepth = 1.0f - displacementTex.SampleLevel(linearSampleType, prevTexCoords, 0).r - currentLayerDepth + layerDepth;
+  float afterDepth = currentDepthMapValue - currentLayerDepth;
+  float beforeDepth = 1.0f - displacementTex.SampleLevel(linearSampleType, prevTexCoords, 0).r - currentLayerDepth + layerDepth;
  
-    float weight = afterDepth / (afterDepth - beforeDepth);
-    float2 finalTexCoords = prevTexCoords * weight + currentTexCoords * (1.0 - weight);
+  float weight = afterDepth / (afterDepth - beforeDepth);
+  float2 finalTexCoords = prevTexCoords * weight + currentTexCoords * (1.0 - weight);
 
-    return finalTexCoords;
+  return finalTexCoords;
 }
 
 float2 nbcs(float2 uv, float3 objectSpaceViewVector, float3 tangentViewVector) {
@@ -98,7 +100,7 @@ float2 nbcs(float2 uv, float3 objectSpaceViewVector, float3 tangentViewVector) {
     float3 tangentSpaceV = mul(TBN, objectSpaceViewVector);
     tangentSpaceV.x /= t.w;
     tangentSpaceV.y /= n.w;
-    tangentSpaceV.z /= -max(0.001f, displacementStrength);
+    tangentSpaceV.z /= -max(0.001f, displacementStrength * NBCS_DISPLACEMENT_FACTOR);
     
     prevUV_i = uv_i;
     uv_i += nbcsStepSizeFactor * stepSize * tangentSpaceV;
@@ -193,13 +195,16 @@ float4 PSMain(PixelInputType input) : SV_TARGET {
     
   float2 mappedUVs = input.uv;
     
-  if (useNBCS) {
+  if (displacementMethod == 1 || displacementMethod == 2) {
     float3x3 worldInverse = transpose((float3x3) worldInverseTranspose);
     float3 objectSpaceViewVector = normalize(mul(viewVector, worldInverse));
     float3 tangentViewVector = normalize(mul(TBN, objectSpaceViewVector));
-    
-    // mappedUVs = parallaxMapping(input.uv, tangentViewVector);
-    mappedUVs = nbcs(input.uv, -objectSpaceViewVector, tangentViewVector);
+  
+    if (displacementMethod == 1) {
+      mappedUVs = parallaxMapping(input.uv, tangentViewVector);
+    } else {
+      mappedUVs = nbcs(input.uv, -objectSpaceViewVector, tangentViewVector);
+    }
   }
     
   float3 albedo = albedoTex.SampleLevel(linearSampleType, mappedUVs, 0).xyz;
