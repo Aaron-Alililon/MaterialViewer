@@ -64,19 +64,23 @@ void ViewLayer::createSettings() const {
     auto lockedSettingsLayer = lockedSettings->getLayer<SettingsLayer>().lock();
     if (lockedSettingsLayer) {
 
+      lockedSettingsLayer->addHeading("Texture Scale");
+
       lockedSettingsLayer->addFloatSlider(
-        "Texture U Scale",
+        "U",
         &m_modelSphere->uScale,
         0.0001f, 20,
         [this]() { m_modelSphere->onValueChange(); }
       );
 
       lockedSettingsLayer->addFloatSlider(
-        "Texture V Scale",
+        "V",
         &m_modelSphere->vScale,
         0.0001f, 20,
         [this]() { m_modelSphere->onValueChange(); }
       );
+
+      lockedSettingsLayer->addHeading("Lighting");
 
       lockedSettingsLayer->addFloatSlider(
         "Global Illumination Strength",
@@ -85,17 +89,19 @@ void ViewLayer::createSettings() const {
         [this]() { m_modelSphere->onValueChange(); }
       );
 
-      lockedSettingsLayer->addFloatSlider(
-        "Displacement Strength",
-        &m_modelSphere->displacement,
-        0, 2,
-        [this]() { m_modelSphere->onValueChange(); }
-      );
+      lockedSettingsLayer->addHeading("Displacement");
 
       lockedSettingsLayer->addDropdown(
         "Displacement Method",
         &m_modelSphere->displacementMethod,
         std::vector<std::string>{ "Vertex Offset", "Parallax Occlusion Mapping", "Normal-Based Curved Silhouettes" },
+        [this]() { m_modelSphere->onValueChange(); }
+      );
+
+      lockedSettingsLayer->addFloatSlider(
+        "Displacement Strength",
+        &m_modelSphere->displacement,
+        0, 2,
         [this]() { m_modelSphere->onValueChange(); }
       );
 

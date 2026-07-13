@@ -16,6 +16,7 @@
 
 class SettingsLayer : public rcore::Layer {
 public:
+  void addHeading(std::string label);
   void addFloatSlider(std::string label, float* value, float min, float max, std::function<void()> onChange = nullptr);
   void addCheckbox(std::string label, bool* value, std::function<void()> onChange = nullptr);
   void addDropdown(std::string label, int* selectedIndex, std::vector<std::string> options, std::function<void()> onChange = nullptr);

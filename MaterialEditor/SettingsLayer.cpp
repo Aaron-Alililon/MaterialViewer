@@ -2,6 +2,10 @@
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
+void SettingsLayer::addHeading(std::string label) {
+  m_settings.push_back(std::make_unique<HeaderSetting>(std::move(label)));
+}
+
 void SettingsLayer::addFloatSlider(std::string label, float* value, float min, float max, std::function<void()> onChange) {
   m_settings.push_back(std::make_unique<FloatSliderSetting>(std::move(label), value, min, max, onChange));
 }

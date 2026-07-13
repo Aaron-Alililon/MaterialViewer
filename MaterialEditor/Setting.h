@@ -2,13 +2,47 @@
 #define SETTING_H
 
 #include <string>
+#include <sstream>
 
 #include "imgui.h"
+
+inline void drawLabelAbove(std::string const& label) {
+  ImGui::TextUnformatted(label.c_str());
+}
+
+inline std::string bar(size_t length) {
+  std::stringstream barString;
+  for (size_t i = 0; i < length; i++) barString << "=";
+  return barString.str();
+}
 
 class ISetting {
 public:
   virtual ~ISetting() = default;
   virtual void draw() = 0;
+};
+
+class HeaderSetting : public ISetting {
+public:
+  HeaderSetting(std::string label) : m_label{ label } {}
+
+  void draw() override {
+    ImGui::Spacing();
+
+    std::string formattedHeading;
+    formattedHeading += "\n ===" + bar(m_label.length()) + "=== ";
+    formattedHeading += "\n || " + m_label + " || ";
+    formattedHeading += "\n ===" + bar(m_label.length()) + "=== ";
+
+    ImVec2 pos = ImGui::GetCursorScreenPos();
+    ImGui::GetWindowDrawList()->AddText(ImVec2(pos.x + 1, pos.y), ImGui::GetColorU32(ImGuiCol_Text), formattedHeading.c_str());
+    ImGui::TextUnformatted(formattedHeading.c_str());
+
+    ImGui::Spacing();
+  }
+
+private:
+  std::string m_label;
 };
 
 class FloatSliderSetting : public ISetting {
@@ -17,9 +51,17 @@ public:
     : m_label(std::move(label)), m_value(value), m_min(min), m_max(max), m_onChange{ std::move(onChange) } {}
 
   void draw() override {
-    if (ImGui::SliderFloat(m_label.c_str(), m_value, m_min, m_max)) {
+    ImGui::Spacing();
+    ImGui::Indent(4.0f);
+
+    drawLabelAbove(m_label);
+    std::string hiddenId = "##" + m_label;
+    if (ImGui::SliderFloat(hiddenId.c_str(), m_value, m_min, m_max)) {
       if (m_onChange) m_onChange();
     }
+
+    ImGui::Unindent(4.0f);
+    ImGui::Spacing();
   }
 
 private:
@@ -35,7 +77,15 @@ public:
     : m_label(std::move(label)), m_value(value) {}
 
   void draw() override {
-    ImGui::Checkbox(m_label.c_str(), m_value);
+    ImGui::Spacing();
+    ImGui::Indent(4.0f);
+
+    drawLabelAbove(m_label);
+    std::string hiddenId = "##" + m_label;
+    ImGui::Checkbox(hiddenId.c_str(), m_value);
+
+    ImGui::Unindent(4.0f);
+    ImGui::Spacing();
   }
 
 private:
@@ -49,7 +99,12 @@ public:
     : m_label(std::move(label)), m_selectedIndex(selectedIndex), m_options(std::move(options)), m_onChange(std::move(onChange)) {}
 
   void draw() override {
-    if (ImGui::BeginCombo(m_label.c_str(), m_options[*m_selectedIndex].c_str())) {
+    ImGui::Spacing();
+    ImGui::Indent(4.0f);
+
+    drawLabelAbove(m_label);
+    std::string hiddenId = "##" + m_label;
+    if (ImGui::BeginCombo(hiddenId.c_str(), m_options[*m_selectedIndex].c_str())) {
       for (int i = 0; i < static_cast<int>(m_options.size()); ++i) {
         const bool isSelected = (*m_selectedIndex == i);
         if (ImGui::Selectable(m_options[i].c_str(), isSelected)) {
@@ -62,6 +117,9 @@ public:
       }
       ImGui::EndCombo();
     }
+
+    ImGui::Unindent(4.0f);
+    ImGui::Spacing();
   }
 
 private:
