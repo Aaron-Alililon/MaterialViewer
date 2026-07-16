@@ -4,13 +4,12 @@
 #include "Preset3D.h"
 
 // TODO
-// Use sphere with same amount of rows and columns
 // Changeable scene (Model sphere, cube, plane, ...; Skybox sky, studio, ...)
 // Resizable windows
 // Drag-and-drop textures
-// Fix paths for textures, shaders and models
 
 // BEFORE PUBLISHING
+// Fix paths for textures, shaders and models
 // Build as cmake
 // rcore as git submodule
 
