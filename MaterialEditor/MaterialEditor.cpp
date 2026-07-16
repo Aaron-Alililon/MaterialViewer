@@ -22,7 +22,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
   rcore::initDevice(devDesc);
 
   // --- Settings Window ---
-  rcore::WindowDesc settingsWindDesc = rcore::Preset3D::makeStandardWindowDescription(L"Material Editor - Settings", 800, 800);
+  rcore::WindowDesc settingsWindDesc = rcore::Preset3D::makeStandardWindowDescription(L"Material Editor - Settings", 500, 800);
   settingsWindDesc.windowPosX(100);
   auto settingsWindow = rcore::makeWindow(settingsWindDesc);
 

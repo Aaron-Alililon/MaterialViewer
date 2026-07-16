@@ -56,6 +56,9 @@ public:
 
     drawLabelAbove(m_label);
     std::string hiddenId = "##" + m_label;
+
+    ImGui::SetNextItemWidth(-1);
+
     if (ImGui::SliderFloat(hiddenId.c_str(), m_value, m_min, m_max)) {
       if (m_onChange) m_onChange();
     }
@@ -104,6 +107,9 @@ public:
 
     drawLabelAbove(m_label);
     std::string hiddenId = "##" + m_label;
+
+    ImGui::SetNextItemWidth(-1);
+
     if (ImGui::BeginCombo(hiddenId.c_str(), m_options[*m_selectedIndex].c_str())) {
       for (int i = 0; i < static_cast<int>(m_options.size()); ++i) {
         const bool isSelected = (*m_selectedIndex == i);
