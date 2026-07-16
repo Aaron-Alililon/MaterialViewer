@@ -1,7 +1,7 @@
 #include "ModelSphere.h"
 
 ModelSphere::ModelSphere(std::vector<D3D11_INPUT_ELEMENT_DESC> const& inputDesc) {
-  m_SIVBuffer = rcore::Preset3D::makeStandardSIVBuffer<rcore::GLTFLoader>("models/plane.glb", true);
+  m_SIVBuffer = rcore::Preset3D::makeStandardSIVBuffer<rcore::GLTFLoader>("models/sphere.glb", true);
 
   auto [texDesc, srvDesc] = rcore::Preset3D::makeStandardTextureDescriptionPair();
   std::string textureFamily = "paving";
