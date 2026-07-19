@@ -4,9 +4,9 @@
 #include "Preset3D.h"
 
 // TODO
+// Make drag-and-drop textures pretty
 // Changeable scene (Model sphere, cube, plane, ...; Skybox sky, studio, ...)
 // Resizable windows
-// Drag-and-drop textures
 
 // BEFORE PUBLISHING
 // Fix paths for textures, shaders and models
@@ -32,6 +32,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
 
   // --- Model Window ---
   rcore::WindowDesc modelWindDesc = rcore::Preset3D::makeStandardWindowDescription(L"Material Editor - View", 1600, 1200);
+  modelWindDesc.toggleExtendedStyle(WS_EX_ACCEPTFILES);
   auto modelWindow = rcore::makeWindow(modelWindDesc);
 
   rcore::D3DContextDesc modelCtxDesc = rcore::Preset3D::makeStandardContextDescription(modelWindDesc.width(), modelWindDesc.height());

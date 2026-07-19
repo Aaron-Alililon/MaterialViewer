@@ -22,13 +22,20 @@ namespace rcore {
     void windowPosY(std::optional<int> y);
     std::optional<int> windowPosY() const;
 
+    void toggleStyle(DWORD style);
+    DWORD styles() const;
+
+    void toggleExtendedStyle(DWORD exStyle);
+    DWORD extendedStyles() const;
+
   private:
     LPCWSTR m_name = L"Window";
     int m_width = 400;
     int m_height = 400;
     std::optional<int> m_windowPosX{};
     std::optional<int> m_windowPosY{};
-
+    DWORD m_styles = WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX;
+    DWORD m_extendedStyles = WS_EX_APPWINDOW;
   };
 
 }

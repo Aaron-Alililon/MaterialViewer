@@ -1,12 +1,15 @@
 #ifndef EDITOR_LAYER_H
 #define EDITOR_LAYER_H
 
+#include <Windows.h>
+
 #include "Layer.h"
 #include "Rcore.h"
 #include "MatrixBuffer.h"
 #include "Preset3D.h"
 
 #include "SettingsLayer.h"
+#include "TextureSettingsLayer.h"
 #include "CameraController.h"
 #include "ModelSphere.h"
 #include "Skybox.h"
@@ -27,12 +30,14 @@ private:
   void createCam();
   void createSettings() const;
 
+  void makeTextureSettingsWindow(std::string path);
+
 private:
   std::weak_ptr<rcore::Window> m_settingsWindow;
   rcore::D3DContextDesc m_ctxDesc;
   CameraController m_camController;
   std::shared_ptr<rcore::MatrixBuffer> m_matrixBuffer;
-  std::unique_ptr<ModelSphere> m_modelSphere;
+  std::shared_ptr<ModelSphere> m_modelSphere;
   std::unique_ptr<Skybox> m_skybox;
 };
 

@@ -30,6 +30,22 @@ bool ViewLayer::onEvent(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam) {
   }
 
   switch (umsg) {
+    case WM_DROPFILES: {
+      HDROP hDrop = (HDROP)wparam;
+      UINT fileCount = DragQueryFile(hDrop, 0xFFFFFFFF, nullptr, 0);
+
+      for (UINT i = 0; i < fileCount; i++) {
+        wchar_t path[MAX_PATH];
+        DragQueryFile(hDrop, i, path, MAX_PATH);
+
+        std::string pathString = std::filesystem::path(path).string();
+        makeTextureSettingsWindow(pathString);
+      }
+
+      DragFinish(hDrop);
+      return false;
+    }
+
     case WM_CLOSE: {
       auto lockedSettings = m_settingsWindow.lock();
       if (lockedSettings) lockedSettings->hintClose();
@@ -46,7 +62,7 @@ void ViewLayer::createMatrixBuffer() {
 
 void ViewLayer::createModels() {
   auto inputDesc = rcore::Preset3D::makeStandardInputDescription();
-  m_modelSphere = std::make_unique<ModelSphere>(m_window, inputDesc);
+  m_modelSphere = std::make_shared<ModelSphere>(m_window, inputDesc);
   m_skybox = std::make_unique<Skybox>(inputDesc);
 }
 
@@ -125,4 +141,14 @@ void ViewLayer::createSettings() const {
 
     }
   }
+}
+
+void ViewLayer::makeTextureSettingsWindow(std::string path) {
+  rcore::WindowDesc texSettingsWindDesc = rcore::Preset3D::makeStandardWindowDescription(L"Material Editor - Texture Settings", 800, 800);
+  auto texSettingsWindow = rcore::makeWindow(texSettingsWindDesc);
+
+  rcore::D3DContextDesc texSettingsCtxDesc = rcore::Preset3D::makeStandardContextDescription(texSettingsWindDesc.width(), texSettingsWindDesc.height());
+  rcore::makeD3D11Context(texSettingsWindow, texSettingsCtxDesc);
+
+  texSettingsWindow.lock()->addLayer<TextureSettingsLayer>(path, m_modelSphere);
 }

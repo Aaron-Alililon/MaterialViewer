@@ -19,22 +19,17 @@ void SettingsLayer::addDropdown(std::string label, int* selectedIndex, std::vect
 }
 
 SettingsLayer::SettingsLayer(std::weak_ptr<rcore::Window> window, rcore::D3DContextDesc contextDesc) : Layer{window} {
-  ImGui::CreateContext();
+  m_imguiContext = ImGui::CreateContext();
+  ImGui::SetCurrentContext(m_imguiContext);
   ImGui_ImplWin32_Init(window.lock()->getHandle());
   ImGui_ImplDX11_Init(rcore::D3D11Device::get().raw(), rcore::D3D11Device::get().rawContext());
-}
-
-void SettingsLayer::update(rcore::FrameState const& frame) {
-  
 }
 
 void SettingsLayer::render(rcore::FrameState const& frame) {
   auto window = m_window.lock();
   if (!window) return;
 
-  float bgCol[] = { 0.1f, 0.15f, 0.2f, 1.0f };
-  rcore::D3D11Device::get().rawContext()->ClearRenderTargetView(window->getUIRenderTargetView(), bgCol);
-
+  ImGui::SetCurrentContext(m_imguiContext);
   ImGui_ImplDX11_NewFrame();
   ImGui_ImplWin32_NewFrame();
   ImGui::NewFrame();
@@ -61,6 +56,8 @@ void SettingsLayer::render(rcore::FrameState const& frame) {
 }
 
 bool SettingsLayer::onEvent(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam) {
+  ImGui::SetCurrentContext(m_imguiContext);
+
   if (ImGui_ImplWin32_WndProcHandler(hwnd, umsg, wparam, lparam)) {
     return false;
   }

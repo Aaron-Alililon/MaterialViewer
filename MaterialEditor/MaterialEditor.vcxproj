@@ -144,6 +144,7 @@
     <ClCompile Include="imgui_widgets.cpp" />
     <ClCompile Include="NBCSTextureGenerator.cpp" />
     <ClCompile Include="SettingsLayer.cpp" />
+    <ClCompile Include="TextureSettingsLayer.cpp" />
     <ClCompile Include="ViewLayer.cpp" />
     <ClCompile Include="imgui_impl_dx11.cpp" />
     <ClCompile Include="imgui_impl_win32.cpp" />
@@ -167,6 +168,7 @@
     <ClInclude Include="NBCSTextureGenerator.h" />
     <ClInclude Include="Setting.h" />
     <ClInclude Include="SettingsLayer.h" />
+    <ClInclude Include="TextureSettingsLayer.h" />
     <ClInclude Include="ViewLayer.h" />
     <ClInclude Include="imgui_impl_dx11.h" />
     <ClInclude Include="imgui_impl_win32.h" />

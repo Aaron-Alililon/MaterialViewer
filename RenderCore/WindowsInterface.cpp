@@ -15,7 +15,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
 
 namespace rcore {
 
-	WindowsInterface::WindowsInterface(LPCWSTR applicationName, int screenWidth, int screenHeight, std::optional<int> windowPosX, std::optional<int> windowPosY) : m_windowClosing{ false }, m_applicationName { applicationName } {
+	WindowsInterface::WindowsInterface(LPCWSTR applicationName, int screenWidth, int screenHeight, std::optional<int> windowPosX, std::optional<int> windowPosY, DWORD styles, DWORD exStyles) : m_windowClosing{ false }, m_applicationName { applicationName } {
 		m_hinstance = GetModuleHandle(NULL);
 
 		WNDCLASSEX wc{};
@@ -43,8 +43,8 @@ namespace rcore {
 		int posX = (windowPosX.has_value()) ? windowPosX.value() : (GetSystemMetrics(SM_CXSCREEN) - adjustedWidth) / 2;
 		int posY = (windowPosY.has_value()) ? windowPosY.value() : (GetSystemMetrics(SM_CYSCREEN) - adjustedHeight) / 2;
 		
-		m_hwnd = CreateWindowEx(WS_EX_APPWINDOW, m_applicationName, m_applicationName,
-			WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX, // | WS_THICKFRAME, // TODO Window resize event needs to resize the D3D11Context stuff
+		m_hwnd = CreateWindowEx(exStyles, m_applicationName, m_applicationName,
+			styles, // | WS_THICKFRAME, // TODO Window resize event needs to resize the D3D11Context stuff
 			posX, posY, adjustedWidth, adjustedHeight, NULL, NULL, m_hinstance, NULL);
 
 		ShowWindow(m_hwnd, SW_SHOW);

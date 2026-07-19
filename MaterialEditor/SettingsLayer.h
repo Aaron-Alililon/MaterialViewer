@@ -25,13 +25,13 @@ public:
   SettingsLayer(std::weak_ptr<rcore::Window> window, rcore::D3DContextDesc contextDesc);
 
 public:
-  void update(rcore::FrameState const& frame) override;
   void render(rcore::FrameState const& frame) override;
   bool onEvent(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam) override;
 
   bool isUI() const override { return true; }
 
 private:
+  ImGuiContext* m_imguiContext;
   std::vector<std::unique_ptr<ISetting>> m_settings;
 };
 

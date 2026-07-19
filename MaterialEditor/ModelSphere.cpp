@@ -31,12 +31,42 @@ void ModelSphere::onCamChange(DirectX::XMFLOAT3 pos) const {
   m_camBuffer->uploadBuffer();
 }
 
+void ModelSphere::updateTexture(std::string const& path, TextureType type) {
+  auto [texDesc, srvDesc] = rcore::Preset3D::makeStandardTextureDescriptionPair();
+
+  auto tex = std::make_shared<rcore::Texture>(rcore::LoaderTag<rcore::PNGLoader>{}, path, texDesc, srvDesc);
+
+  switch (type) {
+    case TextureType::albedo:
+      m_textureAlbedo = tex;
+      break;
+    case TextureType::normal:
+      m_textureNormal = tex;
+      break;
+    case TextureType::displacement:
+      m_textureDisplacement = tex;
+      break;
+    case TextureType::roughness:
+      m_textureRoughness = tex;
+      break;
+    case TextureType::metallic:
+      m_textureMetallic = tex;
+      break;
+    case TextureType::ambientOcclusion:
+      m_textureAmbientOcclusion = tex;
+      break;
+  }
+  
+  ID3D11ShaderResourceView* srv[] = { m_textureAlbedo->getTextureView(), m_textureNormal->getTextureView(), m_textureDisplacement->getTextureView(), m_textureRoughness->getTextureView(), m_textureMetallic->getTextureView(), m_textureAmbientOcclusion->getTextureView(), m_nbcsTextures.first->getSRV(), m_nbcsTextures.second->getSRV() };
+  m_material->setTextures(srv, 0);
+}
+
 void ModelSphere::createSIVBuffer() {
   m_SIVBuffer = rcore::Preset3D::makeStandardSIVBuffer<rcore::GLTFLoader>("models/sphere.glb", true);
 }
 
 void ModelSphere::createTextures(std::weak_ptr<rcore::Window> window) {
-  std::string textureFamily = "paving";
+  std::string textureFamily = "default";
 
   auto [texDesc, srvDesc] = rcore::Preset3D::makeStandardTextureDescriptionPair();
 

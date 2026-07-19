@@ -14,6 +14,15 @@
 #include "PNGLoader.h"
 #include "NBCSTextureGenerator.h"
 
+enum TextureType : int {
+  albedo,
+  normal,
+  displacement,
+  roughness,
+  metallic,
+  ambientOcclusion,
+};
+
 class ModelSphere {
 private:
   struct __declspec(align(16)) MaterialProperties {
@@ -36,6 +45,8 @@ public:
   void render(rcore::FrameState const& frame, rcore::MatrixBuffer& matrixBuffer);
   void setProperties();
   void onCamChange(DirectX::XMFLOAT3 pos) const;
+
+  void updateTexture(std::string const& path, TextureType type);
 
 private:
   void createSIVBuffer();

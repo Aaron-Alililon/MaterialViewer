@@ -10,7 +10,7 @@ namespace rcore {
 
   class WindowsInterface {
   public:
-    WindowsInterface(LPCWSTR applicationName, int screenWidth, int screenHeight, std::optional<int> windowPosX, std::optional<int> windowPosY);
+    WindowsInterface(LPCWSTR applicationName, int screenWidth, int screenHeight, std::optional<int> windowPosX, std::optional<int> windowPosY, DWORD styles, DWORD exStyles);
     WindowsInterface(WindowsInterface const& other) = delete;
     WindowsInterface& operator=(WindowsInterface const& other) = delete;
     ~WindowsInterface();

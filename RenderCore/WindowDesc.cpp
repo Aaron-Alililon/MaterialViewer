@@ -40,8 +40,25 @@ namespace rcore {
   void WindowDesc::windowPosY(std::optional<int> y) {
     m_windowPosY = y;
   }
+
   std::optional<int> WindowDesc::windowPosY() const {
     return m_windowPosY;
+  }
+
+  void WindowDesc::toggleStyle(DWORD style) {
+    m_styles ^= style;
+  }
+
+  DWORD WindowDesc::styles() const {
+    return m_styles;
+  }
+
+  void WindowDesc::toggleExtendedStyle(DWORD exStyle) {
+    m_extendedStyles ^= exStyle;
+  }
+
+  DWORD WindowDesc::extendedStyles() const {
+    return m_extendedStyles;
   }
 
 }

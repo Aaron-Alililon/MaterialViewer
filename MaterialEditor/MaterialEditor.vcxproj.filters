@@ -90,6 +90,9 @@
     <ClCompile Include="NBCSTextureGenerator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="TextureSettingsLayer.cpp">
+      <Filter>Source Files\Layer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ModelSphere.h">
@@ -136,6 +139,9 @@
     </ClInclude>
     <ClInclude Include="NBCSTextureGenerator.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureSettingsLayer.h">
+      <Filter>Header Files\Layer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

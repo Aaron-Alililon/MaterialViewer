@@ -3,6 +3,8 @@
 
 #include <string>
 #include <sstream>
+#include <vector>
+#include <functional>
 
 #include "imgui.h"
 
@@ -37,6 +39,22 @@ public:
     ImVec2 pos = ImGui::GetCursorScreenPos();
     ImGui::GetWindowDrawList()->AddText(ImVec2(pos.x + 1, pos.y), ImGui::GetColorU32(ImGuiCol_Text), formattedHeading.c_str());
     ImGui::TextUnformatted(formattedHeading.c_str());
+
+    ImGui::Spacing();
+  }
+
+private:
+  std::string m_label;
+};
+
+class TextSetting : public ISetting {
+public:
+  TextSetting(std::string label) : m_label{ label } {}
+
+  void draw() override {
+    ImGui::Spacing();
+
+    ImGui::TextUnformatted(m_label.c_str());
 
     ImGui::Spacing();
   }
@@ -133,6 +151,28 @@ private:
   int* m_selectedIndex;
   std::vector<std::string> m_options;
   std::function<void()> m_onChange;
+};
+
+class ButtonSetting : public ISetting{
+public:
+  ButtonSetting(std::string label, std::function<void()> onClick)
+    : m_label(std::move(label)), m_onClick(std::move(onClick)) {}
+
+  void draw() override {
+    ImGui::Spacing();
+    ImGui::Indent(4.0f);
+
+    if (ImGui::Button(m_label.c_str(), ImVec2(-1, 0))) {
+      if (m_onClick) m_onClick();
+    }
+
+    ImGui::Unindent(4.0f);
+    ImGui::Spacing();
+  }
+
+private:
+  std::string m_label;
+  std::function<void()> m_onClick;
 };
 
 #endif
