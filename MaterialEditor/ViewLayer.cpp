@@ -1,27 +1,9 @@
 #include "ViewLayer.h"
 
 ViewLayer::ViewLayer(std::weak_ptr<rcore::Window> window, std::weak_ptr<rcore::Window> settingsWindow, rcore::D3DContextDesc contextDesc) : Layer(window), m_settingsWindow{ settingsWindow }, m_ctxDesc{ contextDesc } {
-  auto inputDesc = rcore::Preset3D::makeStandardInputDescription();
-
-  m_matrixBuffer = std::make_shared<rcore::MatrixBuffer>(0, rcore::Vertex | rcore::Pixel);
-  m_directionalLightBuffer = std::make_shared<rcore::LightBuffer>(8, 2);
-  m_modelSphere = std::make_unique<ModelSphere>(inputDesc);
-  m_skybox = std::make_unique<Skybox>(inputDesc);
-
-  rcore::LightBufferType directionals[] = {
-    {{ 0, 0, 0, 0 }, { 1, 0.5f, 0, 0 }, { 1, 0.976f, 0.925f, 1 }},
-    {{ 0, 0, 0, 0 }, { 1, -0.5f, 0, 0 }, { 0.9f, 0.876f, 0.825f, 1 }}
-  };
-  m_directionalLightBuffer->setData(directionals);
-  m_directionalLightBuffer->uploadBuffer();
-
-  m_camController.updatePosition();
-  m_modelSphere->onCamChange(m_camController.getPosition());
-
-  NBCSTextureGenerator nbcsTexGen{ m_window, m_modelSphere->getSIVBuffer() };
-  m_nbcsTextures = nbcsTexGen.getTextures();
-  m_modelSphere->onNBCSBakeFinish(m_nbcsTextures.first->getSRV(), m_nbcsTextures.second->getSRV());
-
+  createMatrixBuffer();
+  createModels();
+  createCam();
   createSettings();
 }
 
@@ -58,6 +40,21 @@ bool ViewLayer::onEvent(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam) {
   return true;
 }
 
+void ViewLayer::createMatrixBuffer() {
+  m_matrixBuffer = std::make_shared<rcore::MatrixBuffer>(0, rcore::Vertex | rcore::Pixel);
+}
+
+void ViewLayer::createModels() {
+  auto inputDesc = rcore::Preset3D::makeStandardInputDescription();
+  m_modelSphere = std::make_unique<ModelSphere>(m_window, inputDesc);
+  m_skybox = std::make_unique<Skybox>(inputDesc);
+}
+
+void ViewLayer::createCam() {
+  m_camController.updatePosition();
+  m_modelSphere->onCamChange(m_camController.getPosition());
+}
+
 void ViewLayer::createSettings() const {
   auto lockedSettings = m_settingsWindow.lock();
   if (lockedSettings) {
@@ -70,14 +67,14 @@ void ViewLayer::createSettings() const {
         "U",
         &m_modelSphere->uScale,
         0.0001f, 20,
-        [this]() { m_modelSphere->onValueChange(); }
+        [this]() { m_modelSphere->setProperties(); }
       );
 
       lockedSettingsLayer->addFloatSlider(
         "V",
         &m_modelSphere->vScale,
         0.0001f, 20,
-        [this]() { m_modelSphere->onValueChange(); }
+        [this]() { m_modelSphere->setProperties(); }
       );
 
       lockedSettingsLayer->addHeading("Lighting");
@@ -86,7 +83,7 @@ void ViewLayer::createSettings() const {
         "Global Illumination Strength",
         &m_modelSphere->giStrength,
         0, 1,
-        [this]() { m_modelSphere->onValueChange(); }
+        [this]() { m_modelSphere->setProperties(); }
       );
 
       lockedSettingsLayer->addHeading("Displacement");
@@ -95,35 +92,35 @@ void ViewLayer::createSettings() const {
         "Displacement Method",
         &m_modelSphere->displacementMethod,
         std::vector<std::string>{ "Vertex Offset", "Parallax Occlusion Mapping", "Normal-Based Curved Silhouettes" },
-        [this]() { m_modelSphere->onValueChange(); }
+        [this]() { m_modelSphere->setProperties(); }
       );
 
       lockedSettingsLayer->addFloatSlider(
         "Displacement Strength",
         &m_modelSphere->displacement,
         0, 2,
-        [this]() { m_modelSphere->onValueChange(); }
+        [this]() { m_modelSphere->setProperties(); }
       );
 
       lockedSettingsLayer->addFloatSlider(
         "NBCS Step Size Factor",
         &m_modelSphere->nbcsStepSizeFactor,
         1, 10,
-        [this]() { m_modelSphere->onValueChange(); }
+        [this]() { m_modelSphere->setProperties(); }
       );
 
       lockedSettingsLayer->addFloatSlider(
         "POM/NBCS minimum layers",
         &m_modelSphere->minPOMLayers,
         1, 500,
-        [this]() { m_modelSphere->onValueChange(); }
+        [this]() { m_modelSphere->setProperties(); }
       );
 
       lockedSettingsLayer->addFloatSlider(
         "POM/NBCS maximum layers",
         &m_modelSphere->maxPOMLayers,
         1, 500,
-        [this]() { m_modelSphere->onValueChange(); }
+        [this]() { m_modelSphere->setProperties(); }
       );
 
     }

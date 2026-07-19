@@ -12,6 +12,7 @@
 #include "GLTFLoader.h"
 #include "ObjLoader.h"
 #include "PNGLoader.h"
+#include "NBCSTextureGenerator.h"
 
 class ModelSphere {
 private:
@@ -29,15 +30,19 @@ private:
   };
 
 public:
-  ModelSphere(std::vector<D3D11_INPUT_ELEMENT_DESC> const& inputDesc);
+  ModelSphere(std::weak_ptr<rcore::Window> window, std::vector<D3D11_INPUT_ELEMENT_DESC> const& inputDesc);
 
 public:
   void render(rcore::FrameState const& frame, rcore::MatrixBuffer& matrixBuffer);
-  void onValueChange();
+  void setProperties();
   void onCamChange(DirectX::XMFLOAT3 pos) const;
-  void onNBCSBakeFinish(ID3D11ShaderResourceView* normalMapSRV, ID3D11ShaderResourceView* tangentMapSRV) const;
 
-  std::weak_ptr<rcore::StaticIndexedVertexBuffer<rcore::Preset3D::StandardVertexType>> getSIVBuffer() const;
+private:
+  void createSIVBuffer();
+  void createTextures(std::weak_ptr<rcore::Window> window);
+  void createMaterial(std::vector<D3D11_INPUT_ELEMENT_DESC> const& inputDesc);
+  void createCam();
+  void createModel();
 
 public:
   float uScale = 4.0f;
@@ -57,6 +62,7 @@ private:
   std::shared_ptr<rcore::Material<MaterialProperties>> m_material;
   std::unique_ptr<rcore::CBuffer<CameraBufferData>> m_camBuffer;
   std::unique_ptr<rcore::Model> m_sphere;
+  std::pair<std::shared_ptr<rcore::RenderTarget>, std::shared_ptr<rcore::RenderTarget>> m_nbcsTextures;
 };
 
 #endif
