@@ -30,7 +30,7 @@ private:
   void createCam();
   void createSettings() const;
 
-  void makeTextureSettingsWindow(std::string path);
+  void makeTextureSettingsWindow(std::vector<std::string> const& paths);
 
 private:
   std::weak_ptr<rcore::Window> m_settingsWindow;

@@ -14,7 +14,7 @@
 class TextureSettingsLayer : public rcore::Layer {
 
 public:
-  TextureSettingsLayer(std::weak_ptr<rcore::Window> window, std::string texturePath, std::weak_ptr<ModelSphere> model);
+  TextureSettingsLayer(std::weak_ptr<rcore::Window> window, std::vector<std::string> const& texturePaths, std::weak_ptr<ModelSphere> model);
 
 public:
   void render(rcore::FrameState const& frame) override;
@@ -24,14 +24,15 @@ public:
   void submit();
 
 private:
+  void createTypeList();
   void createSettings();
 
 public:
-  int type = 0;
+  std::vector<int> types;
 
 private:
   ImGuiContext* m_imguiContext;
-  std::string m_texturePath;
+  std::vector<std::string> m_texturePaths;
   std::weak_ptr<ModelSphere> m_model;
   std::vector<std::unique_ptr<ISetting>> m_settings;
 };

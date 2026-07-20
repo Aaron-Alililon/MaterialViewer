@@ -116,15 +116,15 @@ private:
 
 class DropdownSetting : public ISetting {
 public:
-  DropdownSetting(std::string label, int* selectedIndex, std::vector<std::string> options, std::function<void()> onChange = nullptr)
-    : m_label(std::move(label)), m_selectedIndex(selectedIndex), m_options(std::move(options)), m_onChange(std::move(onChange)) {}
+  DropdownSetting(std::string label, int* selectedIndex, std::vector<std::string> options, std::function<void()> onChange = nullptr, int uid = 0)
+    : m_label(std::move(label)), m_selectedIndex(selectedIndex), m_options(std::move(options)), m_onChange(std::move(onChange)), m_uid{ uid } {}
 
   void draw() override {
     ImGui::Spacing();
     ImGui::Indent(4.0f);
 
     drawLabelAbove(m_label);
-    std::string hiddenId = "##" + m_label;
+    std::string hiddenId = "##" + m_label + std::to_string(m_uid);
 
     ImGui::SetNextItemWidth(-1);
 
@@ -151,6 +151,7 @@ private:
   int* m_selectedIndex;
   std::vector<std::string> m_options;
   std::function<void()> m_onChange;
+  int m_uid;
 };
 
 class ButtonSetting : public ISetting{
