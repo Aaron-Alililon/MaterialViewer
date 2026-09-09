@@ -1,20 +1,18 @@
-#include "Rcore.h"
-#include "ViewLayer.h"
-#include "SettingsLayer.h"
-#include "Preset3D.h"
+#include "Core/Rcore.h"
+#include "Layer/ViewLayer.h"
+#include "Layer/SettingsLayer.h"
+#include "Core/Preset3D.h"
 
 // TODO
-// Make drag-and-drop textures pretty
 // Changeable scene (Model sphere, cube, plane, ...; Skybox sky, studio, ...)
+// Reflections
 // Resizable windows
+// Make drag-and-drop textures pretty
 
 // BEFORE PUBLISHING
 // Fix paths for textures, shaders and models
 // Build as cmake
 // rcore as git submodule
-
-// INFO
-// WS_EX_ACCEPTFILES for accepting files
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline, int iCmdshow) {
   rcore::DeviceDesc devDesc;

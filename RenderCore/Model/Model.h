@@ -1,0 +1,44 @@
+#ifndef MODEL_H
+#define MODEL_H
+
+#include "Model/Transform.h"
+#include "Render/MaterialBase.h"
+#include "D3D11/D3D11Device.h"
+#include "D3D11/Buffer/MatrixBuffer.h"
+#include "D3D11/Buffer/IVertexBuffer.h"
+
+namespace rcore {
+
+  class Model {
+  public:
+    Model(std::shared_ptr<MaterialBase> const& material, std::shared_ptr<IVertexBuffer> const& vertexBuffer);
+
+  public:
+    void drawIndexed(MatrixBuffer& matrixBuffer, bool activateMaterial = true);
+    void drawIndexed(bool activateMaterial = true);
+
+    Transform getTransform() const;
+    void setTransform(Transform const& transform);
+
+    DirectX::XMFLOAT3 getPosition() const;
+    void setPosition(float x, float y, float z);
+    void setPosition(DirectX::XMFLOAT3 position);
+
+    DirectX::XMFLOAT3 getRotation() const;
+    void setRotation(float pitch, float yaw, float roll);
+    void setRotation(DirectX::XMFLOAT3 rotation);
+
+    DirectX::XMFLOAT3 getScale() const;
+    void setScale(float x, float y, float z);
+    void setScale(DirectX::XMFLOAT3 scale);
+
+  private:
+    bool m_valid = false;
+    Transform m_transform{};
+    std::shared_ptr<MaterialBase> m_material;
+    std::shared_ptr<IVertexBuffer> m_vertexBuffer;
+  };
+
+}
+
+#endif
