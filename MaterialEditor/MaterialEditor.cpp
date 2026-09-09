@@ -9,11 +9,6 @@
 // Resizable windows
 // Make drag-and-drop textures pretty
 
-// BEFORE PUBLISHING
-// Fix paths for textures, shaders and models
-// Build as cmake
-// rcore as git submodule
-
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline, int iCmdshow) {
   rcore::DeviceDesc devDesc;
   rcore::initDevice(devDesc);

@@ -1,0 +1,3 @@
+[submodule "RenderCore"]
+	path = RenderCore
+	url = https://github.com/Aaron-Alililon/RenderCore.git
