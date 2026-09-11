@@ -18,10 +18,30 @@ inline std::string bar(size_t length) {
   return barString.str();
 }
 
+inline void thickText(std::string text) {
+  ImVec2 pos = ImGui::GetCursorScreenPos();
+  ImGui::GetWindowDrawList()->AddText(ImVec2(pos.x + 1, pos.y), ImGui::GetColorU32(ImGuiCol_Text), text.c_str());
+  ImGui::TextUnformatted(text.c_str());
+}
+
 class ISetting {
 public:
   virtual ~ISetting() = default;
   virtual void draw() = 0;
+};
+
+class SpacerSetting : public ISetting {
+public:
+  SpacerSetting(float margin) : m_margin{ margin } {};
+
+  void draw() override {
+    ImGui::Dummy(ImVec2(0.0f, m_margin));
+    ImGui::Separator();
+    ImGui::Dummy(ImVec2(0.0f, m_margin));
+  }
+
+private:
+  float m_margin;
 };
 
 class HeaderSetting : public ISetting {
@@ -36,9 +56,7 @@ public:
     formattedHeading += "\n || " + m_label + " || ";
     formattedHeading += "\n ===" + bar(m_label.length()) + "=== ";
 
-    ImVec2 pos = ImGui::GetCursorScreenPos();
-    ImGui::GetWindowDrawList()->AddText(ImVec2(pos.x + 1, pos.y), ImGui::GetColorU32(ImGuiCol_Text), formattedHeading.c_str());
-    ImGui::TextUnformatted(formattedHeading.c_str());
+    thickText(formattedHeading);
 
     ImGui::Spacing();
   }
@@ -54,7 +72,7 @@ public:
   void draw() override {
     ImGui::Spacing();
 
-    ImGui::TextUnformatted(m_label.c_str());
+    thickText(m_label);
 
     ImGui::Spacing();
   }

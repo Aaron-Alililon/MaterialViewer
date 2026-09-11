@@ -6,8 +6,6 @@
 // TODO
 // Changeable scene (Model sphere, cube, plane, ...; Skybox sky, studio, ...)
 // IBL
-// Resizable windows
-// Make drag-and-drop textures pretty
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline, int iCmdshow) {
   rcore::DeviceDesc devDesc;

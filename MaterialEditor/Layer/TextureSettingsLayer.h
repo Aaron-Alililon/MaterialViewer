@@ -4,12 +4,15 @@
 #include "Core/Layer.h"
 #include "Window/Window.h"
 #include "Models/ModelSphere.h"
+#include "Layer/Setting.h"
 
 #include "ImGUI/imgui.h"
 #include "ImGUI/imgui_impl_dx11.h"
 #include "ImGUI/imgui_impl_win32.h"
 
-#include "Layer/Setting.h"
+#include <filesystem>
+#include <regex>
+
 
 class TextureSettingsLayer : public rcore::Layer {
 
@@ -24,6 +27,7 @@ public:
   void submit();
 
 private:
+  int tryParseTextureType(std::string file) const;
   void createTypeList();
   void createSettings();
 
