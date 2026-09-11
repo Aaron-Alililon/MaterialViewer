@@ -5,7 +5,7 @@
 
 // TODO
 // Changeable scene (Model sphere, cube, plane, ...; Skybox sky, studio, ...)
-// Reflections
+// IBL
 // Resizable windows
 // Make drag-and-drop textures pretty
 
