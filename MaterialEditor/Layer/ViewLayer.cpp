@@ -66,7 +66,7 @@ void ViewLayer::createMatrixBuffer() {
 
 void ViewLayer::createModels() {
   auto inputDesc = rcore::Preset3D::makeStandardInputDescription();
-  m_modelSphere = std::make_shared<ModelSphere>(m_window, inputDesc);
+  m_modelSphere = std::make_shared<DisplayModel>(m_window, inputDesc);
   m_skybox = std::make_unique<Skybox>(inputDesc);
   m_skybox->setType(Skybox::sky);
 }
@@ -80,6 +80,15 @@ void ViewLayer::createSettings() const {
   auto lockedSettings = m_settingsWindow.lock();
   auto lockedSettingsLayer = lockedSettings->getLayer<SettingsLayer>().lock();
   if (!lockedSettings || !lockedSettingsLayer) return;
+
+  lockedSettingsLayer->addHeading("Scene");
+
+  lockedSettingsLayer->addDropdown(
+    "Model",
+    &m_modelSphere->selectedModel,
+    std::vector<std::string>{ "Sphere", "Plane" },
+    [this]() { m_modelSphere->setModel(); }
+  );
 
   lockedSettingsLayer->addHeading("Texture Scale");
 

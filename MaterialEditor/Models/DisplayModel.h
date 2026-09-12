@@ -1,5 +1,5 @@
-#ifndef MODEL_SPHERE_H
-#define MODEL_SPHERE_H
+#ifndef DISPLAY_MODEL_H
+#define DISPLAY_MODEL_H
 
 #include "Render/Material.h"
 #include "Model/Model.h"
@@ -24,7 +24,7 @@ enum TextureType : int {
   count
 };
 
-class ModelSphere {
+class DisplayModel {
 private:
   struct __declspec(align(16)) MaterialProperties {
     DirectX::XMFLOAT2 uvScale;
@@ -39,25 +39,34 @@ private:
     DirectX::XMFLOAT4 camPosition;
   };
 
+  struct ModelData {
+    std::unique_ptr<rcore::Model> model;
+    std::shared_ptr<rcore::StaticIndexedVertexBuffer<rcore::Preset3D::StandardVertexType>> SIVBuffer;
+    std::pair<std::shared_ptr<rcore::RenderTarget>, std::shared_ptr<rcore::RenderTarget>> nbcsTextures;
+  };
+
 public:
-  ModelSphere(std::weak_ptr<rcore::Window> window, std::vector<D3D11_INPUT_ELEMENT_DESC> const& inputDesc);
+  DisplayModel(std::weak_ptr<rcore::Window> window, std::vector<D3D11_INPUT_ELEMENT_DESC> const& inputDesc);
 
 public:
   void render(rcore::FrameState const& frame, rcore::MatrixBuffer& matrixBuffer);
+  void setModel();
   void setProperties();
   void onCamChange(DirectX::XMFLOAT3 pos) const;
 
   void updateTexture(std::string const& path, TextureType type);
 
 private:
-  void createSIVBuffer();
-  void createTextures(std::weak_ptr<rcore::Window> window);
   void createMaterial(std::vector<D3D11_INPUT_ELEMENT_DESC> const& inputDesc);
+  void createTextures();
+  void createSIVBuffer(ModelData& data, std::string const& path);
+  void createNbcsTextures(ModelData& data, std::weak_ptr<rcore::Window> window);
+  void createModels(std::weak_ptr<rcore::Window> window);
   void createCam();
-  void createModel();
   void bindTextures();
 
 public:
+  int selectedModel = 0;
   float uScale = 4.0f;
   float vScale = 4.0f;
   float giStrength = 0.8f;
@@ -69,13 +78,11 @@ public:
 
 private:
   MaterialProperties m_properties;
-  std::shared_ptr<rcore::StaticIndexedVertexBuffer<rcore::Preset3D::StandardVertexType>> m_SIVBuffer;
+  std::vector<ModelData> m_models;
   std::array<std::shared_ptr<rcore::Texture>, static_cast<size_t>(TextureType::count)> m_textures;
   std::shared_ptr<rcore::Sampler> m_pointSampler, m_linearSampler;
   std::shared_ptr<rcore::Material<MaterialProperties>> m_material;
   std::unique_ptr<rcore::CBuffer<CameraBufferData>> m_camBuffer;
-  std::unique_ptr<rcore::Model> m_sphere;
-  std::pair<std::shared_ptr<rcore::RenderTarget>, std::shared_ptr<rcore::RenderTarget>> m_nbcsTextures;
 };
 
 #endif

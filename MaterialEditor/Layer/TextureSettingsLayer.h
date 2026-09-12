@@ -3,7 +3,7 @@
 
 #include "Core/Layer.h"
 #include "Window/Window.h"
-#include "Models/ModelSphere.h"
+#include "Models/DisplayModel.h"
 #include "Layer/Setting.h"
 
 #include "ImGUI/imgui.h"
@@ -17,7 +17,7 @@
 class TextureSettingsLayer : public rcore::Layer {
 
 public:
-  TextureSettingsLayer(std::weak_ptr<rcore::Window> window, std::vector<std::string> const& texturePaths, std::weak_ptr<ModelSphere> model);
+  TextureSettingsLayer(std::weak_ptr<rcore::Window> window, std::vector<std::string> const& texturePaths, std::weak_ptr<DisplayModel> model);
 
 public:
   void render(rcore::FrameState const& frame) override;
@@ -37,7 +37,7 @@ public:
 private:
   ImGuiContext* m_imguiContext;
   std::vector<std::string> m_texturePaths;
-  std::weak_ptr<ModelSphere> m_model;
+  std::weak_ptr<DisplayModel> m_model;
   std::vector<std::unique_ptr<ISetting>> m_settings;
 };
 

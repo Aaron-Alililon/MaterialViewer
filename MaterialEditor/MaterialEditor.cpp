@@ -4,7 +4,7 @@
 #include "Core/Preset3D.h"
 
 // TODO
-// Changeable scene (Model sphere, cube, plane, ...; Skybox sky, studio, ...)
+// Changeable skybox
 // IBL
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline, int iCmdshow) {

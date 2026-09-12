@@ -2,7 +2,7 @@
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
-TextureSettingsLayer::TextureSettingsLayer(std::weak_ptr<rcore::Window> window, std::vector<std::string> const& texturePaths, std::weak_ptr<ModelSphere> model) : Layer{ window }, m_texturePaths { texturePaths }, m_model{ model } {
+TextureSettingsLayer::TextureSettingsLayer(std::weak_ptr<rcore::Window> window, std::vector<std::string> const& texturePaths, std::weak_ptr<DisplayModel> model) : Layer{ window }, m_texturePaths { texturePaths }, m_model{ model } {
   m_imguiContext = ImGui::CreateContext();
   ImGui::SetCurrentContext(m_imguiContext);
   ImGui_ImplWin32_Init(window.lock()->getHandle());

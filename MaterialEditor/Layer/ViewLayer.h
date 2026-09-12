@@ -11,7 +11,7 @@
 #include "Layer/SettingsLayer.h"
 #include "Layer/TextureSettingsLayer.h"
 #include "Camera/CameraController.h"
-#include "Models/ModelSphere.h"
+#include "Models/DisplayModel.h"
 #include "Models/Skybox.h"
 
 class ViewLayer : public rcore::Layer {
@@ -37,7 +37,7 @@ private:
   rcore::D3DContextDesc m_ctxDesc;
   CameraController m_camController;
   std::shared_ptr<rcore::MatrixBuffer> m_matrixBuffer;
-  std::shared_ptr<ModelSphere> m_modelSphere;
+  std::shared_ptr<DisplayModel> m_modelSphere;
   std::unique_ptr<Skybox> m_skybox;
 };
 
