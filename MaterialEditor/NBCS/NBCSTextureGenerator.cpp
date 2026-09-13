@@ -83,7 +83,7 @@ bool NBCSTextureGenerator::makeExtendedSIVBuffer(std::weak_ptr<rcore::StaticInde
 
   m_extendedSIVBuffer = std::make_shared<rcore::StaticIndexedVertexBuffer<NBCSTextureGenerator::ExtendedVertexType>>(extendedVerts, lockedSIVBuffer->getIndices());
 
-  return m_extendedSIVBuffer->valid();
+  return m_extendedSIVBuffer->isValid();
 }
 
 bool NBCSTextureGenerator::makeMaterial() {
@@ -113,7 +113,7 @@ bool NBCSTextureGenerator::makeMaterial() {
   rcore::Shader shader = { L"shaders/NBCSTexVertexShader.hlsl", L"shaders/NBCSTexPixelShader.hlsl", inputDesc };
   m_material = std::make_shared<rcore::Material<NBCSTextureGenerator::EmptyMaterialProperties>>(shader, rcore::Pixel);
 
-  return m_material->valid();
+  return m_material->isValid();
 }
 
 bool NBCSTextureGenerator::prepareTextures() {
