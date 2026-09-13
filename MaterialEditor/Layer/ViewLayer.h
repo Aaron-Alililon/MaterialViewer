@@ -37,7 +37,7 @@ private:
   rcore::D3DContextDesc m_ctxDesc;
   CameraController m_camController;
   std::shared_ptr<rcore::MatrixBuffer> m_matrixBuffer;
-  std::shared_ptr<DisplayModel> m_modelSphere;
+  std::shared_ptr<DisplayModel> m_displayModel;
   std::unique_ptr<Skybox> m_skybox;
 };
 

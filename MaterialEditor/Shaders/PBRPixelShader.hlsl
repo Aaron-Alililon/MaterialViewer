@@ -30,18 +30,6 @@ cbuffer PropertiesBuffer : register(b1) {
   float2 minMaxPOMLayers;
 };
 
-struct LightData {
-  float4 position;
-  float4 direction;
-  float4 color;
-};
-
-StructuredBuffer<LightData> directionals : register(t8);
-
-cbuffer NumDirectionalsBuffer : register(b2) {
-  int numDirectionals;
-};
-
 cbuffer CameraBuffer : register(b3) {
   float4 camPosition;
 };
@@ -217,11 +205,14 @@ float4 PSMain(PixelInputType input) : SV_TARGET {
   float3 worldNormal = normalize(mul(normal, TBN));
     
   float3 reflectanceSum = 0;
+  
+  /*
   for (int i = 0; i < numDirectionals; i++) {
     float3 lightColor = directionals[i].color.xyz;
     float3 lightDirection = directionals[i].direction.xyz;
     reflectanceSum += reflectance(worldNormal, viewVector, albedo, roughness, metallic, lightColor, lightDirection);
   }
+  */
   
   float3 ambient = globalIllumination * albedo * ao;
   

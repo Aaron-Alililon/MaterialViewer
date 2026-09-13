@@ -16,36 +16,28 @@ private:
   struct __declspec(align(16)) MaterialProperties {};
 
 public:
-  struct SkyboxData {
-    std::shared_ptr<rcore::Texture> textureAlbedo;
-    std::shared_ptr<rcore::LightBuffer> directionalLightBuffer;
-  };
-
-  enum SkyboxType {
-    sky,
-    forest
-  };
-
-public:
   Skybox(std::vector<D3D11_INPUT_ELEMENT_DESC> const& inputDesc);
 
 public:
   void render(rcore::FrameState const& frame, rcore::MatrixBuffer& matrixBuffer);
-  void setType(SkyboxType type);
+  void setType();
 
 private:
   void createSIVBuffer();
   void createSampler();
+  void createTextures();
   void createMaterial(std::vector<D3D11_INPUT_ELEMENT_DESC> const& inputDesc);
   void createModel();
-  SkyboxData getSkybox(SkyboxType type, int srvSlot, int numLightsBufferSlot, uint8_t shaderStages = rcore::ShaderStage::Pixel) const;
+
+public:
+  int selectedSkybox = 0;
 
 private:
   std::shared_ptr<rcore::StaticIndexedVertexBuffer<rcore::Preset3D::StandardVertexType>> m_SIVBuffer;
   std::shared_ptr<rcore::Sampler> m_sampler;
   std::shared_ptr<rcore::Material<MaterialProperties>> m_material;
   std::unique_ptr<rcore::Model> m_box;
-  SkyboxData m_type;
+  std::vector<rcore::Texture> m_textures;
 };
 
 #endif

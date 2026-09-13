@@ -20,13 +20,13 @@ void ViewLayer::render(rcore::FrameState const& frame) {
   rcore::D3D11Device::get().rawContext()->ClearDepthStencilView(window->getDepthStencilView(), D3D11_CLEAR_DEPTH, 1.0f, 0);
 
   m_skybox->render(frame, *m_matrixBuffer);
-  m_modelSphere->render(frame, *m_matrixBuffer);
+  m_displayModel->render(frame, *m_matrixBuffer);
 }
 
 bool ViewLayer::onEvent(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam) {
   if (m_camController.onEvent(hwnd, umsg, wparam, lparam)) {
     m_camController.updatePosition();
-    m_modelSphere->onCamChange(m_camController.getPosition());
+    m_displayModel->onCamChange(m_camController.getPosition());
   }
 
   switch (umsg) {
@@ -66,14 +66,13 @@ void ViewLayer::createMatrixBuffer() {
 
 void ViewLayer::createModels() {
   auto inputDesc = rcore::Preset3D::makeStandardInputDescription();
-  m_modelSphere = std::make_shared<DisplayModel>(m_window, inputDesc);
+  m_displayModel = std::make_shared<DisplayModel>(m_window, inputDesc);
   m_skybox = std::make_unique<Skybox>(inputDesc);
-  m_skybox->setType(Skybox::sky);
 }
 
 void ViewLayer::createCam() {
   m_camController.updatePosition();
-  m_modelSphere->onCamChange(m_camController.getPosition());
+  m_displayModel->onCamChange(m_camController.getPosition());
 }
 
 void ViewLayer::createSettings() const {
@@ -85,71 +84,78 @@ void ViewLayer::createSettings() const {
 
   lockedSettingsLayer->addDropdown(
     "Model",
-    &m_modelSphere->selectedModel,
+    &m_displayModel->selectedModel,
     std::vector<std::string>{ "Sphere", "Plane" },
-    [this]() { m_modelSphere->setModel(); }
+    [this]() { m_displayModel->setModel(); }
+  );
+
+  lockedSettingsLayer->addDropdown(
+    "Skybox",
+    &m_skybox->selectedSkybox,
+    std::vector<std::string>{ "Sky", "Forest" },
+    [this]() { m_skybox->setType(); }
   );
 
   lockedSettingsLayer->addHeading("Texture Scale");
 
   lockedSettingsLayer->addFloatSlider(
     "U",
-    &m_modelSphere->uScale,
+    &m_displayModel->uScale,
     0.0001f, 20,
-    [this]() { m_modelSphere->setProperties(); }
+    [this]() { m_displayModel->setProperties(); }
   );
 
   lockedSettingsLayer->addFloatSlider(
     "V",
-    &m_modelSphere->vScale,
+    &m_displayModel->vScale,
     0.0001f, 20,
-    [this]() { m_modelSphere->setProperties(); }
+    [this]() { m_displayModel->setProperties(); }
   );
 
   lockedSettingsLayer->addHeading("Lighting");
 
   lockedSettingsLayer->addFloatSlider(
     "Global Illumination Strength",
-    &m_modelSphere->giStrength,
+    &m_displayModel->giStrength,
     0, 1,
-    [this]() { m_modelSphere->setProperties(); }
+    [this]() { m_displayModel->setProperties(); }
   );
 
   lockedSettingsLayer->addHeading("Displacement");
 
   lockedSettingsLayer->addDropdown(
     "Displacement Method",
-    &m_modelSphere->displacementMethod,
+    &m_displayModel->displacementMethod,
     std::vector<std::string>{ "Vertex Offset", "Parallax Occlusion Mapping", "Normal-Based Curved Silhouettes" },
-    [this]() { m_modelSphere->setProperties(); }
+    [this]() { m_displayModel->setProperties(); }
   );
 
   lockedSettingsLayer->addFloatSlider(
     "Displacement Strength",
-    &m_modelSphere->displacement,
+    &m_displayModel->displacement,
     0, 2,
-    [this]() { m_modelSphere->setProperties(); }
+    [this]() { m_displayModel->setProperties(); }
   );
 
   lockedSettingsLayer->addFloatSlider(
     "NBCS Step Size Factor",
-    &m_modelSphere->nbcsStepSizeFactor,
+    &m_displayModel->nbcsStepSizeFactor,
     1, 10,
-    [this]() { m_modelSphere->setProperties(); }
+    [this]() { m_displayModel->setProperties(); }
   );
 
   lockedSettingsLayer->addFloatSlider(
     "POM/NBCS minimum layers",
-    &m_modelSphere->minPOMLayers,
+    &m_displayModel->minPOMLayers,
     1, 500,
-    [this]() { m_modelSphere->setProperties(); }
+    [this]() { m_displayModel->setProperties(); }
   );
 
   lockedSettingsLayer->addFloatSlider(
     "POM/NBCS maximum layers",
-    &m_modelSphere->maxPOMLayers,
+    &m_displayModel->maxPOMLayers,
     1, 500,
-    [this]() { m_modelSphere->setProperties(); }
+    [this]() { m_displayModel->setProperties(); }
   );
 }
 
@@ -160,5 +166,5 @@ void ViewLayer::makeTextureSettingsWindow(std::vector<std::string> const& paths)
   rcore::D3DContextDesc texSettingsCtxDesc = rcore::Preset3D::makeStandardContextDescription(texSettingsWindDesc.width(), texSettingsWindDesc.height());
   rcore::makeD3D11Context(texSettingsWindow, texSettingsCtxDesc);
 
-  texSettingsWindow.lock()->addLayer<TextureSettingsLayer>(paths, m_modelSphere);
+  texSettingsWindow.lock()->addLayer<TextureSettingsLayer>(paths, m_displayModel);
 }
