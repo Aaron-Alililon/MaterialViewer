@@ -4,7 +4,6 @@
 #include "Core/Preset3D.h"
 
 // TODO
-// Changeable skybox
 // IBL
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline, int iCmdshow) {

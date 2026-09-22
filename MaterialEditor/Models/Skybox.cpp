@@ -1,22 +1,44 @@
 #include "Models/Skybox.h"
 
-Skybox::Skybox(std::vector<D3D11_INPUT_ELEMENT_DESC> const& inputDesc) {
+Skybox::Skybox(std::weak_ptr<rcore::Window> window, std::vector<D3D11_INPUT_ELEMENT_DESC> const& inputDesc) {
+  bakeIBL(window);
   createSIVBuffer();
   createSampler();
-  createTextures();
   createMaterial(inputDesc);
   createModel();
-
-  setType();
 }
 
 void Skybox::render(rcore::FrameState const& frame, rcore::MatrixBuffer& matrixBuffer) {
   m_box->drawIndexed(matrixBuffer);
 }
 
-void Skybox::setType() {
-  ID3D11ShaderResourceView* srv[] = { m_textures.at(selectedSkybox).getTextureView() };
+Skybox::SkyboxData Skybox::setType() {
+  ID3D11ShaderResourceView* srv[] = { m_skyboxes.at(selectedSkybox).envCube->getSRV() };
   m_material->setTextures(srv, 0);
+
+  return m_skyboxes.at(selectedSkybox);
+}
+
+void Skybox::bakeIBL(std::weak_ptr<rcore::Window> window) {
+  static const std::string skyboxPaths[] = { "sky.hdr", "forest.hdr", "livingRoom.hdr", "studio.hdr" };
+
+  for (auto const& path : skyboxPaths) {
+    SkyboxData data{ };
+
+    EquirectToCubeBaker etcb{ window, "skyboxes/" + path };
+    data.envCube = etcb.getEnvironmentCube();
+
+    IrradianceBaker ib{ window, data.envCube };
+    data.irradianceCube = ib.getIrradianceCube();
+
+    SpecularBaker sb{ window, data.envCube };
+    data.specularCube = sb.getPrefilteredCube();
+
+    BRDFLUTBaker lutb{ window };
+    data.brdfLut = lutb.getLUT();
+
+    m_skyboxes.push_back(data);
+  }
 }
 
 void Skybox::createSIVBuffer() {
@@ -25,13 +47,6 @@ void Skybox::createSIVBuffer() {
 
 void Skybox::createSampler() {
   m_sampler = std::make_shared<rcore::Sampler>(rcore::Preset3D::makeStandardLinearSamplerDescription());
-}
-
-void Skybox::createTextures() {
-  auto [texDesc, srvDesc] = rcore::Preset3D::makeStandardTextureDescriptionPair();
-
-  m_textures.push_back({ rcore::LoaderTag<rcore::PNGLoader>{}, "textures/skybox/sky.png", texDesc, srvDesc });
-  m_textures.push_back({ rcore::LoaderTag<rcore::PNGLoader>{}, "textures/skybox/field.png", texDesc, srvDesc });
 }
 
 void Skybox::createMaterial(std::vector<D3D11_INPUT_ELEMENT_DESC> const& inputDesc) {

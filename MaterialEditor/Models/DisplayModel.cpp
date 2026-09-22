@@ -37,9 +37,14 @@ void DisplayModel::onCamChange(DirectX::XMFLOAT3 pos) const {
 
 void DisplayModel::updateTexture(std::string const& path, TextureType type) {
   auto [texDesc, srvDesc] = rcore::Preset3D::makeStandardTextureDescriptionPair();
-
   m_textures[static_cast<size_t>(type)] = std::make_shared<rcore::Texture>(rcore::LoaderTag<rcore::PNGLoader>{}, path, texDesc, srvDesc);
   
+  bindTextures();
+}
+
+void DisplayModel::updateSkyboxData(Skybox::SkyboxData data) {
+  m_skyboxData = data;
+
   bindTextures();
 }
 
@@ -71,13 +76,7 @@ void DisplayModel::createSIVBuffer(ModelData& data, std::string const& path) {
 }
 
 void DisplayModel::createNbcsTextures(ModelData& data, std::weak_ptr<rcore::Window> window) {
-  auto lockedWindow = window.lock();
-  if (!lockedWindow) {
-    RCORE_LOG(rcore::ERR, "Tried creating NBCS textures with invalid window pointer");
-    return;
-  }
-
-  NBCSTextureGenerator nbcsTexGen{ lockedWindow, data.SIVBuffer };
+  NBCSTextureGenerator nbcsTexGen{ window, data.SIVBuffer };
   data.nbcsTextures = nbcsTexGen.getTextures();
 }
 
@@ -104,7 +103,10 @@ void DisplayModel::bindTextures() {
   ID3D11ShaderResourceView* srv[] = {
     m_textures[0]->getTextureView(), m_textures[1]->getTextureView(), m_textures[2]->getTextureView(),
     m_textures[3]->getTextureView(), m_textures[4]->getTextureView(), m_textures[5]->getTextureView(),
-    m_models[selectedModel].nbcsTextures.first->getSRV(), m_models[selectedModel].nbcsTextures.second->getSRV()
+    m_models[selectedModel].nbcsTextures.first->getSRV(), m_models[selectedModel].nbcsTextures.second->getSRV(),
+    (m_skyboxData.irradianceCube) ? m_skyboxData.irradianceCube->getSRV() : nullptr,
+    (m_skyboxData.specularCube) ? m_skyboxData.specularCube->getSRV() : nullptr,
+    (m_skyboxData.brdfLut) ? m_skyboxData.brdfLut->getSRV() : nullptr
   };
 
   m_material->setTextures(srv, 0);

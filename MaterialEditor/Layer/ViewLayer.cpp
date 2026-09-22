@@ -66,13 +66,21 @@ void ViewLayer::createMatrixBuffer() {
 
 void ViewLayer::createModels() {
   auto inputDesc = rcore::Preset3D::makeStandardInputDescription();
+  m_skybox = std::make_unique<Skybox>(m_window, inputDesc);
   m_displayModel = std::make_shared<DisplayModel>(m_window, inputDesc);
-  m_skybox = std::make_unique<Skybox>(inputDesc);
+
+  Skybox::SkyboxData data = m_skybox->setType();
+  m_displayModel->updateSkyboxData(data);
 }
 
 void ViewLayer::createCam() {
   m_camController.updatePosition();
   m_displayModel->onCamChange(m_camController.getPosition());
+}
+
+void ViewLayer::setSkybox() const {
+  Skybox::SkyboxData data = m_skybox->setType();
+  m_displayModel->updateSkyboxData(data);
 }
 
 void ViewLayer::createSettings() const {
@@ -92,8 +100,8 @@ void ViewLayer::createSettings() const {
   lockedSettingsLayer->addDropdown(
     "Skybox",
     &m_skybox->selectedSkybox,
-    std::vector<std::string>{ "Sky", "Forest" },
-    [this]() { m_skybox->setType(); }
+    std::vector<std::string>{ "Sky", "Forest", "Living Room", "Studio" },
+    [this]() { setSkybox(); }
   );
 
   lockedSettingsLayer->addHeading("Texture Scale");

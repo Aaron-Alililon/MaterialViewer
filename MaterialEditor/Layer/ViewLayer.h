@@ -28,6 +28,7 @@ private:
   void createMatrixBuffer();
   void createModels();
   void createCam();
+  void setSkybox() const;
   void createSettings() const;
 
   void makeTextureSettingsWindow(std::vector<std::string> const& paths);
@@ -37,8 +38,8 @@ private:
   rcore::D3DContextDesc m_ctxDesc;
   CameraController m_camController;
   std::shared_ptr<rcore::MatrixBuffer> m_matrixBuffer;
-  std::shared_ptr<DisplayModel> m_displayModel;
   std::unique_ptr<Skybox> m_skybox;
+  std::shared_ptr<DisplayModel> m_displayModel;
 };
 
 #endif

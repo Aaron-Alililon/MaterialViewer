@@ -12,7 +12,8 @@
 #include "Model/GLTFLoader.h"
 #include "Model/ObjLoader.h"
 #include "Resource/PNGLoader.h"
-#include "NBCS/NBCSTextureGenerator.h"
+#include "Bake/NBCS/NBCSTextureGenerator.h"
+#include "Models/Skybox.h"
 
 enum TextureType : int {
   albedo,
@@ -55,6 +56,7 @@ public:
   void onCamChange(DirectX::XMFLOAT3 pos) const;
 
   void updateTexture(std::string const& path, TextureType type);
+  void updateSkyboxData(Skybox::SkyboxData data);
 
 private:
   void createMaterial(std::vector<D3D11_INPUT_ELEMENT_DESC> const& inputDesc);
@@ -83,6 +85,7 @@ private:
   std::shared_ptr<rcore::Sampler> m_pointSampler, m_linearSampler;
   std::shared_ptr<rcore::Material<MaterialProperties>> m_material;
   std::unique_ptr<rcore::CBuffer<CameraBufferData>> m_camBuffer;
+  Skybox::SkyboxData m_skyboxData;
 };
 
 #endif
