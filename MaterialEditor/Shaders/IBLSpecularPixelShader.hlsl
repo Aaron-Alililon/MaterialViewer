@@ -14,7 +14,7 @@ struct PSInput {
 };
 
 static const float PI = 3.14159265f;
-static const uint SAMPLE_COUNT = 1024u;
+static const uint SAMPLE_COUNT = 16384u;
 
 // Van der Corput / Hammersley for low-discrepancy 2D samples //
 float radicalInverseVdC(uint bits) {

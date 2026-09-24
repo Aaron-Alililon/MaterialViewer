@@ -4,7 +4,9 @@
 #include "Core/Preset3D.h"
 
 // TODO
-// IBL
+// Check/Fix tone mapping technique
+// SSAO
+// Depth aware NCS
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline, int iCmdshow) {
   rcore::DeviceDesc devDesc;

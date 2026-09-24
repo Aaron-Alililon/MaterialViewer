@@ -8,6 +8,22 @@ std::shared_ptr<rcore::RenderTarget> BRDFLUTBaker::getLUT() const {
   return m_lut;
 }
 
+std::string BRDFLUTBaker::makeCacheKey() const {
+  uint64_t h;
+  h = hashData(&m_size, sizeof(m_size));
+
+  constexpr uint32_t bakerVersion = 1;
+  h = hashData(&bakerVersion, sizeof(bakerVersion), h);
+
+  return std::format("{:016x}", h);
+}
+
+std::vector<BakePass::CacheEntry> BRDFLUTBaker::getCacheEntries() {
+  return {
+    CacheEntry{ "iblBrdfLut_" + m_cacheKey + ".dds", &m_lut }
+  };
+}
+
 bool BRDFLUTBaker::setupRenderTargets() {
   D3D11_TEXTURE2D_DESC textureDesc = rcore::Preset3D::makeRenderTargetTextureDescription(m_size, m_size);
   textureDesc.Format = DXGI_FORMAT_R16G16_FLOAT;

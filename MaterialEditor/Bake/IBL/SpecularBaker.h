@@ -20,12 +20,14 @@ private:
   };
 
 public:
-  SpecularBaker(std::weak_ptr<rcore::Window> const& window, std::shared_ptr<rcore::RenderTarget> const& envCube);
+  SpecularBaker(std::weak_ptr<rcore::Window> const& window, std::shared_ptr<rcore::RenderTarget> const& envCube, std::string const& envCacheKey);
 
 public:
   std::shared_ptr<rcore::RenderTarget> getPrefilteredCube() const;
 
 protected:
+  virtual std::string makeCacheKey() const override;
+  virtual std::vector<CacheEntry> getCacheEntries() override;
   virtual bool setupRenderTargets() override;
   virtual bool bindSourceData() override;
   virtual bool draw() override;
@@ -35,12 +37,13 @@ private:
   bool makeMaterial();
 
 private:
-  const UINT m_baseWidth = 1024;
-  const UINT m_baseHeight = 1024;
+  const UINT m_textureWidth = 1024;
+  const UINT m_textureHeight = 1024;
   const UINT m_mipCount = 6;
 
   std::shared_ptr<rcore::RenderTarget> m_prefilteredCube;
   std::shared_ptr<rcore::RenderTarget> m_envCube;
+  std::string m_envCacheKey;
   rcore::Sampler m_sampler;
   std::shared_ptr<rcore::Material<EmptyMaterialProperties>> m_material;
   std::unique_ptr<rcore::CBuffer<FaceDirectionData>> m_faceBuffer;

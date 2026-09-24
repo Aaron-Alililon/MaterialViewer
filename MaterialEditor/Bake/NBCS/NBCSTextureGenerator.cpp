@@ -10,6 +10,32 @@ std::pair<std::shared_ptr<rcore::RenderTarget>, std::shared_ptr<rcore::RenderTar
   return std::make_pair(m_normalTexture, m_tangentTexture);
 }
 
+std::string NBCSTextureGenerator::makeCacheKey() const {
+  auto lockedSIVBuffer = m_sivBuffer.lock();
+  if (!lockedSIVBuffer) return {};
+
+  auto const& verts = lockedSIVBuffer->getVertices();
+  auto const& indices = lockedSIVBuffer->getIndices();
+
+  uint64_t h;
+  h = hashData(verts.data(), verts.size() * sizeof(verts[0]));
+  h = hashData(indices.data(), indices.size() * sizeof(indices[0]), h);
+  h = hashData(&m_textureWidth, sizeof(m_textureWidth), h);
+  h = hashData(&m_textureHeight, sizeof(m_textureHeight), h);
+
+  constexpr uint32_t bakerVersion = 1;
+  h = hashData(&bakerVersion, sizeof(bakerVersion), h);
+
+  return std::format("{:016x}", h);
+}
+
+std::vector<BakePass::CacheEntry> NBCSTextureGenerator::getCacheEntries() {
+  return {
+    CacheEntry{ "nbcsNormals_" + m_cacheKey + ".dds", &m_normalTexture },
+    CacheEntry{ "nbcsTangents_" + m_cacheKey + ".dds", &m_tangentTexture }
+  };
+}
+
 bool NBCSTextureGenerator::setupRenderTargets() {
   D3D11_TEXTURE2D_DESC textureDesc = rcore::Preset3D::makeRenderTargetTextureDescription(m_textureWidth, m_textureHeight);
   textureDesc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
@@ -99,6 +125,10 @@ std::vector<std::pair<float, float>> NBCSTextureGenerator::computeTangentScales(
 
 bool NBCSTextureGenerator::makeExtendedSIVBuffer(std::weak_ptr<rcore::StaticIndexedVertexBuffer<rcore::Preset3D::StandardVertexType>> sivBuffer) {
   auto lockedSIVBuffer = sivBuffer.lock();
+  if (!lockedSIVBuffer) {
+    RCORE_LOG(rcore::ERR, "Tried using an invalid SIV buffer during NBCS texture baking");
+    return false;
+  }
 
   auto standardVerts = lockedSIVBuffer->getVertices();
   std::vector<ExtendedVertexType> extendedVerts(standardVerts.size());

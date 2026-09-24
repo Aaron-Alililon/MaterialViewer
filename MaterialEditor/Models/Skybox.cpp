@@ -28,10 +28,10 @@ void Skybox::bakeIBL(std::weak_ptr<rcore::Window> window) {
     EquirectToCubeBaker etcb{ window, "skyboxes/" + path };
     data.envCube = etcb.getEnvironmentCube();
 
-    IrradianceBaker ib{ window, data.envCube };
+    IrradianceBaker ib{ window, data.envCube, etcb.getCacheKey() };
     data.irradianceCube = ib.getIrradianceCube();
 
-    SpecularBaker sb{ window, data.envCube };
+    SpecularBaker sb{ window, data.envCube, etcb.getCacheKey() };
     data.specularCube = sb.getPrefilteredCube();
 
     BRDFLUTBaker lutb{ window };
@@ -39,6 +39,8 @@ void Skybox::bakeIBL(std::weak_ptr<rcore::Window> window) {
 
     m_skyboxes.push_back(data);
   }
+
+  BakePass::pruneCache();
 }
 
 void Skybox::createSIVBuffer() {

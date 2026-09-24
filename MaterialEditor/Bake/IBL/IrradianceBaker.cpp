@@ -1,11 +1,29 @@
 #include "IrradianceBaker.h"
 
-IrradianceBaker::IrradianceBaker(std::weak_ptr<rcore::Window> const& window, std::shared_ptr<rcore::RenderTarget> const& envCube) : BakePass{ window }, m_envCube{ envCube } {
+IrradianceBaker::IrradianceBaker(std::weak_ptr<rcore::Window> const& window, std::shared_ptr<rcore::RenderTarget> const& envCube, std::string const& envCacheKey) : BakePass{ window }, m_envCube{ envCube }, m_envCacheKey{ envCacheKey } {
   bake();
 }
 
 std::shared_ptr<rcore::RenderTarget> IrradianceBaker::getIrradianceCube() const {
   return m_irradianceCube;
+}
+
+std::string IrradianceBaker::makeCacheKey() const {
+  uint64_t h;
+  h = hashData(&m_textureWidth, sizeof(m_textureWidth));
+  h = hashData(&m_textureHeight, sizeof(m_textureHeight), h);
+  h = hashData(m_envCacheKey.data(), m_envCacheKey.size(), h);
+
+  constexpr uint32_t bakerVersion = 1;
+  h = hashData(&bakerVersion, sizeof(bakerVersion), h);
+
+  return std::format("{:016x}", h);
+}
+
+std::vector<BakePass::CacheEntry> IrradianceBaker::getCacheEntries() {
+  return {
+    CacheEntry{ "iblIrradiance_" + m_cacheKey + ".dds", &m_irradianceCube }
+  };
 }
 
 bool IrradianceBaker::setupRenderTargets() {

@@ -26,6 +26,8 @@ public:
   std::pair<std::shared_ptr<rcore::RenderTarget>, std::shared_ptr<rcore::RenderTarget>> getTextures() const;
 
 protected:
+  virtual std::string makeCacheKey() const override;
+  virtual std::vector<CacheEntry> getCacheEntries() override;
   virtual bool setupRenderTargets() override;
   virtual bool bindSourceData() override;
   virtual bool draw() override;

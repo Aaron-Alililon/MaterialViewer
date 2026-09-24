@@ -27,12 +27,14 @@ public:
   std::shared_ptr<rcore::RenderTarget> getEnvironmentCube() const;
 
 protected:
+  virtual std::string makeCacheKey() const override;
+  virtual std::vector<CacheEntry> getCacheEntries() override;
   virtual bool setupRenderTargets() override;
   virtual bool bindSourceData() override;
   virtual bool draw() override;
 
 private:
-  bool loadTexture(std::string const& texturePath);
+  bool loadTexture();
   bool makeFaceBuffer();
   bool makeMaterial();
 
@@ -40,6 +42,7 @@ private:
   const UINT m_textureWidth = 1024;
   const UINT m_textureHeight = 1024;
 
+  std::string m_texturePath;
   std::shared_ptr<rcore::RenderTarget> m_envCube;
   rcore::Texture m_texture;
   rcore::Sampler m_sampler;

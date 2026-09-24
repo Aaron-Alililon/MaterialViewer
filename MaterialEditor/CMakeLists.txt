@@ -43,7 +43,7 @@ set(SHADER_STAMP ${CMAKE_CURRENT_BINARY_DIR}/shaders.stamp)
 
 add_custom_command(
     OUTPUT ${SHADER_STAMP}
-    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    COMMAND ${CMAKE_COMMAND} -E copy_directory_if_different
         ${CMAKE_CURRENT_SOURCE_DIR}/Shaders
         $<TARGET_FILE_DIR:MaterialEditor>/shaders
     COMMAND ${CMAKE_COMMAND} -E touch ${SHADER_STAMP}
@@ -52,12 +52,10 @@ add_custom_command(
 )
 
 add_custom_command(TARGET MaterialEditor POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    COMMAND ${CMAKE_COMMAND} -E copy_directory_if_different
         ${CMAKE_CURRENT_SOURCE_DIR}/Resources
         $<TARGET_FILE_DIR:MaterialEditor>
 )
-
-
 
 add_custom_target(CopyShaders ALL DEPENDS ${SHADER_STAMP})
 add_dependencies(MaterialEditor CopyShaders)

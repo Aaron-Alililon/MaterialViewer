@@ -1,6 +1,6 @@
 #include "SpecularBaker.h"
 
-SpecularBaker::SpecularBaker(std::weak_ptr<rcore::Window> const& window, std::shared_ptr<rcore::RenderTarget> const& envCube) : BakePass{ window }, m_envCube { envCube } {
+SpecularBaker::SpecularBaker(std::weak_ptr<rcore::Window> const& window, std::shared_ptr<rcore::RenderTarget> const& envCube, std::string const& envCacheKey) : BakePass{ window }, m_envCube { envCube }, m_envCacheKey{ envCacheKey } {
   bake();
 }
 
@@ -8,8 +8,27 @@ std::shared_ptr<rcore::RenderTarget> SpecularBaker::getPrefilteredCube() const {
   return m_prefilteredCube;
 }
 
+std::string SpecularBaker::makeCacheKey() const {
+  uint64_t h;
+  h = hashData(&m_textureWidth, sizeof(m_textureWidth));
+  h = hashData(&m_textureHeight, sizeof(m_textureHeight), h);
+  h = hashData(&m_mipCount, sizeof(m_mipCount), h);
+  h = hashData(m_envCacheKey.data(), m_envCacheKey.size(), h);
+
+  constexpr uint32_t bakerVersion = 1;
+  h = hashData(&bakerVersion, sizeof(bakerVersion), h);
+
+  return std::format("{:016x}", h);
+}
+
+std::vector<BakePass::CacheEntry> SpecularBaker::getCacheEntries() {
+  return {
+    CacheEntry{ "iblSpecular_" + m_cacheKey + ".dds", &m_prefilteredCube }
+  };
+}
+
 bool SpecularBaker::setupRenderTargets() {
-  D3D11_TEXTURE2D_DESC textureDesc = rcore::Preset3D::makeCubeRenderTargetTextureDescription(m_baseWidth, m_baseHeight);
+  D3D11_TEXTURE2D_DESC textureDesc = rcore::Preset3D::makeCubeRenderTargetTextureDescription(m_textureWidth, m_textureHeight);
   textureDesc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
   textureDesc.MipLevels = m_mipCount;
   textureDesc.MiscFlags &= ~D3D11_RESOURCE_MISC_GENERATE_MIPS;
@@ -45,8 +64,8 @@ bool SpecularBaker::draw() {
   m_material->activate();
 
   for (UINT mip = 0; mip < m_mipCount; mip++) {
-    UINT mipWidth = m_baseWidth >> mip;
-    UINT mipHeight = m_baseHeight >> mip;
+    UINT mipWidth = m_textureWidth >> mip;
+    UINT mipHeight = m_textureHeight >> mip;
     float roughness = static_cast<float>(mip) / static_cast<float>(m_mipCount - 1);
 
     D3D11_VIEWPORT viewport{};

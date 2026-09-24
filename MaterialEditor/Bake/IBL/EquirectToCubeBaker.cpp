@@ -1,22 +1,43 @@
 #include "Bake/IBL/EquirectToCubeBaker.h"
 
-EquirectToCubeBaker::EquirectToCubeBaker(std::weak_ptr<rcore::Window> const& window, std::string const& texturePath) : BakePass{ window } {
-  if (
-    loadTexture(texturePath)
-  ) {
-    bake();
-  } else {
-    RCORE_LOG(rcore::ERR, "Failed to bake skybox equirect to cube");
-  }
+EquirectToCubeBaker::EquirectToCubeBaker(std::weak_ptr<rcore::Window> const& window, std::string const& texturePath) : BakePass{ window }, m_texturePath{ texturePath }  {
+  bake();
 }
 
 std::shared_ptr<rcore::RenderTarget> EquirectToCubeBaker::getEnvironmentCube() const {
   return m_envCube;
 }
 
+std::string EquirectToCubeBaker::makeCacheKey() const {
+  std::error_code ec;
+  auto size = std::filesystem::file_size(m_texturePath, ec);
+  auto mtime = std::filesystem::last_write_time(m_texturePath, ec).time_since_epoch().count();
+  if (ec) return {};
+
+  std::string pathStr = std::filesystem::absolute(m_texturePath).generic_string();
+
+  uint64_t h = hashData(pathStr.data(), pathStr.size());
+  h = hashData(&size, sizeof(size), h);
+  h = hashData(&mtime, sizeof(mtime), h);
+  h = hashData(&m_textureWidth, sizeof(m_textureWidth), h);
+  h = hashData(&m_textureHeight, sizeof(m_textureHeight), h);
+
+  constexpr uint32_t bakerVersion = 1;
+  h = hashData(&bakerVersion, sizeof(bakerVersion), h);
+
+  return std::format("{:016x}", h);
+}
+
+std::vector<BakePass::CacheEntry> EquirectToCubeBaker::getCacheEntries() {
+  return {
+    CacheEntry{ "iblEnvironment_" + m_cacheKey + ".dds", &m_envCube }
+  };
+}
+
 bool EquirectToCubeBaker::setupRenderTargets() {
   D3D11_TEXTURE2D_DESC textureDesc = rcore::Preset3D::makeCubeRenderTargetTextureDescription(m_textureWidth, m_textureHeight);
   textureDesc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
+  textureDesc.MipLevels = 0;
 
   auto srvDesc = rcore::Preset3D::makeCubeShaderResourceViewDescription();
   srvDesc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
@@ -29,6 +50,7 @@ bool EquirectToCubeBaker::setupRenderTargets() {
 bool EquirectToCubeBaker::bindSourceData() {
   bool result = true;
 
+  result &= loadTexture();
   result &= makeMaterial();
   result &= makeFaceBuffer();
 
@@ -64,13 +86,15 @@ bool EquirectToCubeBaker::draw() {
     rcore::D3D11Device::get().rawContext()->Draw(3, 0);
   }
 
+  rcore::D3D11Device::get().rawContext()->GenerateMips(m_envCube->getSRV());
+
   return true;
 }
 
-bool EquirectToCubeBaker::loadTexture(std::string const& texturePath) {
+bool EquirectToCubeBaker::loadTexture() {
   auto [hdrTexDesc, hdrSrvDesc] = rcore::Preset3D::makeHDRTextureDescriptionPair();
 
-  m_texture = { rcore::LoaderTag<rcore::HDRLoader>{}, texturePath, hdrTexDesc, hdrSrvDesc };
+  m_texture = { rcore::LoaderTag<rcore::HDRLoader>{}, m_texturePath, hdrTexDesc, hdrSrvDesc };
   m_sampler = { rcore::Preset3D::makeStandardLinearSamplerDescription() };
 
   return m_texture.isValid() && m_sampler.isValid();
