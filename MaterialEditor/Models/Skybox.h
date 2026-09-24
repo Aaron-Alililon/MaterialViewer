@@ -18,7 +18,10 @@
 
 class Skybox {
 private:
-  struct __declspec(align(16)) MaterialProperties {};
+  struct __declspec(align(16)) MaterialProperties {
+    int tonemapMethod;
+    float exposure;
+  };
 
 public:
   struct SkyboxData {
@@ -33,6 +36,7 @@ public:
 
 public:
   void render(rcore::FrameState const& frame, rcore::MatrixBuffer& matrixBuffer);
+  void setProperties();
   SkyboxData setType();
 
 private:
@@ -43,9 +47,12 @@ private:
   void createModel();
 
 public:
-  int selectedSkybox = 0;
+  int selectedSkybox = 0; // Sky
+  int tonemapMethod; // Set by ViewLayer
+  float exposure; // Set by ViewLayer
 
 private:
+  MaterialProperties m_properties;
   std::shared_ptr<rcore::StaticIndexedVertexBuffer<rcore::Preset3D::StandardVertexType>> m_SIVBuffer;
   std::shared_ptr<rcore::Sampler> m_sampler;
   std::shared_ptr<rcore::Material<MaterialProperties>> m_material;

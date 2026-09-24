@@ -5,6 +5,11 @@ cbuffer MatrixBuffer : register(b0) {
   matrix worldInverseTranspose;
 };
 
+cbuffer PropertiesBuffer : register(b0) {
+  int tonemapMethod;
+  float exposure;
+};
+
 struct VertexInputType {
   float4 position : POSITION;
   float3 normal : NORMAL;

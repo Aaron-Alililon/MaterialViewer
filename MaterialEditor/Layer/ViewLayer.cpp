@@ -5,6 +5,7 @@ ViewLayer::ViewLayer(std::weak_ptr<rcore::Window> window, std::weak_ptr<rcore::W
   createModels();
   createCam();
   createSettings();
+  setTonemappingProperties();
 }
 
 void ViewLayer::update(rcore::FrameState const& frame) {
@@ -83,7 +84,17 @@ void ViewLayer::setSkybox() const {
   m_displayModel->updateSkyboxData(data);
 }
 
-void ViewLayer::createSettings() const {
+void ViewLayer::setTonemappingProperties() const {
+  m_displayModel->tonemapMethod = tonemapMethod;
+  m_displayModel->exposure = exposure;
+  m_displayModel->setProperties();
+
+  m_skybox->tonemapMethod = tonemapMethod;
+  m_skybox->exposure = exposure;
+  m_skybox->setProperties();
+}
+
+void ViewLayer::createSettings() {
   auto lockedSettings = m_settingsWindow.lock();
   auto lockedSettingsLayer = lockedSettings->getLayer<SettingsLayer>().lock();
   if (!lockedSettings || !lockedSettingsLayer) return;
@@ -131,16 +142,16 @@ void ViewLayer::createSettings() const {
 
   lockedSettingsLayer->addDropdown(
     "Material Tonemapping Method",
-    &m_displayModel->tonemapMethod,
-    std::vector<std::string>{ "None", "ACES" },
-    [this]() { m_displayModel->setProperties(); }
+    &tonemapMethod,
+    std::vector<std::string>{ "None", "Neutral", "ACES" },
+    [this]() { setTonemappingProperties(); }
   );
 
   lockedSettingsLayer->addFloatSlider(
     "Exposure",
-    &m_displayModel->exposure,
+    &exposure,
     0, 3,
-    [this]() { m_displayModel->setProperties(); }
+    [this]() { setTonemappingProperties(); }
   );
 
   lockedSettingsLayer->addHeading("Displacement");

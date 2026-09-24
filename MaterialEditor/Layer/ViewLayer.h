@@ -29,9 +29,14 @@ private:
   void createModels();
   void createCam();
   void setSkybox() const;
-  void createSettings() const;
+  void setTonemappingProperties() const;
+  void createSettings();
 
   void makeTextureSettingsWindow(std::vector<std::string> const& paths);
+
+public:
+  int tonemapMethod = 1; // Neutral
+  float exposure = 0.6f;
 
 private:
   std::weak_ptr<rcore::Window> m_settingsWindow;

@@ -6,10 +6,20 @@ Skybox::Skybox(std::weak_ptr<rcore::Window> window, std::vector<D3D11_INPUT_ELEM
   createSampler();
   createMaterial(inputDesc);
   createModel();
+  setProperties();
 }
 
 void Skybox::render(rcore::FrameState const& frame, rcore::MatrixBuffer& matrixBuffer) {
   m_box->drawIndexed(matrixBuffer);
+}
+
+void Skybox::setProperties() {
+  m_properties = {
+    tonemapMethod,
+    exposure
+  };
+
+  m_material->uploadProperties(m_properties, 1);
 }
 
 Skybox::SkyboxData Skybox::setType() {

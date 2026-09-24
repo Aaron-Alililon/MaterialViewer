@@ -74,8 +74,8 @@ public:
   float uScale = 4.0f;
   float vScale = 4.0f;
   float giStrength = 1.0f;
-  int tonemapMethod = 0; // None
-  float exposure = 1.0f;
+  int tonemapMethod; // Set by ViewLayer
+  float exposure; // Set by ViewLayer
   float displacement = 0.15f;
   int displacementMethod = 2; // NBCS
   float nbcsStepSizeFactor = 5.0f; // 2.5 or less for plane, 5.0 for sphere

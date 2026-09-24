@@ -49,11 +49,6 @@ struct PixelInputType {
   float3 binormal : BINORMAL;
 };
 
-float3 tonemapACES(float3 x) {
-  const float a = 2.51, b = 0.03, c = 2.43, d = 0.59, e = 0.14;
-  return saturate((x * (a * x + b)) / (x * (c * x + d) + e));
-}
-
 float2 parallaxMapping(float2 uv, float3 tangentView) {
   float numLayers = lerp(minMaxPOMLayers.y, minMaxPOMLayers.x, max(dot(float3(0.0, 0.0, 1.0), tangentView), 0.0));
     
@@ -145,6 +140,31 @@ float3 F_SchlickRoughness(float NdotV, float3 F0, float roughness) {
   return F0 + (max(float3(1.0 - roughness, 1.0 - roughness, 1.0 - roughness), F0) - F0) * pow(saturate(1.0 - NdotV), 5.0);
 }
 
+float3 tonemapNeutral(float3 color) {
+  const float startCompression = 0.8 - 0.04;
+  const float desaturation = 0.15;
+
+  float x = min(color.r, min(color.g, color.b));
+  float offset = x < 0.08 ? x - 6.25 * x * x : 0.04;
+  color -= offset;
+
+  float peak = max(color.r, max(color.g, color.b));
+  if (peak < startCompression)
+    return color;
+
+  const float d = 1.0f - startCompression;
+  float newPeak = 1.0f - d * d / (peak + d - startCompression);
+  color *= newPeak / peak;
+
+  float g = 1.0f - 1.0f / (desaturation * (peak - newPeak) + 1.0f);
+  return lerp(color, newPeak * float3(1, 1, 1), g);
+}
+
+float3 tonemapACES(float3 color) {
+  const float a = 2.51, b = 0.03, c = 2.43, d = 0.59, e = 0.14;
+  return saturate((color * (a * color + b)) / (color * (c * color + d) + e));
+}
+
 float4 PSMain(PixelInputType input) : SV_TARGET {
   float3x3 TBN = float3x3(input.tangent, input.binormal, input.normal);
     
@@ -189,7 +209,10 @@ float4 PSMain(PixelInputType input) : SV_TARGET {
   float3 specularIBL = prefilteredColor * (kS * brdf.x + brdf.y);
 
   float3 outCol = (diffuseIBL + specularIBL) * ao * globalIllumination;
+  
   if (tonemapMethod == 1) {
+    outCol = tonemapNeutral(outCol * exposure);
+  } else if (tonemapMethod == 2) {
     outCol = tonemapACES(outCol * exposure);
   }
   
