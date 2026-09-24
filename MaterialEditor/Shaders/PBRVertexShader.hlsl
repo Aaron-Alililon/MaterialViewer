@@ -11,6 +11,8 @@ cbuffer MatrixBuffer : register(b0) {
 cbuffer PropertiesBuffer : register(b1) {
   float2 uvScale;
   float globalIllumination;
+  int tonemapMethod;
+  float exposure;
   float displacementStrength;
   int displacementMethod;
   float nbcsStepSizeFactor;

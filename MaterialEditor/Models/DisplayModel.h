@@ -30,6 +30,8 @@ private:
   struct __declspec(align(16)) MaterialProperties {
     DirectX::XMFLOAT2 uvScale;
     float globalIllumination;
+    int tonemapMethod;
+    float exposure;
     float displacementStrength;
     int displacementMethod;
     float nbcsStepSizeFactor;
@@ -68,13 +70,15 @@ private:
   void bindTextures();
 
 public:
-  int selectedModel = 0;
+  int selectedModel = 0; // Sphere
   float uScale = 4.0f;
   float vScale = 4.0f;
-  float giStrength = 0.8f;
+  float giStrength = 1.0f;
+  int tonemapMethod = 0; // None
+  float exposure = 1.0f;
   float displacement = 0.15f;
   int displacementMethod = 2; // NBCS
-  float nbcsStepSizeFactor = 2.5f; // 2.5 or less for plane, 5.0 for sphere
+  float nbcsStepSizeFactor = 5.0f; // 2.5 or less for plane, 5.0 for sphere
   float minPOMLayers = 100;
   float maxPOMLayers = 250;
 

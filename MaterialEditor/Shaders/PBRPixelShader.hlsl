@@ -28,6 +28,8 @@ cbuffer MatrixBuffer : register(b0) {
 cbuffer PropertiesBuffer : register(b1) {
   float2 uvScale;
   float globalIllumination;
+  int tonemapMethod;
+  float exposure;
   float displacementStrength;
   int displacementMethod;
   float nbcsStepSizeFactor;
@@ -46,6 +48,11 @@ struct PixelInputType {
   float3 tangent : TANGENT;
   float3 binormal : BINORMAL;
 };
+
+float3 tonemapACES(float3 x) {
+  const float a = 2.51, b = 0.03, c = 2.43, d = 0.59, e = 0.14;
+  return saturate((x * (a * x + b)) / (x * (c * x + d) + e));
+}
 
 float2 parallaxMapping(float2 uv, float3 tangentView) {
   float numLayers = lerp(minMaxPOMLayers.y, minMaxPOMLayers.x, max(dot(float3(0.0, 0.0, 1.0), tangentView), 0.0));
@@ -181,7 +188,10 @@ float4 PSMain(PixelInputType input) : SV_TARGET {
   float2 brdf = brdfLutTex.SampleLevel(pointSampleType, float2(NdotV, roughness), 0).rg;
   float3 specularIBL = prefilteredColor * (kS * brdf.x + brdf.y);
 
-  float3 ambient = (diffuseIBL + specularIBL) * ao * globalIllumination;
+  float3 outCol = (diffuseIBL + specularIBL) * ao * globalIllumination;
+  if (tonemapMethod == 1) {
+    outCol = tonemapACES(outCol * exposure);
+  }
   
-  return float4(ambient, 1);
+  return float4(outCol, 1);
 }

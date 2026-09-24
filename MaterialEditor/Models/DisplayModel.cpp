@@ -21,6 +21,8 @@ void DisplayModel::setProperties() {
   m_properties = {
     { uScale, vScale },
     giStrength,
+    tonemapMethod,
+    exposure,
     displacement,
     displacementMethod,
     nbcsStepSizeFactor,

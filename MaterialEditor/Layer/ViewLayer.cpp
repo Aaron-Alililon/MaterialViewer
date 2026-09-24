@@ -125,7 +125,21 @@ void ViewLayer::createSettings() const {
   lockedSettingsLayer->addFloatSlider(
     "Global Illumination Strength",
     &m_displayModel->giStrength,
-    0, 1,
+    0, 2,
+    [this]() { m_displayModel->setProperties(); }
+  );
+
+  lockedSettingsLayer->addDropdown(
+    "Material Tonemapping Method",
+    &m_displayModel->tonemapMethod,
+    std::vector<std::string>{ "None", "ACES" },
+    [this]() { m_displayModel->setProperties(); }
+  );
+
+  lockedSettingsLayer->addFloatSlider(
+    "Exposure",
+    &m_displayModel->exposure,
+    0, 3,
     [this]() { m_displayModel->setProperties(); }
   );
 
