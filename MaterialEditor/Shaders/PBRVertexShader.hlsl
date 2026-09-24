@@ -17,6 +17,8 @@ cbuffer PropertiesBuffer : register(b1) {
   int displacementMethod;
   float nbcsStepSizeFactor;
   float2 minMaxPOMLayers;
+  int selfOcclusionMethod;
+  float horizonFade;
 };
 
 struct VertexInputType {

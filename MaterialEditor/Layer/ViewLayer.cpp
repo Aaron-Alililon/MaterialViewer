@@ -180,16 +180,32 @@ void ViewLayer::createSettings() {
   );
 
   lockedSettingsLayer->addFloatSlider(
-    "POM/NBCS minimum layers",
+    "POM/NBCS Minimum Layers",
     &m_displayModel->minPOMLayers,
     1, 500,
     [this]() { m_displayModel->setProperties(); }
   );
 
   lockedSettingsLayer->addFloatSlider(
-    "POM/NBCS maximum layers",
+    "POM/NBCS Maximum Layers",
     &m_displayModel->maxPOMLayers,
     1, 500,
+    [this]() { m_displayModel->setProperties(); }
+  );
+
+  lockedSettingsLayer->addHeading("Self Occlusion");
+
+  lockedSettingsLayer->addDropdown(
+    "Self Occlusion Method",
+    &m_displayModel->selfOcclusionMethod,
+    std::vector<std::string>{ "None", "Height Field Visibility", "Horizon Fade" },
+    [this]() { m_displayModel->setProperties(); }
+  );
+
+  lockedSettingsLayer->addFloatSlider(
+    "Horizon Fade Strength",
+    &m_displayModel->horizonFade,
+    0, 3,
     [this]() { m_displayModel->setProperties(); }
   );
 }

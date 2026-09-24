@@ -36,6 +36,8 @@ private:
     int displacementMethod;
     float nbcsStepSizeFactor;
     DirectX::XMFLOAT2 minMaxPOMLayers;
+    int selfOcclusionMethod;
+    float horizonFade;
   };
 
   struct __declspec(align(16)) CameraBufferData {
@@ -78,9 +80,11 @@ public:
   float exposure; // Set by ViewLayer
   float displacement = 0.15f;
   int displacementMethod = 2; // NBCS
-  float nbcsStepSizeFactor = 5.0f; // 2.5 or less for plane, 5.0 for sphere
+  float nbcsStepSizeFactor = 2.5f; // 2.5 or less for plane, 5.0 for sphere
   float minPOMLayers = 100;
   float maxPOMLayers = 250;
+  int selfOcclusionMethod = 1; // Height Field Visibility
+  float horizonFade = 1.5f;
 
 private:
   MaterialProperties m_properties;

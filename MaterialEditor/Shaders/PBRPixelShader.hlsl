@@ -4,6 +4,7 @@
 #define NBCS_DISPLACEMENT_FACTOR 4.0f
 #define NBCS_BINARY_STEPS 5
 #define IBL_MAX_SPECULAR_MIP 5.0f
+#define REFLECTION_SHADOW_STEPS 12
 
 Texture2D albedoTex : register(t0);
 Texture2D normalTex : register(t1);
@@ -36,6 +37,8 @@ cbuffer PropertiesBuffer : register(b1) {
   int displacementMethod;
   float nbcsStepSizeFactor;
   float2 minMaxPOMLayers;
+  int selfOcclusionMethod;
+  float horizonFade;
 };
 
 cbuffer CameraBuffer : register(b3) {
@@ -142,6 +145,27 @@ float3 F_SchlickRoughness(float NdotV, float3 F0, float roughness) {
   return F0 + (max(float3(1.0 - roughness, 1.0 - roughness, 1.0 - roughness), F0) - F0) * pow(saturate(1.0 - NdotV), 5.0);
 }
 
+float heightFieldVisibility(float2 uv, float3 dirTS, float softness) {
+  if (dirTS.z <= 0.0)
+    return 0.0; // pointing into the surface
+
+  float startDepth = 1.0f - displacementTex.SampleLevel(linearSampleType, uv, 0).r;
+  float2 uvPerDepth = dirTS.xy * (displacementStrength * POM_DISPLACEMENT_FACTOR);
+
+  float vis = 1.0;
+  for (int k = 1; k <= REFLECTION_SHADOW_STEPS; k++) {
+    float t = (float) k / REFLECTION_SHADOW_STEPS;
+    float rayDepth = startDepth * (1.0 - t); // climbs to the top surface
+    float2 sampleUV = uv + uvPerDepth * (startDepth * t);
+    float surfDepth = 1.0f - displacementTex.SampleLevel(linearSampleType, sampleUV, 0).r;
+
+    // < 0 means the ray is below the surface (blocked); dividing by t makes far occluders count less
+    float diff = surfDepth - rayDepth;
+    vis = min(vis, saturate(1.0 + softness * diff / t));
+  }
+  return vis;
+}
+
 float4 PSMain(PixelInputType input) : SV_TARGET {
   float3x3 TBN = float3x3(input.tangent, input.binormal, input.normal);
     
@@ -185,7 +209,19 @@ float4 PSMain(PixelInputType input) : SV_TARGET {
 
   float2 brdf = brdfLutTex.SampleLevel(pointSampleType, float2(NdotV, roughness), 0).rg;
   float3 specularIBL = prefilteredColor * (kS * brdf.x + brdf.y);
-
+  
+  if (selfOcclusionMethod == 1 && displacementMethod != 0) {
+    float3 reflectTS = normalize(mul(TBN, reflectVector)); // world -> tangent (TBN rows are the basis vectors)
+    float vis = heightFieldVisibility(mappedUVs, reflectTS, 8.0 * (1.0 - roughness) + 1.0);
+    specularIBL *= vis;
+  }
+  
+  if (selfOcclusionMethod == 2) {
+    float3 geoNormal = normalize(input.normal);
+    float horizon = saturate(1.0 + horizonFade * dot(reflectVector, geoNormal));
+    specularIBL *= horizon * horizon;
+  }
+  
   float3 hdrCol = (diffuseIBL + specularIBL) * ao * globalIllumination;
   
   float3 sdrCol = applyTonemap(hdrCol, tonemapMethod, exposure);

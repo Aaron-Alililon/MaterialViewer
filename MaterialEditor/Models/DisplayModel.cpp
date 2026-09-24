@@ -26,7 +26,9 @@ void DisplayModel::setProperties() {
     displacement,
     displacementMethod,
     nbcsStepSizeFactor,
-    { minPOMLayers, maxPOMLayers }
+    { minPOMLayers, maxPOMLayers },
+    selfOcclusionMethod,
+    horizonFade
   };
 
   m_material->uploadProperties(m_properties, 1);

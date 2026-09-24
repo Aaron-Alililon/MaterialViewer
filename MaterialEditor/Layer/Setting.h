@@ -112,8 +112,8 @@ private:
 
 class CheckboxSetting : public ISetting {
 public:
-  CheckboxSetting(std::string label, bool* value, std::function<void()> onChange)
-    : m_label(std::move(label)), m_value(value) {}
+  CheckboxSetting(std::string label, bool* value, std::function<void()> onChange = nullptr)
+    : m_label(std::move(label)), m_value(value), m_onChange{ std::move(onChange) } {}
 
   void draw() override {
     ImGui::Spacing();
@@ -121,7 +121,9 @@ public:
 
     drawLabelAbove(m_label);
     std::string hiddenId = "##" + m_label;
-    ImGui::Checkbox(hiddenId.c_str(), m_value);
+    if (ImGui::Checkbox(hiddenId.c_str(), m_value)) {
+      if (m_onChange) m_onChange();
+    }
 
     ImGui::Unindent(4.0f);
     ImGui::Spacing();
@@ -130,6 +132,7 @@ public:
 private:
   std::string m_label;
   bool* m_value;
+  std::function<void()> m_onChange;
 };
 
 class DropdownSetting : public ISetting {

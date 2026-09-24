@@ -3,10 +3,6 @@
 #include "Layer/SettingsLayer.h"
 #include "Core/Preset3D.h"
 
-// TODO
-// SSR
-// Depth aware NCS
-
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline, int iCmdshow) {
   rcore::DeviceDesc devDesc;
   rcore::initDevice(devDesc);
