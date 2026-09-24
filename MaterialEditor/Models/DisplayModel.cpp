@@ -39,6 +39,12 @@ void DisplayModel::onCamChange(DirectX::XMFLOAT3 pos) const {
 
 void DisplayModel::updateTexture(std::string const& path, TextureType type) {
   auto [texDesc, srvDesc] = rcore::Preset3D::makeStandardTextureDescriptionPair();
+
+  if (type == albedo) {
+    texDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+    srvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+  }
+
   m_textures[static_cast<size_t>(type)] = std::make_shared<rcore::Texture>(rcore::LoaderTag<rcore::PNGLoader>{}, path, texDesc, srvDesc);
   
   bindTextures();
