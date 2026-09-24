@@ -70,6 +70,8 @@ void ViewLayer::createModels() {
   m_skybox = std::make_unique<Skybox>(m_window, inputDesc);
   m_displayModel = std::make_shared<DisplayModel>(m_window, inputDesc);
 
+  BakePass::pruneCache();
+
   Skybox::SkyboxData data = m_skybox->setType();
   m_displayModel->updateSkyboxData(data);
 }
@@ -141,7 +143,7 @@ void ViewLayer::createSettings() {
   );
 
   lockedSettingsLayer->addDropdown(
-    "Material Tonemapping Method",
+    "Tonemapping Method",
     &tonemapMethod,
     std::vector<std::string>{ "None", "Neutral", "ACES" },
     [this]() { setTonemappingProperties(); }

@@ -49,8 +49,6 @@ void Skybox::bakeIBL(std::weak_ptr<rcore::Window> window) {
 
     m_skyboxes.push_back(data);
   }
-
-  BakePass::pruneCache();
 }
 
 void Skybox::createSIVBuffer() {
