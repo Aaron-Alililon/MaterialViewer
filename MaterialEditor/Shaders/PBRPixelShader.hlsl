@@ -1,3 +1,5 @@
+#include "Common/Tonemap.hlsli"
+
 #define POM_DISPLACEMENT_FACTOR 2.0f
 #define NBCS_DISPLACEMENT_FACTOR 4.0f
 #define NBCS_BINARY_STEPS 5
@@ -140,46 +142,22 @@ float3 F_SchlickRoughness(float NdotV, float3 F0, float roughness) {
   return F0 + (max(float3(1.0 - roughness, 1.0 - roughness, 1.0 - roughness), F0) - F0) * pow(saturate(1.0 - NdotV), 5.0);
 }
 
-float3 tonemapNeutral(float3 color) {
-  const float startCompression = 0.8 - 0.04;
-  const float desaturation = 0.15;
-
-  float x = min(color.r, min(color.g, color.b));
-  float offset = x < 0.08 ? x - 6.25 * x * x : 0.04;
-  color -= offset;
-
-  float peak = max(color.r, max(color.g, color.b));
-  if (peak < startCompression)
-    return color;
-
-  const float d = 1.0f - startCompression;
-  float newPeak = 1.0f - d * d / (peak + d - startCompression);
-  color *= newPeak / peak;
-
-  float g = 1.0f - 1.0f / (desaturation * (peak - newPeak) + 1.0f);
-  return lerp(color, newPeak * float3(1, 1, 1), g);
-}
-
-float3 tonemapACES(float3 color) {
-  const float a = 2.51, b = 0.03, c = 2.43, d = 0.59, e = 0.14;
-  return saturate((color * (a * color + b)) / (color * (c * color + d) + e));
-}
-
 float4 PSMain(PixelInputType input) : SV_TARGET {
   float3x3 TBN = float3x3(input.tangent, input.binormal, input.normal);
     
   float3 viewVector = normalize(camPosition.xyz - input.worldPos.xyz);
     
   float2 mappedUVs = input.uv;
-    
+  
+  // --- Displacement --- //
   if (displacementMethod == 1 || displacementMethod == 2) {
     float3x3 worldInverse = transpose((float3x3) worldInverseTranspose);
     float3 objectSpaceViewVector = normalize(mul(viewVector, worldInverse));
     float3 tangentViewVector = normalize(mul(TBN, objectSpaceViewVector));
   
-    if (displacementMethod == 1) {
+    if (displacementMethod == 1) { // POM
       mappedUVs = parallaxMapping(input.uv, tangentViewVector);
-    } else {
+    } else { // NBCS
       mappedUVs = nbcs(input.uv, -objectSpaceViewVector, tangentViewVector);
     }
   }
@@ -195,7 +173,7 @@ float4 PSMain(PixelInputType input) : SV_TARGET {
   float NdotV = saturate(dot(worldNormal, viewVector));
   float3 F0 = lerp(float3(0.04, 0.04, 0.04), albedo, metallic);
   
-  // --- IBL ---
+  // --- IBL --- //
   float3 kS = F_SchlickRoughness(NdotV, F0, roughness);
   float3 kD = (1.0 - kS) * (1.0 - metallic);
 
@@ -208,13 +186,9 @@ float4 PSMain(PixelInputType input) : SV_TARGET {
   float2 brdf = brdfLutTex.SampleLevel(pointSampleType, float2(NdotV, roughness), 0).rg;
   float3 specularIBL = prefilteredColor * (kS * brdf.x + brdf.y);
 
-  float3 outCol = (diffuseIBL + specularIBL) * ao * globalIllumination;
+  float3 hdrCol = (diffuseIBL + specularIBL) * ao * globalIllumination;
   
-  if (tonemapMethod == 1) {
-    outCol = tonemapNeutral(outCol * exposure);
-  } else if (tonemapMethod == 2) {
-    outCol = tonemapACES(outCol * exposure);
-  }
+  float3 sdrCol = applyTonemap(hdrCol, tonemapMethod, exposure);
   
-  return float4(outCol, 1);
+  return float4(sdrCol, 1);
 }
