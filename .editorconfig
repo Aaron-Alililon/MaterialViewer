@@ -1,5 +1,0 @@
-root = true
-
-# All files
-[*]
-cpp_include_cleanup_add_missing_error_tag_type = none
