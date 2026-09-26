@@ -91,7 +91,7 @@ void DisplayModel::createNbcsTextures(ModelData& data, std::weak_ptr<rcore::Wind
 }
 
 void DisplayModel::createModels(std::weak_ptr<rcore::Window> window) {
-  static constexpr std::array<const char*, 2> modelPaths = { "models/sphere.glb", "models/plane.glb" };
+  static constexpr std::array<const char*, 4> modelPaths = { "models/uvsphere.glb", "models/plane.glb", "models/cube.glb", "models/cubesphere.glb" };
 
   for (size_t i = 0; i < modelPaths.size(); i++) {
     ModelData data{};

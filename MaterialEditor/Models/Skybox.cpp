@@ -30,7 +30,7 @@ Skybox::SkyboxData Skybox::setType() {
 }
 
 void Skybox::bakeIBL(std::weak_ptr<rcore::Window> window) {
-  static const std::string skyboxPaths[] = { "sky.hdr", "forest.hdr", "livingRoom.hdr", "studio.hdr" };
+  static const std::string skyboxPaths[] = { "sky.hdr", "forest.hdr", "livingRoom.hdr", "studio.hdr", "city.hdr" };
 
   for (auto const& path : skyboxPaths) {
     SkyboxData data{ };

@@ -106,14 +106,14 @@ void ViewLayer::createSettings() {
   lockedSettingsLayer->addDropdown(
     "Model",
     &m_displayModel->selectedModel,
-    std::vector<std::string>{ "Sphere", "Plane" },
+    std::vector<std::string>{ "UV Sphere", "Plane", "Cube", "Cube Sphere" },
     [this]() { m_displayModel->setModel(); }
   );
 
   lockedSettingsLayer->addDropdown(
     "Skybox",
     &m_skybox->selectedSkybox,
-    std::vector<std::string>{ "Sky", "Forest", "Living Room", "Studio" },
+    std::vector<std::string>{ "Sky", "Forest", "Living Room", "Studio", "City" },
     [this]() { setSkybox(); }
   );
 

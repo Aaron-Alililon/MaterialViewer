@@ -43,7 +43,7 @@ float4 PSMain(PSInput input) : SV_Target {
   float3 tangentX = normalize(cross(up_, normal));
   float3 tangentY = cross(normal, tangentX);
 
-  static const uint SAMPLE_COUNT = 65536u;
+  static const uint SAMPLE_COUNT = 16384u;
   static const float ENV_RESOLUTION = 1024.0f;
 
   float3 irradiance = float3(0, 0, 0);
