@@ -99,7 +99,7 @@ StyleCopReport.xml
 *.scc
 
 # Allow models to be loaded
-!MaterialEditor/Resources/models/*.obj
+!MaterialViewer/Resources/models/*.obj
 
 # Chutzpah Test files
 _Chutzpah*

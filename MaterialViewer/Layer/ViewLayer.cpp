@@ -211,7 +211,7 @@ void ViewLayer::createSettings() {
 }
 
 void ViewLayer::makeTextureSettingsWindow(std::vector<std::string> const& paths) {
-  rcore::WindowDesc texSettingsWindDesc = rcore::Preset3D::makeStandardWindowDescription(L"Material Editor - Texture Settings", 800, 800);
+  rcore::WindowDesc texSettingsWindDesc = rcore::Preset3D::makeStandardWindowDescription(L"Material Viewer - Texture Settings", 800, 800);
   auto texSettingsWindow = rcore::makeWindow(texSettingsWindDesc);
 
   rcore::D3DContextDesc texSettingsCtxDesc = rcore::Preset3D::makeStandardContextDescription(texSettingsWindDesc.width(), texSettingsWindDesc.height());

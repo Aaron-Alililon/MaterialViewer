@@ -3,12 +3,17 @@
 #include "Layer/SettingsLayer.h"
 #include "Core/Preset3D.h"
 
+// Features
+// - Warnings for incompatible feature modes
+// - Quality preset selection
+// - Bake loading bar
+
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline, int iCmdshow) {
   rcore::DeviceDesc devDesc;
   rcore::initDevice(devDesc);
 
   // --- Settings Window ---
-  rcore::WindowDesc settingsWindDesc = rcore::Preset3D::makeStandardWindowDescription(L"Material Editor - Settings", 500, 800);
+  rcore::WindowDesc settingsWindDesc = rcore::Preset3D::makeStandardWindowDescription(L"Material Viewer - Settings", 500, 800);
   settingsWindDesc.windowPosX(100);
   auto settingsWindow = rcore::makeWindow(settingsWindDesc);
 
@@ -18,7 +23,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
   settingsWindow.lock()->addLayer<SettingsLayer>(settingsCtxDesc);
 
   // --- Model Window ---
-  rcore::WindowDesc modelWindDesc = rcore::Preset3D::makeStandardWindowDescription(L"Material Editor - View", 1600, 1200);
+  rcore::WindowDesc modelWindDesc = rcore::Preset3D::makeStandardWindowDescription(L"Material Viewer - View", 1600, 1200);
   modelWindDesc.toggleExtendedStyle(WS_EX_ACCEPTFILES);
   auto modelWindow = rcore::makeWindow(modelWindDesc);
 
